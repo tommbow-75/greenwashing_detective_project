@@ -134,9 +134,10 @@ function showDetail(company) {
     document.getElementById('filterHint').style.display = 'none';
     document.getElementById('detailCompanyName').textContent = `${company.name} - 詳細分析 (${company.year}年)`;
 
-    generateWordcloud(company); // 呼叫亂數文字雲
+    generateWordcloud(company);
     renderLayer4(company);
-    renderLayer6(company);      // 顯示 SASB 地圖
+    renderLayer5(company); // [New] 新增 Layer 5 的渲染
+    renderLayer6(company);
 
     document.querySelectorAll('.analysis-section').forEach(el => {
         el.classList.remove('hidden');
@@ -144,11 +145,6 @@ function showDetail(company) {
 
     document.getElementById('detailView').classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function closeDetail() {
-    document.getElementById('detailView').classList.remove('active');
-    currentCompany = null;
 }
 
 function filterByField(field) {
@@ -204,27 +200,15 @@ function generateWordcloud(company) {
     wordcloudArea.appendChild(img);
 }
 
-function renderLayer4(company) {
-    const tableBody = document.getElementById('layer4Table');
-    tableBody.innerHTML = '';
 
-    // 注意：後端傳來的資料結構要是 list of dicts
-    if (!company.layer4Data || company.layer4Data.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">無資料</td></tr>';
-        return;
-    }
 
-    company.layer4Data.forEach(row => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${row.category}</td>
-            <td>${row.sasb_topic}</td> <td>${row.page_number || '-'}</td>
-            <td>${row.report_claim || '-'}</td>
-            <td>${row.adjustment_score}</td>
-            <td>${getRiskLabel(row.risk_score)}</td>
-        `;
-        tableBody.appendChild(tr);
-    });
+
+
+// 輔助函式：截斷字串
+function cutString(str, len) {
+    if (!str) return '-';
+    if (str.length <= len) return str;
+    return str.substring(0, len) + '...';
 }
 
 function getRiskLabel(score) {
@@ -391,4 +375,121 @@ function renderLayer6(company) {
 
         container.appendChild(item);
     });
+}
+
+// [Update] 輔助函式：取得風險標籤 (支援小數點判斷)
+// 邏輯：分數越高越安全(綠)，越低越危險(紅)
+function getRiskLabel(score) {
+    const numScore = parseFloat(score); // 確保是數字
+
+    // 防呆：若非數字則回傳原始值
+    if (isNaN(numScore)) return score;
+
+    let labelClass = '';
+    let labelText = '';
+
+    // 定義分數區間 (可依需求微調)
+    // 4.0 ~ 3.5 : 無風險 (綠)
+    // 3.4 ~ 2.5 : 低風險 (黃)
+    // 2.4 ~ 1.5 : 中風險 (橘)
+    // < 1.5     : 高風險 (紅)
+
+    if (numScore >= 3.5) {
+        labelClass = 'no';
+        labelText = `無風險 (${numScore})`;
+    } else if (numScore >= 2.5) {
+        labelClass = 'low';
+        labelText = `低風險 (${numScore})`;
+    } else if (numScore >= 1.5) {
+        labelClass = 'medium';
+        labelText = `中風險 (${numScore})`;
+    } else {
+        labelClass = 'high';
+        labelText = `高風險 (${numScore})`;
+    }
+
+    return `<span class="risk-label ${labelClass}">${labelText}</span>`;
+}
+
+// [Update] Layer 4: 內部比對
+function renderLayer4(company) {
+    const tableBody = document.getElementById('layer4Table');
+    tableBody.innerHTML = '';
+
+    if (!company.layer4Data || company.layer4Data.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">無資料</td></tr>';
+        return;
+    }
+
+    company.layer4Data.forEach(row => {
+        // 1. 計算調整後的分數 (Net Score)
+        const initialRisk = parseFloat(row.risk_score) || 0;
+        // const deduction = parseFloat(row.adjustment_score) || 0;
+        // 分數最低扣到 0，不出現負分
+        // const netScore = Math.max(0, initialRisk - deduction).toFixed(1);
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${row.ESG_category || ''}</td>
+            <td title="${row.SASB_topic}">${row.SASB_topic || ''}</td> 
+            <td>${row.page_number || '-'}</td>
+            <td title="${row.report_claim}">${cutString(row.report_claim, 15)}</td>
+            
+            <td style="color: #666; font-size: 0.9em;">
+                ${row.greenwashing_factor || '-'}
+            </td>
+
+            <td>${getRiskLabel(initialRisk)}</td>
+        `;
+        tableBody.appendChild(tr);
+    });
+}
+
+// [Update] Layer 5: 外部新聞揭露對比
+function renderLayer5(company) {
+    const tableBody = document.getElementById('layer5Table');
+    tableBody.innerHTML = '';
+
+    const dataWithEvidence = company.layer4Data;
+
+    if (!dataWithEvidence || dataWithEvidence.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">無相關外部證據資料</td></tr>';
+        return;
+    }
+
+    dataWithEvidence.forEach(row => {
+        // 計算 Net Score
+        const initialRisk = parseFloat(row.risk_score) || 0;
+        const deduction = parseFloat(row.adjustment_score) || 0;
+        const netScore = Math.max(0, initialRisk - deduction).toFixed(1);
+
+        const evidence = row.external_evidence || '-';
+        const status = row.consistency_status || '待確認';
+        const msci = row.MSCI_flag || '-';
+        const url = row.external_evidence_url ? `<a href="${row.external_evidence_url}" target="_blank">連結</a>` : '-';
+
+        let statusColor = 'black';
+        if (status.includes('不一致')) statusColor = 'var(--danger)';
+        else if (status.includes('一致')) statusColor = 'var(--success)';
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${row.ESG_category}</td>
+            <td title="${row.report_claim}">${cutString(row.report_claim, 15)}</td>
+            <td title="${evidence}">${cutString(evidence, 15)}</td>
+            <td>${url}</td>
+            <td style="color:${statusColor}; font-weight:bold;">${status}</td>
+            <td>${msci}</td>
+            
+            <td>${getRiskLabel(netScore)}</td>
+        `;
+        tableBody.appendChild(tr);
+    });
+}
+
+// 輔助函式：字串截斷 (保持不變)
+function cutString(str, len) {
+    if (!str) return '-';
+    if (str.length <= len) return str;
+    return str.substring(0, len) + '...';
 }

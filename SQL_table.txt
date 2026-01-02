@@ -1,0 +1,28 @@
+-- 1. 公司基本資料表
+CREATE TABLE company_report(
+ESG_id VARCHAR(8) NOT NULL PRIMARY KEY,
+company_id VARCHAR(4),
+year INT,  -- 報告年份
+ESG_category VARCHAR(5),  -- ESG 分類
+SASB_topic VARCHAR(20),  -- SASB 議題
+page_number VARCHAR(3),  -- 報告宣稱所在的頁碼
+report_claim TEXT(500),  -- 報告宣稱
+greenwashing_factor TEXT(500),  -- 原因
+risk_score VARCHAR(3),  -- 初始分數 (0-4)
+external_evidence TEXT(500),  -- 外部證據
+external_evidence_url VARCHAR(100),  -- 外部證據連結
+consistency_status VARCHAR(100),  -- 一致程度
+MSCI_flag VARCHAR(100),  -- MSCI 旗號
+adjustment_score DECIMAL(5,2)  -- 調整分數 (扣分項)
+);
+
+-- 2. 詳細 ESG 分析數據表 (用於計算)
+CREATE TABLE company(
+ESG_id VARCHAR(8) NOT NULL PRIMARY KEY,
+company_name VARCHAR(20),
+industry VARCHAR(20),  -- 對應 JSON 中的產業欄位名稱
+company_code VARCHAR(4),  -- 股票代號
+Report_year INT,  -- 報告年份
+total_score DECIMAL(5,2),
+URL VARCHAR(24)  -- 永續報告書的連結
+);

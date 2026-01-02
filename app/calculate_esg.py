@@ -2,14 +2,12 @@ import os
 import json
 
 # 載入 SASB 權重設定
-# 確保 JSON 檔案位於專案目錄
 def load_sasb_weights():
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     json_path = os.path.join(base_dir, 'static', 'data', 'SASB_weightMap.json')
     with open(json_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
     
-    # 轉換為更容易查詢的字典結構: weights[topic][industry] = weight
     weights = {}
     for item in data:
         topic = item.get('議題')
@@ -23,11 +21,10 @@ def calculate_esg_scores(company_industry, esg_records):
     """
     計算 E, S, G 分數以及總風險分數
     :param company_industry: 公司產業別 (字串)
-    :param esg_records: 資料庫撈出的詳細 list (dict)
+    :param esg_records: 資料庫撈出的詳細 list (dict)，欄位名稱已變更
     :return: dict 包含 e_score, s_score, g_score, total_score
     """
     
-    # 初始化累加器
     scores = {
         'E': {'numerator': 0, 'denominator': 0},
         'S': {'numerator': 0, 'denominator': 0},
@@ -35,34 +32,38 @@ def calculate_esg_scores(company_industry, esg_records):
         'Total': {'numerator': 0, 'denominator': 0}
     }
 
-    # --- Python 運算段落 ---
     for row in esg_records:
-        category = row['category'] # E, S, or G
-        topic = row['sasb_topic']
+        # [Update] 欄位名稱對應 SQL_table_new.txt
+        category = row['ESG_category'] # 舊: category
+        topic = row['SASB_topic']      # 舊: sasb_topic
         
-        # 1. 取得權重 W (如果 JSON 沒定義該產業，預設為 1)
-        # 注意：SASB JSON 鍵值可能與資料庫不完全一致，需確保資料一致性
+        # 1. 取得權重
         topic_info = SASB_WEIGHTS.get(topic, {})
         weight = topic_info.get(company_industry, 1) 
         
         # 2. 計算淨分數 S_net (Risk - Adjustment)
-        # 確保分數不低於 0 (視業務邏輯而定，這裡設為 0)
-        raw_risk = row['risk_score']
-        adjustment = row['adjustment_score']
+        # [Important] 資料庫中 risk_score 定義為 VARCHAR(3)，需轉型
+        try:
+            raw_risk = float(row['risk_score']) if row['risk_score'] else 0
+        except ValueError:
+            raw_risk = 0 # 若資料庫存了非數字字元，預設為 0
+            
+        # adjustment_score 定義為 DECIMAL，Python通常會自動轉為 Decimal 或 float
+        adjustment = float(row['adjustment_score']) if row['adjustment_score'] else 0
+        
         net_score = max(0, raw_risk - adjustment)
         
-        # 3. 累加分子與分母
-        # 分子 += S_net * W
+        # 3. 累加
         weighted_score = net_score * weight
-        # 分母 += 4 * W (滿分基準)
         max_weighted_score = 4 * weight
         
-        # 寫入分項
-        if category in scores:
-            scores[category]['numerator'] += weighted_score
-            scores[category]['denominator'] += max_weighted_score
+        # 防呆：避免資料庫 category 欄位有大小寫或額外空白
+        clean_cat = category.strip().upper() if category else 'E'
+        
+        if clean_cat in scores:
+            scores[clean_cat]['numerator'] += weighted_score
+            scores[clean_cat]['denominator'] += max_weighted_score
             
-        # 寫入總分
         scores['Total']['numerator'] += weighted_score
         scores['Total']['denominator'] += max_weighted_score
 
@@ -74,6 +75,6 @@ def calculate_esg_scores(company_industry, esg_records):
         if den > 0:
             final_results[key] = round((num / den) * 100, 1)
         else:
-            final_results[key] = 0 # 避免除以零，若無資料則為 0
+            final_results[key] = 0
 
     return final_results

@@ -12,8 +12,6 @@ load_dotenv()
 app = Flask(__name__)
 
 # --- 資料庫連線設定 ---
-# 使用環境變數，請參考 .env.example，然後在專案根目錄建立 .env
-# 目前用於測試的SQL table 參考 SQL_table_test.txt
 def get_db_connection():
     return pymysql.connect(
         host=os.getenv('DB_HOST'),
@@ -29,48 +27,57 @@ def get_db_connection():
 def index():
     """
     主頁路由：渲染儀表板首頁
-    這裡僅回傳 HTML 結構，資料透過 API 非同步加載或直接 Jinja2 渲染
-    本範例採用：後端算出所有資料 -> Jinja2 渲染到 HTML (Server-Side Rendering)
     """
     conn = get_db_connection()
     companies_data = []
     
     try:
         with conn.cursor() as cursor:
-            # --- 資料庫讀取段落 (取得所有公司) ---
-            sql_companies = "SELECT * FROM companies"
+            # --- [Update] 資料庫讀取段落 (取得所有公司) ---
+            # 資料表名稱變更: companies -> company
+            # 欄位對應: id -> ESG_id (或忽略), name -> company_name, stock_id -> company_code
+            sql_companies = "SELECT * FROM company"
             cursor.execute(sql_companies)
             companies_basic = cursor.fetchall()
             
             for comp in companies_basic:
-                comp_id = comp['id']
+                # 取得關聯用的 Key
+                stock_code = comp['company_code'] # 對應 company_report.company_id
+                report_year = comp['Report_year'] # 對應 company_report.year
                 industry = comp['industry']
                 
-                # --- 資料庫讀取段落 (取得該公司所有 ESG 細項) ---
+                # --- [Update] 資料庫讀取段落 (取得該公司該年度所有 ESG 細項) ---
+                # 資料表名稱變更: esg_details -> company_report
+                # 我們撈出所有欄位，包含新增的 external_evidence, MSCI_flag 等，供前端顯示
                 sql_details = """
-                    SELECT category, sasb_topic, risk_score, adjustment_score, 
-                           report_claim, page_number
-                    FROM esg_details 
-                    WHERE company_id = %s
+                    SELECT ESG_category, SASB_topic, risk_score, adjustment_score, 
+                           report_claim, page_number, greenwashing_factor,
+                           external_evidence, external_evidence_url, 
+                           consistency_status, MSCI_flag
+                    FROM company_report 
+                    WHERE company_id = %s AND year = %s
                 """
-                cursor.execute(sql_details, (comp_id,))
+                cursor.execute(sql_details, (stock_code, report_year))
                 details = cursor.fetchall()
                 
                 # --- Python 運算段落 (呼叫計算引擎) ---
+                # 計算邏輯不變，但 details 內的 key 變了，需由 calculate_esg.py 處理或在此轉換
+                # 這裡我們維持直接傳入，讓 calculate_esg.py 去適應新的 key 名稱
                 scores = calculate_esg_scores(industry, details)
                 
                 # 組合最終物件
                 company_obj = {
-                    'id': comp['id'],
-                    'name': comp['name'],
-                    'stockId': comp['stock_id'],
+                    'id': comp['ESG_id'],     # 使用新的 PK
+                    'name': comp['company_name'],
+                    'stockId': comp['company_code'],
                     'industry': comp['industry'],
-                    'year': comp['year'],
+                    'year': comp['Report_year'],
+                    'url': comp['URL'],       # 新增: 報告連結
                     'greenwashingScore': scores['Total'], # 總風險分
                     'eScore': scores['E'],
                     'sScore': scores['S'],
                     'gScore': scores['G'],
-                    'layer4Data': details # 傳遞給前端做詳細列表顯示
+                    'layer4Data': details     # 傳遞給前端做詳細列表顯示 (包含 Layer 4 和 Layer 5 所需資料)
                 }
                 companies_data.append(company_obj)
                 
@@ -82,7 +89,6 @@ def index():
 # 如果需要 API 格式 (Optional)
 @app.route('/api/companies')
 def api_companies():
-    # ... (同上邏輯，只是 return jsonify(companies_data))
     pass
 
 if __name__ == '__main__':
