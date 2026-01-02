@@ -5,19 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ESG 綠洗風險監測儀表板</title>
-    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
-    <!-- Header -->
     <div class="header">
         <h1>🌱 ESG 綠色洗白風險監測儀表板</h1>
-        <p>多層級分析架構 | 即時監控 | 最後更新: 2025年12月17日</p>
+        <p>表面很綠，底下見真章</p>
     </div>
 
-    <!-- 第一層:篩選搜索層 -->
     <div class="container">
-        <!-- 第一層：篩選區 -->
         <div class="filter-section">
             <div class="filter-row">
                 <div class="filter-group">
@@ -28,39 +25,39 @@
                     <label>🏢 產業別</label>
                     <select id="industryFilter">
                         <option value="">全部產業</option>
-                        <option value="cement">水泥工業</option>
-                        <option value="food">食品工業</option>
-                        <option value="plastic">塑膠工業</option>
-                        <option value="textile">紡織纖維</option>
-                        <option value="machinery">電機機械</option>
-                        <option value="cable">電器電纜</option>
-                        <option value="chem">化學工業</option>
-                        <option value="biotech">生技醫療業</option>
-                        <option value="glass">玻璃陶瓷</option>
-                        <option value="paper">造紙工業</option>
-                        <option value="steel">鋼鐵工業</option>
-                        <option value="rubber">橡膠工業</option>
-                        <option value="auto">汽車工業</option>
-                        <option value="semi">半導體業</option>
-                        <option value="computer">電腦及週邊設備業</option>
-                        <option value="opto">光電業</option>
-                        <option value="telecom">通信網路業</option>
-                        <option value="components">電子零組件業</option>
-                        <option value="distribution">電子通路業</option>
-                        <option value="it">資訊服務業</option>
-                        <option value="other_electronics">其他電子業</option>
-                        <option value="construction">建材營造</option>
-                        <option value="shipping">航運業</option>
-                        <option value="tourism">觀光餐旅</option>
-                        <option value="finance">金融保險</option>
-                        <option value="retail">貿易百貨</option>
-                        <option value="energy">油電燃氣業</option>
-                        <option value="conglomerate">綜合</option>
-                        <option value="green_energy">綠能環保</option>
-                        <option value="cloud">數位雲端</option>
-                        <option value="sports">運動休閒</option>
-                        <option value="home">居家生活</option>
-                        <option value="other">其他</option>
+                        <option value="水泥工業">水泥工業</option>
+                        <option value="食品工業">食品工業</option>
+                        <option value="塑膠工業">塑膠工業</option>
+                        <option value="紡織纖維">紡織纖維</option>
+                        <option value="電機機械">電機機械</option>
+                        <option value="電器電纜">電器電纜</option>
+                        <option value="化學工業">化學工業</option>
+                        <option value="生技醫療業">生技醫療業</option>
+                        <option value="玻璃陶瓷">玻璃陶瓷</option>
+                        <option value="造紙工業">造紙工業</option>
+                        <option value="鋼鐵工業">鋼鐵工業</option>
+                        <option value="橡膠工業">橡膠工業</option>
+                        <option value="汽車工業">汽車工業</option>
+                        <option value="半導體業">半導體業</option>
+                        <option value="電腦及週邊設備業">電腦及週邊設備業</option>
+                        <option value="光電業">光電業</option>
+                        <option value="通信網路業">通信網路業</option>
+                        <option value="電子零組件業">電子零組件業</option>
+                        <option value="電子通路業">電子通路業</option>
+                        <option value="資訊服務業">資訊服務業</option>
+                        <option value="其他電子業">其他電子業</option>
+                        <option value="建材營造">建材營造</option>
+                        <option value="航運業">航運業</option>
+                        <option value="觀光餐旅">觀光餐旅</option>
+                        <option value="金融保險業">金融保險業</option>
+                        <option value="貿易百貨">貿易百貨</option>
+                        <option value="油電燃氣業">油電燃氣業</option>
+                        <option value="綜合企業">綜合企業</option>
+                        <option value="綠能環保">綠能環保</option>
+                        <option value="數位雲端">數位雲端</option>
+                        <option value="運動休閒">運動休閒</option>
+                        <option value="居家生活">居家生活</option>
+                        <option value="其他">其他</option>
                     </select>
                 </div>
                 <div class="filter-group">
@@ -77,15 +74,14 @@
             </div>
         </div>
 
-        <!-- 初始提示區域 -->
         <div id="initialPrompt" class="initial-prompt" style="margin-top: 2rem;">
             <div class="prompt-content">
-                <img src="../static/images/harvesting-tools.gif" alt="搜尋提示動圖" class="prompt-gif">
+                <img src="{{ url_for('static', filename='images/harvesting-tools.gif') }}" alt="搜尋提示動圖"
+                    class="prompt-gif">
                 <p class="prompt-text">請使用上方篩選條件進行搜尋，以查看 ESG 綠洗風險監測結果</p>
             </div>
         </div>
 
-        <!-- 第二層 & 第三層：簡化 Dashboard 結果列表 -->
         <div id="resultsDashboard" class="results-dashboard" style="margin-top: 2rem; display: none;">
             <table class="dashboard-table"
                 style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
@@ -103,10 +99,8 @@
                     </tr>
                 </thead>
                 <tbody id="companiesContainer">
-                    <!-- Javascript 填充 -->
                 </tbody>
             </table>
-            <!-- 分頁控制 -->
             <div id="paginationControls" class="pagination-controls" style="margin-top: 1rem; display: none;">
                 <button id="prevPage" class="btn" style="padding: 0.5rem 1rem; margin-right: 0.5rem;">上一頁</button>
                 <span id="pageInfo" style="margin: 0 1rem; color: var(--text-secondary);"></span>
@@ -114,17 +108,12 @@
             </div>
         </div>
 
-        <!-- 詳細視圖 (Hidden by default) -->
         <div id="detailView" class="detail-view">
             <div class="detail-view-header">
                 <h2 id="detailCompanyName">公司詳細分析</h2>
                 <button class="close-detail" onclick="closeDetail()">✕</button>
             </div>
 
-            <!-- 原第三層 ESG Cards 已整合至主要 Dashboard 列表，此處移除以簡化 -->
-
-
-            <!-- 篩選提示 -->
             <div id="filterHint"
                 style="background: rgba(32, 128, 128, 0.05); padding: 1rem; border-radius: 6px; margin-bottom: 2rem; display: none;">
                 <p style="color: var(--primary); font-weight: 600;">篩選模式已啟用：只顯示 <span id="filterFieldName"></span> 領域資料
@@ -133,7 +122,6 @@
                     顯示全部</button>
             </div>
 
-            <!-- 第四層：前後文比對 -->
             <div id="layer4" class="analysis-section">
                 <h3 class="section-title">🔍 第四層：內部比對 </h3>
                 <p style="color: var(--text-secondary); margin-bottom: 1rem;">分析報告內容與實際績效的一致性</p>
@@ -144,17 +132,15 @@
                             <th>sasb_topic</th>
                             <th>page_number </th>
                             <th>report_claim</th>
-                            <th>greenwashing_factor</th>
+                            <th>factor (adjustment)</th>
                             <th>risk_score</th>
                         </tr>
                     </thead>
                     <tbody id="layer4Table">
-                        <!-- 動態生成 -->
                     </tbody>
                 </table>
             </div>
 
-            <!-- 第五層：外部新聞比對 -->
             <div id="layer5" class="analysis-section hidden">
                 <h3 class="section-title">📰 第五層：外部新聞揭露對比</h3>
                 <p style="color: var(--text-secondary); margin-bottom: 1rem;">對標外部新聞與監管文件的一致性</p>
@@ -176,25 +162,15 @@
                             <td>E</td>
                             <td>「無重大環保違規」</td>
                             <td>環保署公告2023年罰款3次</td>
-                            <td>urlurlurlurl</td>
+                            <td><a href="#">連結</a></td>
                             <td>不一致 ⚠️</td>
                             <td>red</td>
-                            <td><span class="risk-label high">高風險</span></td>
-                        </tr>
-                        <tr>
-                            <td>S</td>
-                            <td>「員工滿意度95%」</td>
-                            <td>Glassdoor評分2.8/5</td>
-                            <td>urlurlurlurl</td>
-                            <td>不一致 ⚠️</td>
-                            <td>orange</td>
                             <td><span class="risk-label high">高風險</span></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- 第六層：SASB 產業權重 (Materiality Map) -->
             <div id="layer6" class="analysis-section hidden">
                 <h3 class="section-title">⚖️ 第六層：SASB 產業權重分布 (Materiality Map)</h3>
                 <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">依據 SASB 標準，<span
@@ -202,25 +178,20 @@
                         style="color:var(--text-secondary);">淺色區塊</span> 為一般議題 (權重 x 1)</p>
                 <div id="sasbInfo"
                     style="margin-top: 1rem; padding: 10px; background: rgba(0,0,0,0.02); border-radius: 4px; font-size: 0.9rem; color: var(--text-secondary); text-align: center;">
-                    <!-- JS 填充 -->
                 </div>
                 <div class="sasb-grid" id="sasbContainer">
-                    <!-- 動態生成 -->
                 </div>
             </div>
 
-            <!-- 第七層：詞雲 -->
             <div id="layer7" class="analysis-section">
                 <h3 class="section-title">☁️ 第七層：關鍵字出現頻率 (詞雲)</h3>
                 <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">報告中出現頻率最高的 ESG 相關詞彙（字體越大＝頻率越高）</p>
                 <div class="wordcloud-container">
                     <div class="wordcloud" id="wordcloudArea">
-                        <!-- 動態生成 -->
                     </div>
                 </div>
             </div>
 
-            <!-- 第八層：資料來源 -->
             <div id="layer8" class="analysis-section">
                 <h3 class="section-title">📊 第八層：資料來源與驗證</h3>
                 <div class="source-grid">
@@ -265,7 +236,27 @@
         </div>
     </div>
 
-    <script src="../static/js/script.js"></script>
+    <!-- 從 Flask 傳入的 JSON 資料，先以純 JSON 形式嵌入，避免與 JS 語法衝突 -->
+    <script id="companies-data" type="application/json">
+        {{ companies | tojson | safe }}
+    </script>
+
+    <script>
+        // 讀取並解析後端嵌入的 JSON 資料
+        const companiesData = JSON.parse(
+            document.getElementById("companies-data").textContent || "[]"
+        );
+
+        // 圖片基礎路徑 (給 script.js 使用，目前沒用到)
+        const imgBasePath = "{{ url_for('static', filename='images/') }}";
+
+        // SASB JSON 路徑
+        const sasbJsonPath = "{{ url_for('static', filename='data/SASB_weightMap.json') }}";
+
+        console.log("資料庫已載入:", companiesData.length, "筆公司資料");
+    </script>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 
 </html>
