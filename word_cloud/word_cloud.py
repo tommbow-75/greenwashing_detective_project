@@ -131,7 +131,7 @@ execution_time = end_time - start_time
 print(f"程式執行時間: {execution_time:.2f} 秒")
 
 # 待加強功能---
-# wordcloud.png title 改成公司或不顯示 company_name="", f"{company_name}_word_cloud.png"
+# wordcloud.png title 改成公司或不顯示 company_name="", year="" f"{company_name}_{year}_word_cloud.png"
 # 直接丟到網頁上，不要圖片
 # 存檔改成公司代號
 # 需分成讀取PDF以及抓取現有資料
