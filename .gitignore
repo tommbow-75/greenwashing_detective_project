@@ -1,1 +1,9 @@
 .env
+
+# 虛擬環境
+venv/
+.venv/
+env/
+ENV/
+bin/
+lib/
