@@ -1,0 +1,2012 @@
+[
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "4",
+    "report_claim": "民國 113 年為全球節電 1,042 億度，約當減少 4,400 萬公噸碳排放量；至民國 119 年，台積公司每用 1 度電生產半導體產品，將為全球減省 4.3 度電。",
+    "greenwashing_factor": "聲稱節電效益，但未提供詳細計算方式與驗證。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Climate Change",
+    "page_number": "4",
+    "report_claim": "民國 113 年是全球氣溫升幅首次超越《巴黎協定》所訂定的 1.5°C臨界值的一年，刻不容緩的氣候行動持續在台積公司全面開展。",
+    "greenwashing_factor": "提及氣候變遷的急迫性，但缺乏具體行動的詳細資訊。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "5",
+    "report_claim": "民國 113 年台積公司落實 1,177 項電力節能措施，並拓展多樣化的再生能源方案。",
+    "greenwashing_factor": "聲稱落實節能措施及拓展再生能源，但未提供具體數據與目標。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Water Management",
+    "page_number": "5",
+    "report_claim": "水資源正效益（Water Positive）納入水管理的長期目標之一，並列為應對氣候變遷的核心策略，深化氣候韌性。",
+    "greenwashing_factor": "提出水資源正效益的長期目標，但缺乏具體定義與衡量標準。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "5",
+    "report_claim": "首次執行涵蓋全球各營運據點同仁的「職場人權氛圍調查」，深入瞭解同仁對工作環境人權議題的感受度，做為精進人權管理行動的參考。",
+    "greenwashing_factor": "進行人權氛圍調查，但未說明調查結果與後續改善計畫。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Supply Chain",
+    "page_number": "5",
+    "report_claim": "亦將人權盡職調查擴及至供應鏈，長期目標新增人權管理績效。",
+    "greenwashing_factor": "將人權盡職調查擴及供應鏈，但未說明具體方法與範圍。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Occupational Health",
+    "page_number": "5",
+    "report_claim": "配置 24 小時駐廠救護車及救護技術員，保障工作者的安全健康。",
+    "greenwashing_factor": "配置救護資源，但未說明事故發生率與預防措施。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Community Relations",
+    "page_number": "5",
+    "report_claim": "台積電文教基金會與台積電慈善基金會推動各項社會計畫實現SDGs，並持續擴大台積公司產學合作領域，強化 SDG 17 多元合作夥伴關係。",
+    "greenwashing_factor": "推動社會計畫與產學合作，但缺乏具體成果與影響力評估。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Business Ethics",
+    "page_number": "5",
+    "report_claim": "強化ESG治理架構與內控機制，實現以數據驅動更具效率的永續管理模式，發揮價值鏈的正向影響力。",
+    "greenwashing_factor": "聲稱強化ESG治理，但未說明具體措施與績效指標。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Water Management",
+    "page_number": "11",
+    "report_claim": "技術升級減少 30% 廢水處理化學藥劑用量",
+    "greenwashing_factor": "宣稱減少化學藥劑用量，但未說明技術升級的具體內容及對環境的整體影響",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Relations",
+    "page_number": "12",
+    "report_claim": "人人都是共融職場行動家，民國113年達14萬9565參與人次",
+    "greenwashing_factor": "強調共融職場，但未說明實際政策與具體成效",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Air Quality",
+    "page_number": "12",
+    "report_claim": "空汙防制新技術，降低40%氮氧化物排放",
+    "greenwashing_factor": "宣稱降低空氣汙染，但未提供具體技術細節及對周邊環境的影響評估",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Management of ESG",
+    "page_number": "21",
+    "report_claim": "台積公司遵循《ESG 政策 》的願景與使命，由董事會／提名及公司治理暨永續委員會督導企業永續發展，並以「ESG指導委員會」與「ESG委員會」做為二大管理平台。",
+    "greenwashing_factor": "宣稱遵循 ESG 政策，但缺乏具體目標和績效指標。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Management of ESG",
+    "page_number": "21",
+    "report_claim": "ESG 指導委員會由董事長擔任主席、ESG委員會主席擔任執行秘書，每季與經營團隊共同檢視攸關公司營運的 ESG 議題，確立各議題的中長期發展策略與目標。",
+    "greenwashing_factor": "高階主管參與 ESG 議題，但未說明決策如何影響實際行動和績效。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Business Ethics",
+    "page_number": "22",
+    "report_claim": "台積公司以「誠信正直」的核心價值實踐公司治理、從業道德、法規遵循與風險管理最高標準，同時兼顧所有利害關係人利益，追求企業營運永續。",
+    "greenwashing_factor": "宣稱核心價值為誠信正直，但缺乏具體案例和證據支持。",
+    "risk_score": "3"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "23",
+    "report_claim": "淨零永續是台積公司推動綠色製造的目標，致力推動節能減碳、碳零排放、多元水資源環境零衝擊與資源循環零廢棄，並支持生物多樣性，奠定永續營運基石。",
+    "greenwashing_factor": "過於籠統地描述環境目標，缺乏具體的量化目標和時間表。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "24",
+    "report_claim": "因應淨零排放目標及RE 承諾，提升再生能源使用比例，並精進綠色製造績效。",
+    "greenwashing_factor": "提及提升再生能源比例，但未提供基期、具體目標和達成進度。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Water Management",
+    "page_number": "24",
+    "report_claim": "將提升水資源正效益 納入應對氣候變遷核心策略，透過使用再生水、開發與復育多元水資源，降低環境衝擊",
+    "greenwashing_factor": "提及提升水資源效益，但未提供具體定義，目標和衡量方式",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "24",
+    "report_claim": "更新《全球共融職場宣言 》，持續支持成立員工資源團體，深化全球化人才培育與成長",
+    "greenwashing_factor": "更新共融宣言但未提供具體執行措施和績效指標",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Supply Chain Managem",
+    "page_number": "24",
+    "report_claim": "針對在台設廠的第一階原物料供應商推出減碳補助計畫 ，鼓勵汰換或新設相關設備，提升價值鏈減排效益",
+    "greenwashing_factor": "只針對第一階供應商，減碳範圍可能有限",
+    "risk_score": "3"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Supply Chain Managem",
+    "page_number": "24",
+    "report_claim": "首次將供應商人權管理績效列入永續目標，精進人權管理作為",
+    "greenwashing_factor": "首次將人權納入目標，表示過去可能缺乏關注",
+    "risk_score": "3"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Stakeholder Engageme",
+    "page_number": "25",
+    "report_claim": "台積公司藉由TDDM方法學，每年依照不同的調查目的，執行重大議題的盤點與分析，形塑一個完整的調查週期。",
+    "greenwashing_factor": "使用複雜方法學，但未明確說明利害關係人如何影響公司決策。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Board Independence",
+    "page_number": "29",
+    "report_claim": "台積公司提供高階主管限制員工權利新股，將各年度可既得的最高股數設定為 110%，其中 100%依據台積公司股東總報酬率指標相對達成情形計算，再由薪酬暨人才發展委員會評估永續影響力指標的當年度ESG成果，於可既得股數正負 10%區間內調整。",
+    "greenwashing_factor": "將高階主管薪酬與 ESG 成果連結，但 ESG 權重較低，可能不足以推動實質改變。",
+    "risk_score": "3"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Community Relations",
+    "page_number": "35",
+    "report_claim": "台積電文教基金會發揮社會影響力，提供教育及藝文資源，塑造多元舞台，培育新時代全方位人才",
+    "greenwashing_factor": "未提供具體證據證明這些活動對社區帶來的影響",
+    "risk_score": "3"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Sustainability Impac",
+    "page_number": "36",
+    "report_claim": "立基於「技術領先、卓越製造、客戶信任」三大競爭優勢，台積公司運用「財務、製造、智慧、人力、自然、社會」六大資本，結合財務損益（Profit and Loss）思維，從外部觀點出發，透過因果關係導向的永續衝擊路徑（Sustainability Impact Pathway），建構以三重盈餘（Triple Bottom Line）為基礎的價值創造模式",
+    "greenwashing_factor": "使用大量術語，但未明確說明如何將這些概念轉化為具體的行動和改善。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "41",
+    "report_claim": "台積公司秉持「誠信正直、強化環保、關懷弱勢」的ESG使命，透過「ESG執行架構 」實踐永續治理，並聚焦「綠色製造、建立責任供應鏈、打造健康共融職場、培育人才及關懷弱勢」ESG五大方向，推動營運成長與永續發展並行",
+    "greenwashing_factor": "聲稱致力於環保，但未提供具體可量化的目標或實際行動。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "41",
+    "report_claim": "台積公司秉持「誠信正直、強化環保、關懷弱勢」的ESG使命，透過「ESG執行架構 」實踐永續治理，並聚焦「綠色製造、建立責任供應鏈、打造健康共融職場、培育人才及關懷弱勢」ESG五大方向，推動營運成長與永續發展並行",
+    "greenwashing_factor": "聲稱致力於社會責任，但未提供具體可量化的目標或實際行動。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Business Ethics",
+    "page_number": "41",
+    "report_claim": "台積公司秉持「誠信正直、強化環保、關懷弱勢」的ESG使命，透過「ESG執行架構 」實踐永續治理，並聚焦「綠色製造、建立責任供應鏈、打造健康共融職場、培育人才及關懷弱勢」ESG五大方向，推動營運成長與永續發展並行",
+    "greenwashing_factor": "提及誠信正直，但缺乏具體政策或案例說明如何落實。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "42",
+    "report_claim": "台積公司依循「瞭解與定義優先順序」、「設定目標與整合」、「揭露與溝通」三大步驟，從五大永續落實清潔生產，領先開發高效節能半導體技術以因應氣候變遷，促進全球永續發展",
+    "greenwashing_factor": "提及清潔生產和節能技術，但沒有提供具體的節能目標或成果數據。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "42",
+    "report_claim": "營造安全健康、公平、共融且重視人權的工作環境，釋放員工潛能",
+    "greenwashing_factor": "聲稱重視員工權益，但缺乏具體政策或數據佐證。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Supply Chain Managem",
+    "page_number": "42",
+    "report_claim": "台積公司致力落實負責任採購，在技術、品質、交期、人權、環保安全各方面與供應鏈夥伴積極合作。面對氣候變遷的嚴峻挑戰，更進一步強化綠色創新與氣候韌性，一同為打造半導體低碳供應鏈而不懈努力",
+    "greenwashing_factor": "聲稱致力於負責任採購和低碳供應鏈，但缺乏具體措施和目標。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "46",
+    "report_claim": "為激勵同仁善用AI及數位工具釋放創新，台積公司自民國112年起舉辦數位卓越競賽（Digital Excellence Conference），促進跨廠處間分享數位轉型應用成果，共吸引超過50個廠處參與，連續二年報名件數均超過200件。本屆競賽呼應全球永續發展趨勢，新增「Green AI Award」獎項，共6件報名參賽",
+    "greenwashing_factor": "提及Green AI，但對於AI的實際節能效果未提供量化數據。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Water Management",
+    "page_number": "45",
+    "report_claim": "EUV餘氫再利用，轉型綠色能源; 再生水導入先進製程應用; 首座循環經濟示範中心，廢棄資源點石成金; 優化防制設備處理機制，氧化亞氮削減率達 90 %",
+    "greenwashing_factor": "提到一些環境措施，但是沒有明確說明這些措施的總體影響或是否足以抵消其環境足跡。",
+    "risk_score": "3"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Intellectual Propert",
+    "page_number": "51",
+    "report_claim": "台積公司依據企業經營目標及公司治理原則，制訂四大智慧財產權管理政策與目標，以專利及營業秘密雙軌保護技術發明創新與商業機密資訊，強化「技術領先、卓越製造、客戶信任」三大競爭優勢。技術領先方面，智權與研發團隊緊密合作，針對公司前瞻性及近中長程技術研發藍圖及執行計畫，設定智權產出目標，超前部署每一世代製程技術核心專利，涵蓋最新2奈米及A16技術，積極建構全球專利戰略版圖，確保技術領導地位",
+    "greenwashing_factor": "雖然專利保護很重要，但這本身不直接關係到環境或社會責任。除非專利是關於環境友好技術，否則這可能被視為轉移焦點。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "61",
+    "report_claim": "台積公司積極與各級學校、教育及研究機構合作，致力建立並深化校園合作計畫，培育人才，提升全球半導體人才素質與競爭力。\n總受益人次74,384\n總投入金額7.82億元\n全球合作學校105所",
+    "greenwashing_factor": "受益人次與金額的比例沒有明確說明，無法判斷效益。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "62",
+    "report_claim": "台積電與均一平台教育基金會合作，啟動「TSMC for Education」專案，打造「我的半導體大冒險 」線上互動學習專區，從生活中的科技產品出發，循序漸進帶領國中生理解半導體的基本原理、功能及應用。113年此學習專區共累積超過3.9萬使用人次，使用者遍及全台灣含離島所有行政區；課程滿意度在滿分5分中達4.57分，完課率則為94.45%，是均一平台所有課程中最高。",
+    "greenwashing_factor": "雖有數據支持，但缺乏長期追蹤學習成效的資訊。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "63",
+    "report_claim": "台積電文教基金會舉辦「女科學家之旅」活動，113年超過1,000名女性學子參與；此外結合「挺身而進，成就更好的妳」職涯講座，邀請已畢業的女性校友與學子分享產業趨勢及個人成長經驗，啟發其對STEM的興趣，吸引逾3,000名女性學子參與。為進一步加速培育未來女性科技研發人才，台積公司與18所學校合作設立「女高中生獎學金」，提供充足支持與資源，鼓勵更多女性學子投身STEM領域。",
+    "greenwashing_factor": "僅描述參與人數，未說明獎學金具體金額或後續追蹤。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "63",
+    "report_claim": "台積公司自民國112年起與3所高工學校合作推動「營運組織設備星芒計畫」，透過校園分享會、企業參訪與獎助學金等方式，培養學子擁有設備機台改造與廠務工程所需的實作技能，激發持續學習並投身半導體產業的興趣，進而擴大產業人才庫。民國113年參與學生達218人次，歷年總計327人次。",
+    "greenwashing_factor": "缺乏計畫詳細內容和長期影響的評估",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "64",
+    "report_claim": "台積公司透過「大學晶圓快捷專案」為全球17所大學提供製程技術，支持師生落實創新的電路或系統設計並驗證其設計有效性。民國 113 年合作學校共發表80篇論文，涵蓋高速有線通訊、電子元件、電機工程、記憶體內運算、人工智慧、安全防護、毫米波系統、生醫電路系統與物聯網等領域，其中14篇發表於學術權威期刊",
+    "greenwashing_factor": "論文發表數僅能代表研究成果，無法完全評估專案對學生職涯發展的影響。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "64",
+    "report_claim": "台積公司與國內外多所大學密切合作，投入涵蓋先進半導體材料、元件、製程、設備、封裝技術、綠色製造、電路設計等領域的產學計畫，與31所國內大學及8所海外大學、共計319名教授執行391件產學合作專案；自民國102年以來，已累計提出311件美國專利申請。",
+    "greenwashing_factor": "專利申請數無法代表實際商業價值，綠色製造的具體措施也需要更詳細的說明。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "65",
+    "report_claim": "台積公司與德國塞克森斯及德勒斯登工業大學共同簽署「半導體人才培育計畫（STIPT）」合作協議，透過為期6個月的台灣實務訓練，提升德國學子的專業技能與跨文化合作能力。首批4名交換學生依據各自專業背景、前2個月於國立臺灣大學選修半導體課程；後2個月於台積公司新訓中心學習。",
+    "greenwashing_factor": "只提到初步的訓練計畫，沒有學生的回饋或計畫成果的長期追蹤。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "65",
+    "report_claim": "台積公司與日本九州大學合作推出為期8周的半導體課程，由台積公司JASM經理級以上主管擔任講者，授課內容涵蓋半導體元件、製程、製造、設計、封裝基礎知識，以及產業應用與未來挑戰，為九州地區7所大學學生提供結合理論與應用的學習體驗，共計173人次完成課程。",
+    "greenwashing_factor": "課程內容僅為基礎知識，對於學生未來職涯發展的實質幫助不明顯。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "65",
+    "report_claim": "台積公司攜手國內大學開設半導體學程，涵蓋六大主修領域，民國113年合作大學累計達17所共57個學程，吸引超過1萬2800名學生修習；其中，更特別開設「半導體製程─設備與技術」、「半導體智慧製造」及「半導體通識講座」3門課程，並由台積公司同仁擔任業師。同時，台積公司亦釋出內部培訓資源，開放半導體學程學子至台積公司新人訓練中心上課，已累計逾1840人次完訓且通過測驗。",
+    "greenwashing_factor": "雖然有量化數據，但缺乏這些學程是否真正提升學生就業競爭力的證據，且僅是培訓資源的釋出，實質的投入程度仍待評估。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "66",
+    "report_claim": "台積公司為降低半導體設計學用落差，推出N16製程的鰭式場效電晶體（FinFET）前瞻電路設計教育套件（ADFP），並與OIP夥伴合作，協助大學提升超大積體電路（VLSI）設計教學。截至民國113年，該套件已成功推廣至全球150所大學，6300多名教授獲得免費授權，嘉惠超過多名學子於課程中使用。台積公司亦將套件提供給「大學校院積體電路設計競賽」的學子使用",
+    "greenwashing_factor": "提供套件的具體效益，例如學生獲獎情況或就業機會，並未提及。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "66",
+    "report_claim": "台積公司攜手國立臺灣大學與國立陽明交通大學的管理學院推出「企業管理人才培育課程」，從全球視角剖析半導體產業的關鍵管理議題，培養學子分析思維與創新能力，構建完整且系統化的學習架構，協助學子掌握半導體產業的挑戰與應對策略，共吸引81名學子參與。",
+    "greenwashing_factor": "課程內容和效果沒有詳細說明，僅描述課程主題和參與人數。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "66",
+    "report_claim": "台積公司每年透過聯合研發中心舉辦菁英種子營，探討半導體在生活中的應用與未來技術發展，深化學子對半導體的理解。民國113年吸引87名大學生參與，整體滿意度超過9成。",
+    "greenwashing_factor": "僅說明滿意度，沒有說明活動的具體內容、參與者的後續發展或對半導體領域的實際貢獻。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "66",
+    "report_claim": "台積公司與國立陽明交通大學資訊工程學系合作，推出「雲原生軟體開發與最佳實踐」的研究所課程，並進一步擴展至國立臺灣大學資訊工程學系與資訊管理學系。截至民國113年，2校共計開設4班次，累計508名學子修課",
+    "greenwashing_factor": "僅提供參與人數，缺乏課程的實際成效、學生在相關領域的就業情況等。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "66",
+    "report_claim": "台積公司於合作的大學研究中心設立獎學金，鼓勵學子參與前瞻半導體技術研究。其中，博士級研究人才是產業創新的關鍵，因此於民國109年特別設立「台積電博士獎學金」，鼓勵並支持優秀學子攻讀半導體相關博士學位，民國113年新增47名獎助學子，累計154名博士生受惠，其中16位已取得博士學位。",
+    "greenwashing_factor": "沒有說明獎學金的具體金額和對學生研究成果的影響，也沒有追踪已畢業博士生的職業發展。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "68",
+    "report_claim": "NMP 全公司蝕刻製程(N 甲基吡咯烷酮)替代 海外蝕刻製程100%完成替代",
+    "greenwashing_factor": "沒有提供NMP替代方案的詳細資訊，以及替代方案對環境影響的比較。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Waste Management",
+    "page_number": "68",
+    "report_claim": "采鈺公司含PFHxA(全氟己酸)相關物質光阻替代64%采鈺公司含PFHxA相關物質光阻替代完成",
+    "greenwashing_factor": "沒有說明剩餘36%的替代計畫，以及替代材料的環境影響。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Business Ethics",
+    "page_number": "81",
+    "report_claim": "台積公司遵循國際資安規範及標準，通過「ISO 27001：國際資訊安全管理系統」認證」，亦實踐資訊保護政策及標準程序，提供客戶如自家工廠般最高規格的機密資訊保護。",
+    "greenwashing_factor": "可能存在誇大，沒有提供具體的數據支持資訊安全保護的有效性，僅僅提到通過ISO認證。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Data Security",
+    "page_number": "81",
+    "report_claim": "台積公司亦建立全新的安全傳輸平台（CSFT），透過「權限卡控、建立安全合法的作業環境、處理進度報表」三大功能的一站式服務，強化客戶線路圖（GDS）資訊保護機制及系統使用效率",
+    "greenwashing_factor": "描述了安全措施，但未提供具體數據證明其有效性，例如數據洩露事件的減少。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Business Ethics",
+    "page_number": "82",
+    "report_claim": "民國113年台積公司於客戶自助式晶圓指令系統「TSMC-Online」推出全新「檔案傳輸協定（FTP）帳戶服務」，將客戶申請FTP帳號時間由3.5天大幅縮短為12秒，並精進資安保護機制。",
+    "greenwashing_factor": "強調效率提升，但資安保護機制的細節和有效性不明確。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "84",
+    "report_claim": "台積公司致力落實負責任採購，在人權各方面與供應鏈夥伴積極合作",
+    "greenwashing_factor": "缺乏具體的人權保障措施的描述，僅為籠統的承諾。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Supply Chain",
+    "page_number": "84",
+    "report_claim": "補助供應鏈減碳專案 8,400萬(新台幣)",
+    "greenwashing_factor": "只提到補助金額，沒有具體說明減碳效果或專案細節。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "87",
+    "report_claim": "供應商碳排放量減少 4% ",
+    "greenwashing_factor": "碳排放量減少的基線(BAU)不明確，缺乏減少幅度的情境說明。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "88",
+    "report_claim": "台積公司要求供應商遵循台積公司《供應商行為準則》，並填寫自我評估管理問卷（SAQ），促進供應商自我管理能力",
+    "greenwashing_factor": "僅僅要求遵循行為準則，沒有說明具體如何監督和執行。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Supply Chain",
+    "page_number": "89",
+    "report_claim": "民國113年，延續供應鏈共融發展，台積公司提前完成第一階供應商 100% 訂定共融職場相關政策或聲明的長期目標； 5家供應商取得女性擁有企業（Women-owned Business）多元化認證",
+    "greenwashing_factor": "完成了共融職場政策的制定，但聲明與實際行動的連結性不明確，也可能只是表面功夫。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Business Ethics",
+    "page_number": "90",
+    "report_claim": "台積公司建立謹慎的合作評估流程，包括合作前須透過公正第三方評估，確認其商業實力與道德操守；要求供應商簽署《供應商行為準則規範遵循及從業道德聲明》，確保其業務活動合法性與正當性",
+    "greenwashing_factor": "強調了評估流程，但第三方評估的標準和流程細節沒有揭露，透明度不足。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Supply Chain",
+    "page_number": "96",
+    "report_claim": "台積公司致力提升供應鏈永續風險控管，民國113年建立「供應商信任模型－全方位風險評估技術」，整合「供應商SAQ、實地稽核結果、第三方公開資訊、匿名舉報系統」四大供應商管理作為",
+    "greenwashing_factor": "建立了風險評估模型，但是四大管理作為如何整合、如何量化風險、如何應對風險等細節沒有具體描述。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "101",
+    "report_claim": "台積公司於各個營運據點推動在地採購，訂立採購目標，持續推動或維持在地採購比例，達到長期目標。邀請各國供應商至各營運據點設立生產、研發、培訓單位。",
+    "greenwashing_factor": "在地採購比例的提升是否真正帶來環境效益（如減少運輸碳足跡）需要更詳細的數據支持，例如運輸距離、運輸方式等。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Materials Sourcing",
+    "page_number": "101",
+    "report_claim": "台積公司民國113年發布《永續原物料政策》，成立永續原物料專案管理小組，於SAQ中加入供應商原物料永續認證的風險係數評估。調查、評估並鑑別供應鏈受管制物料汰換的潛在機會點，並將第一階供應商 %完成逐步淘汰受管制物料列為長期永續目標。",
+    "greenwashing_factor": "僅提到第一階供應商，未說明後續階供應商的管理。政策的有效性需要具體的執行細節和成果數據。",
+    "risk_score": "3"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Supply Chain Managem",
+    "page_number": "102",
+    "report_claim": "台積公司要求產品中含有錫、鉭、鎢、金的供應商遵循負責任礦產相關規範採購，並簽署負責任礦產聲明書；民國 年起，對客戶揭露其產品使用到鈷的來源熔煉廠，民國 年將鈷正式加入供應商行為準則中。",
+    "greenwashing_factor": "僅聲明要求供應商遵守規範，未說明具體的執行和監督機制，以及違規處理方式。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "103",
+    "report_claim": "台積公司建立供應商環境資訊數位平台收集供應商工廠及產品環境資訊，提高原物料數據品質。民國113年為強化關鍵排放源供應商減排進度管理，開發台積公司供應商碳管理工具（TSMC Supplier Emission Management Tool）予供應商使用。",
+    "greenwashing_factor": "平台和工具的有效性取決於供應商的參與度和數據的準確性。需要驗證數據的真實性和工具的實際減排效果。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "103",
+    "report_claim": "台積公司邀請前75%採購支出的原物料及設備供應商透過CDP揭露碳管理進度，共計135家供應商受邀並達100%回覆率。根據問卷分析結果， % 供應商已設定減排目標； % 供應商提供範疇三中排放量占比最高的「購買商品及服務碳排數據」。",
+    "greenwashing_factor": "僅僅是揭露碳管理進度，並不代表實際的減排效果。需要驗證這些供應商的減排目標是否具有足夠的雄心，以及是否採取了有效的減排措施。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "103",
+    "report_claim": "台積公司與民國 年分別提出 8,400萬元（新台幣）補助供應鏈減碳，可帶來年減碳 45 萬噸。成功與供應商合作開發顯影廢液與銅錳合金靶材回收再利用技術。",
+    "greenwashing_factor": "補助金額與減碳量的關聯性需要更清晰的數據支持。需要說明補助如何有效推動減碳，以及這些回收技術的實際應用範圍。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Waste Management",
+    "page_number": "104",
+    "report_claim": "攜手供應商強化水與廢棄物管理，民國 年邀請 家供應商參加溫室氣體議定書（GHG protocol）範疇三盤查訓練、辦理上游原物料供應鏈碳排管理工作坊。當年度供應商節水量新增 , 萬立方公尺、累計 , 萬立方公尺；供應商平均廢棄物回收率達為 %。",
+    "greenwashing_factor": "僅僅是提供訓練和工作坊，並不代表實際的改善效果。需要提供更多關於節水和廢棄物回收的具體措施和成果數據。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "105",
+    "report_claim": "台積公司與供應商密切合作，民國 年推動第二波供應商再生能源聯合採購，並將創新視為提升減碳效益的重要關鍵，攜手供應商提升氮氣使用效率、開發電子級化學品回收再利用與電子級金屬材料循環再生等。",
+    "greenwashing_factor": "聯合採購再生能源是否真正帶來額外的再生能源增量，而非僅是轉移現有資源？需要提供更多關於這些創新合作項目的具體成果和減碳效益。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Community Relations",
+    "page_number": "106",
+    "report_claim": "台積公司「循環箱大聯盟 」換箱計畫，串聯台積公司、社會企業、供應商及社福團體，透過ESG創新合作模式提升資源循環利用，實現環境與社會共好。截至民國 年，已吸引 家耗材供應商加入「換箱計畫」，使 用循環箱取代一次性紙箱，累計使用 , 個循環箱，減碳 . 公噸。",
+    "greenwashing_factor": "循環箱的材料和生產過程是否環保？與一次性紙箱相比，是否真的能減少碳排放？需要提供更詳細的生命週期評估數據。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "108",
+    "report_claim": "民國113年目標：單位產品溫室氣體排放量（公噸－二氧化碳當量／十二吋晶圓當量－光罩數）減少10%（民國109年為基準年），未達成。海外子公司全部使用再生能源 ；再生能源使用比例占全公司用電量14.1%。累積節能率15.5%",
+    "greenwashing_factor": "未達成減排目標的原因是什麼？具體措施和未來計畫是什麼？僅僅是聲明目標，並未詳細說明如何應對挑戰。",
+    "risk_score": "3"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Climate Change Adapt",
+    "page_number": "109",
+    "report_claim": "民國 113 年台積公司亦啟動「Eco Plus! 生態共融計畫」，並發布首本《氣候暨自然報告 》，強化生物多樣性保育行動；供應鏈管理方面，透過制訂「T.S.M.C.供應鏈減碳行動策略 」，並要求關鍵排放源供應商簽署溫室氣體減排協議，驅動整體產業鏈綠色轉型，與台積公司一同邁向零碳永續發展。",
+    "greenwashing_factor": "「Eco Plus! 生態共融計畫」和《氣候暨自然報告》是否具有具體的目標和衡量標準？生態保育的具體措施是什麼？減排協議的約束力如何？需要提供更多細節。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Business Ethics",
+    "page_number": "112",
+    "report_claim": "ESG指導委員會確認申請SBT，指示相關單位制訂執行計畫與財務規畫。",
+    "greenwashing_factor": "尚未提出具體計畫與財務規劃，僅表示確認申請，空洞的承諾",
+    "risk_score": "3"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "113",
+    "report_claim": "台積公司每年藉由經第三方查證的溫室氣體盤查結果檢視整體減碳成效，民國 年溫室 氣體總排放量約 , 萬公噸二氧化碳當量， 來自含氟溫室氣體與氧化亞氮等範疇一製程直接排放占 %，電力使用造成的範疇二能源間接排放占 %，為最大排放源。",
+    "greenwashing_factor": "排放量上升，聲稱會檢討，但未提出更積極之措施",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Water Management",
+    "page_number": "116",
+    "report_claim": "台積公司每 年執行一次碳足跡及水足跡調查，並通過ISO 與ISO 驗證。 根據民國 年碳足跡調查結果，晶圓製造階段的環境影響較大，占 %，原料階段占%。",
+    "greenwashing_factor": "需關注後續改善方案，若長期沒有進展，有漂綠風險",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "117",
+    "report_claim": "民國 年台積公司台灣廠區全年再生能源 使用量增加至 . 億度，同時維持全球辦公 室 %使用再生能源，亦 %抵銷海外 據點因電力使用產生的二氧化碳排放量，已 連續 年達成海外子公司零電力碳排放",
+    "greenwashing_factor": "過度強調再生能源使用，但未揭露更多實際碳排放量，可能藉此掩蓋其他高污染活動",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "121",
+    "report_claim": "照明節能, 用量管理, 各項節能措施減少能耗與碳排放",
+    "greenwashing_factor": "未提供節能措施的具體執行細節和驗證方法，可能誇大實際效益。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "121",
+    "report_claim": "空調節能, 機組汰換",
+    "greenwashing_factor": "僅列出節能度數與減碳量，缺乏對舊機組能耗的比較，難以評估實際改善程度。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "121",
+    "report_claim": "效能提升, 新機規格, 使用高效率變壓器與節能元件",
+    "greenwashing_factor": "未明確說明高效率的具體標準，以及如何驗證這些設備的節能效果。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "121",
+    "report_claim": "生產機台, 待機節能, 機台修改, 不斷電系統節能模式",
+    "greenwashing_factor": "宣稱節能但缺乏具體數據支持，未說明節能模式的啟動條件和實際節能效果。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Biodiversity",
+    "page_number": "122",
+    "report_claim": "強化自然與生物多樣性保護",
+    "greenwashing_factor": "雖然有提到相關計畫，但缺乏量化數據，難以評估對生物多樣性的實際貢獻。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "122",
+    "report_claim": "台積公司改良無塵室風機結構，提升節能效益",
+    "greenwashing_factor": "聲稱提升運轉效率，但主要著重在技術規格的改良，未提供長期節能效益的追蹤數據。",
+    "risk_score": "3"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "123",
+    "report_claim": "EUV 餘氫再利用，轉型綠色能源",
+    "greenwashing_factor": "描述了技術，但缺乏規模化的數據，無法評估對公司整體能源結構的影響。",
+    "risk_score": "3"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Water Management",
+    "page_number": "124",
+    "report_claim": "單位產品用水量上升",
+    "greenwashing_factor": "直接承認未達成目標，相對誠實，但需要更詳細解釋原因和改進計畫。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Water Management",
+    "page_number": "125",
+    "report_claim": "台積公司力行水資源永續管理",
+    "greenwashing_factor": "屬於口號式宣傳，需要更多具體行動和數據來支持。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Water Management",
+    "page_number": "125",
+    "report_claim": "優化水汙防治效能",
+    "greenwashing_factor": "優化但沒有數據支持",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Water Management",
+    "page_number": "126",
+    "report_claim": "台積公司水資源中心統籌廠內用水、多元水資源開發與技術管理",
+    "greenwashing_factor": "描述組織架構，缺乏實際行動和成果的展示。",
+    "risk_score": "0"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Water Management",
+    "page_number": "127",
+    "report_claim": "擴大再生水使用",
+    "greenwashing_factor": "僅聲稱擴大使用，未提供具體擴大比例和影響。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Water Management",
+    "page_number": "128",
+    "report_claim": "良好的水管理制度",
+    "greenwashing_factor": "僅是制度，缺乏實際數據和執行效果的展示。",
+    "risk_score": "0"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Water Management",
+    "page_number": "129",
+    "report_claim": "落實「降低系統排水損失、廠務系統用水減量、增加廠務廢水回收、提升系統 產水率」四大節水措施",
+    "greenwashing_factor": "落實但沒有數據支持",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Water Management",
+    "page_number": "130",
+    "report_claim": "水足跡調查",
+    "greenwashing_factor": "雖然有調查，但未明確說明如何利用調查結果來改善水資源管理。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Water Management",
+    "page_number": "130",
+    "report_claim": "環境教育推廣",
+    "greenwashing_factor": "僅是教育推廣，需要更多在實際運營中減少用水的措施。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Water Management",
+    "page_number": "131",
+    "report_claim": "致力善用每一滴水資源",
+    "greenwashing_factor": "口號式宣傳",
+    "risk_score": "0"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Water Management",
+    "page_number": "132",
+    "report_claim": "再生水導入先進製程應用",
+    "greenwashing_factor": "再生水導入先進製程應用",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Water Management",
+    "page_number": "133",
+    "report_claim": "持續推動廢水資源化管理",
+    "greenwashing_factor": "僅是推動，需要更多實際成果的展示。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Water Management",
+    "page_number": "134",
+    "report_claim": "廢水分類及 排放至園區 河川 回收 再利用",
+    "greenwashing_factor": "流程描述，缺乏每個環節的實際回收比例。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Waste Management",
+    "page_number": "135",
+    "report_claim": "持續推動源頭分類減廢",
+    "greenwashing_factor": "推動，但未提供具體成效數據",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Waste Management",
+    "page_number": "135",
+    "report_claim": "與廠商合作研究新的廢棄物回收技術",
+    "greenwashing_factor": "研究中，無明確成果",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Waste Management",
+    "page_number": "136",
+    "report_claim": "透過稽核輔導及應用科技 追蹤，提升廠商自主管理 能力及落實資源循環",
+    "greenwashing_factor": "稽核輔導追蹤，無具體管理提升",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Waste Management",
+    "page_number": "137",
+    "report_claim": "積極實踐「廢棄物產出最小化、 資源循環使用最大化、廠商管理最優化」目標",
+    "greenwashing_factor": "積極實踐，但未提供相關數據",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Waste Management",
+    "page_number": "138",
+    "report_claim": "單位晶圓委外廢棄物處理量趨勢圖",
+    "greenwashing_factor": "趨勢圖，無具體管理提升",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Waste Management",
+    "page_number": "139",
+    "report_claim": "源頭減量",
+    "greenwashing_factor": "僅是源頭減量，需要更多在實際運營中減少浪費的措施。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Waste Management",
+    "page_number": "140",
+    "report_claim": "致力創造綠色循環體系",
+    "greenwashing_factor": "僅是致力，需要更多實際成果的展示。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Waste Management",
+    "page_number": "141",
+    "report_claim": "台積公司擴大應用種廢液轉製為有價再資源高值化行動方案，目標降低外運及回用於台積公司製程使用。規畫中推動有機汙泥、廢鋁蝕刻液及鋁塑包裝袋焚化轉再利用專案。",
+    "greenwashing_factor": "僅說明計畫，未揭露實際執行成果與具體數據。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Waste Management",
+    "page_number": "142",
+    "report_claim": "台積公司與供應商合作針對廢鋁塑包裝袋進行回收再利用研究，開發出能將鋁箔層與塑膠完全分離的處理技術，預計民國114年導入所有台灣廠區，可年減焚化量1,350公噸。將分離出來的塑膠粒再製為100%回收材質的筆記本封面與封底。",
+    "greenwashing_factor": "強調未來預計可減少的焚化量，但實際減量效果仍待觀察。將廢棄物再製成筆記本，但未說明筆記本的具體用途與數量，可能僅為少量展示。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "142",
+    "report_claim": "台積公司發起「外送環保認證」活動，鼓勵同仁購買具外送環保認證的店家商品，減少塑料使用，創造綠色生活。",
+    "greenwashing_factor": "鼓勵員工環保行為，但對於公司整體的環境影響可能有限。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Waste Management",
+    "page_number": "143",
+    "report_claim": "台積公司建置台中零廢製造中心，將製程產出的廢棄物轉製為工業級原物料，預計每年可減少2萬公噸的廢棄物委外處理量；民國113年已處理廢棄物9,400公噸，創造新台幣8,000萬元成效。與環境部合作發展「薄膜碳捕捉技術」，並以台中零廢製造中心為全台首個示範場域。",
+    "greenwashing_factor": "強調零廢棄目標，但未提供整體廢棄物產生量，難以評估實際成效。薄膜碳捕捉技術仍處於示範階段，實際應用效果未知。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Supply Chain Managem",
+    "page_number": "143",
+    "report_claim": "台積公司要求清運廠商須遵守《供應商運輸管理白皮書》規範，並透過專屬GPS衛星清運車隊系統追蹤廢棄物清運過程，落實透明化管理。針對廢液槽車廠商首次舉辦清運安全座談會，建立季度教育訓練制度。",
+    "greenwashing_factor": "強調供應鏈管理，但未揭露具體稽核結果與改善措施。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Supply Chain Managem",
+    "page_number": "144",
+    "report_claim": "台積公司透過「廢棄物處理廠商永續力躍昇專案」進行跨組織合作，進行書面審查及實地勘查，審慎遴選合作廠商。民國113年執行69家廢棄物處理廠商實地稽核，比例達100%，共完成98項缺失改善，評鑑獲得優良以上的廠商比例提升至88%，其中傑出比例達32%；取得ISO14001等國際環安衛驗證廠商家數比例達89%。民國113年已有44%廢棄物處理廠商完成建置廢棄物智能追蹤系統。",
+    "greenwashing_factor": "強調供應鏈管理，數據正面，但未揭露不合格廠商的處理方式與後續追蹤。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Air Quality",
+    "page_number": "147",
+    "report_claim": "台積公司採用最佳可行技術處理營運產生的汙染，單位產品空氣汙染物排放量降低47%（民國104年為基準年）。揮發性有機氣體削減率達99%。",
+    "greenwashing_factor": "數據正面，但未說明最佳可行技術的具體內容與成本效益。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Air Quality",
+    "page_number": "147",
+    "report_claim": "民國113年增加晶圓二十廠第1期廠區、晶圓二十二廠第1期廠區、TSMC Arizona第1期廠區、JASM第1期廠區及先進封測六B廠，雖尚未正式生(量)產，仍有固定空汙排放量，因此未達年度目標",
+    "greenwashing_factor": "承認因擴廠導致空汙排放量未達標",
+    "risk_score": "3"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Air Quality",
+    "page_number": "148",
+    "report_claim": "台積公司與供應商合作改造電熱式現址式處理設備，成功將氧化亞氮（N2O）削減率推升至90%、氮氧化物（NOx）排放量再降低40%。民國113年擴大環境檢測中心採檢應用面向，新增廢棄物再生檢測技術，並首辦「自主採樣訓練工作坊」。",
+    "greenwashing_factor": "數據正面，強調技術提升，但未說明改造設備的具體成本與效益。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Air Quality",
+    "page_number": "149",
+    "report_claim": "台積公司透過「新機台及新化學品審查委員會」進行二次審核，民國113年共執行351件，包括170件新機台、181件新化學品審查。第一次以評估新化學品相關風險並建立管控機制為主，第二次則測試確認排放量對環境的影響。",
+    "greenwashing_factor": "強調事前審查，但未說明審查未通過的案例與比例。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Air Quality",
+    "page_number": "150",
+    "report_claim": "民國113年新建廠區晶圓二十廠、晶圓二十二廠第2期廠區、先進封測五B廠已導入低氮氧化物燃燒爐，以低氧燃燒與流場控制技術減少氮氧化物排放量，民國113年揮發性有機氣體削減率達99%。",
+    "greenwashing_factor": "數據正面，強調技術提升，但未說明低氮氧化物燃燒爐的具體成本與效益。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Air Quality",
+    "page_number": "153",
+    "report_claim": "台積公司攜手供應商改造電熱式現址式處理設備，提升氧化亞氮削減率至90%。",
+    "greenwashing_factor": "數據正面，強調技術提升，但未說明改造設備的具體成本與效益。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "154",
+    "report_claim": "台積公司員工全年平均學習時數較前一年增加100.5%。整體薪酬在業界前25%水準。",
+    "greenwashing_factor": "僅強調學習時數與薪酬水平，未說明員工滿意度與流動率。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Occupational Health ",
+    "page_number": "154",
+    "report_claim": "台積公司攜手產官學跨界推出多元尺碼防護衣。",
+    "greenwashing_factor": "強調安全衛生，但未揭露具體事故發生率與改善措施。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Diversity & Inclusio",
+    "page_number": "155",
+    "report_claim": "在「員工意見調查」中「共融職場」結果對比韋萊韜悅《全球高績效企業常模》達前25%水準。女性主管占比達14.6%。新聘技術職新鮮人女性占比達28.7%。",
+    "greenwashing_factor": "數據正面，但未說明具體改善措施與未來目標。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Diversity & Inclusio",
+    "page_number": "156",
+    "report_claim": "台積公司人才願景：我們營造多元共融的環境，激發同仁熱情，成就最棒的您。",
+    "greenwashing_factor": "僅為口號，缺乏具體行動與指標。",
+    "risk_score": "0"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Diversity & Inclusio",
+    "page_number": "157",
+    "report_claim": "台積公司全球員工總數達8萬4,512人，正職員工組成涵蓋51個國籍，其中台灣、中國大陸、美國、日本占總員工數超過98%。",
+    "greenwashing_factor": "僅描述員工組成，未說明多元化政策與具體措施。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Diversity & Inclusio",
+    "page_number": "158",
+    "report_claim": "台積公司參考蓋洛普員工體驗（Gallups Employee Experience），以員工職涯的「吸引、招募、入職、參與、績效、發展、留才／離職」各階段為主軸，設計、規畫並整合各項員工體驗項目，落實共融職場。",
+    "greenwashing_factor": "強調員工體驗，但未說明具體措施與成效。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Diversity & Inclusio",
+    "page_number": "159",
+    "report_claim": "台積公司成立4個員工資源團體Women@tsmc、Global Family@tsmc、Accessibility@tsmc，與美國在地的Veterans@tsmc，聚焦性別、種族／國籍、身心障礙，以及美國退伍軍人身份等多元領域。",
+    "greenwashing_factor": "強調員工資源團體，但未說明參與人數與具體成效。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Diversity & Inclusio",
+    "page_number": "160",
+    "report_claim": "台積公司持續攜手員工資源團體舉辦全球共融職場系列活動 ， 鎖定「行動」（Action）、「公平」（Equity）及「盟友相挺」（Allyship）三大議題，跨界邀請專家詮釋相關概念的實踐，並從公開承諾及提升認知的層次，轉為採取行動促成改變，本屆活動總計吸引超過1萬9,000人次參與。",
+    "greenwashing_factor": "活動參與人數眾多，但未揭露對公司文化的實際影響",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Diversity & Inclusio",
+    "page_number": "161",
+    "report_claim": "為實踐共融職場，台積公司持續與專業協會和智庫交流合作，透過分享自身經驗，對標最佳實踐做法，持續完善共融職場措施，並協助重點議題倡議。台積公司女性持續挖掘，新聘技術職新鮮人女性占比達28.7%。",
+    "greenwashing_factor": "數據呈現女性員工占比，但民國 113 年女性員工占比仍呈下降趨勢，因新聘人力以工程師為大宗，而相關人力市場中女性供給顯著少於男性。可能存在強調成果，但未充分揭露挑戰和改進空間的風險。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Diversity & Inclusio",
+    "page_number": "162",
+    "report_claim": "女性與男性員工整體薪酬比例於各地區/子公司與職務別揭露",
+    "greenwashing_factor": "薪酬比例數據揭露完整，但未提供造成薪資差異的原因分析，可能隱藏潛在的薪酬不平等問題。需要更深入的分析以評估公平性。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Demographic",
+    "page_number": "163",
+    "report_claim": "整體員工占比：年齡層分布、工作地區分布、職務別分布、學歷分布。",
+    "greenwashing_factor": "僅提供員工占比的統計數據，缺乏對數據背後原因的分析，例如，高學歷員工占比高的原因、各地區員工占比差異的原因等。可能為選擇性揭露，未提供充分背景資訊。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Diversity & Inclusio",
+    "page_number": "164",
+    "report_claim": "女性占比：年齡層分布、工作地區分布、職務別分布、學歷分布。",
+    "greenwashing_factor": "與第163頁類似，僅呈現女性在不同人口統計類別中的比例，缺乏對這些比例背後原因的分析，例如，女性在高階管理職位和STEM職位占比依然偏低的原因，以及公司為提升女性在這些領域的參與度所做的努力。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Community Relations",
+    "page_number": "165",
+    "report_claim": "共融行動家活動，透過線上課程、體驗活動和專家講座等多樣化的活動形式，讓同仁從中自我覺察、學習傾聽，進一步同理他人，培養共融意識，孕育出歸屬感與心理安全感。",
+    "greenwashing_factor": "主要描述活動參與人次，但缺乏對活動成效的客觀評估，例如，員工共融意識的提升程度、職場歸屬感與心理安全感的變化等。需要更具體的指標來衡量活動的實際影響。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Business Ethics",
+    "page_number": "166",
+    "report_claim": "落實核心價值，每年執行「核心價值員工意見調查」，並據以落實強化方案。在「員工意見調查」中，「永續敬業度」結果對比《全球高績效企業常模》中排名達前50%水準。全體員工離職率3.5%。",
+    "greenwashing_factor": "雖然有員工意見調查結果，但缺乏對調查方法的詳細說明，例如，調查對象的抽樣方式、調查問卷的設計等。此外，僅提供離職率數據，未分析離職原因，難以判斷員工是否真正認同公司文化和價值觀。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Relations",
+    "page_number": "167",
+    "report_claim": "招募萬位新進員工、新增7,291個優質工作機會。每 年進行「核心價值員工意見調查」， 民國 年共計 萬 份有效問卷，回覆率達 。",
+    "greenwashing_factor": "雖然強調招募人數和優質工作機會，但缺乏對這些工作機會的具體描述，例如，工作內容、薪資待遇、發展前景等。此外，意見調查回覆率高，但未說明如何處理負面反饋，可能存在選擇性揭露。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Diversity & Inclusio",
+    "page_number": "168",
+    "report_claim": "強化多元人才聘用，持續聘用身心障礙者。秉持「志同道合」原則，台積公司用人唯才，將品格與才能視為選才的首要標準。共聘用輕度及中度身心障礙者193人，重度以上身心障礙者499人，整體聘用加權後占比為1%。",
+    "greenwashing_factor": "雖然強調聘用身心障礙者，但子公司采鈺公司全年聘用加權占比未達總員工人數1%，已依法繳納差額補助費。可能存在過度強調成果，但未充分揭露挑戰和改進空間的風險。",
+    "risk_score": "3"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Training",
+    "page_number": "169",
+    "report_claim": "學徒計畫推出技術人員培訓制度，延攬包括廠務、設備、製程及晶圓製造等四類技術員人才。民國 年，台積公司外籍員工總數1,614人，間占全球員工1.9%，新進外籍員工比例則達1.1%。",
+    "greenwashing_factor": "學徒計畫看似完善，但缺乏對培訓內容、師資力量、學員成果的詳細說明。外籍員工占比不高，可能暗示公司在多元文化融合方面仍有提升空間。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Relations",
+    "page_number": "170",
+    "report_claim": "台積公司重視員工的意見與反饋，建立有效的溝通管道以鼓勵員工提供建議，這對於改善管理實踐至關重要。",
+    "greenwashing_factor": "僅列出溝通管道，缺乏對溝通效果的客觀評估，例如，員工意見的採納率、問題解決的效率等。可能為宣傳公司形象，但未提供充分證據支持。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Business Ethics",
+    "page_number": "171",
+    "report_claim": "民國 年，台積公司共收到 5,272 件員工意見與申訴案。其中，經性騷擾申訴處理委員會調查成立案件共28件，不當行為的員工依情節輕重受職務調整、解雇等懲處。",
+    "greenwashing_factor": "雖然揭露了申訴案件數量和處理結果，但缺乏對申訴案件類型的詳細分類和分析。同時，未說明公司如何預防性騷擾事件的發生，可能暗示公司在防治性騷擾方面仍有不足。",
+    "risk_score": "3"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Relations",
+    "page_number": "172",
+    "report_claim": "尊重員工結社自由，定期舉辦勞資會議，所有正職員工皆可參與「全球員工購股計畫」，由台積公司提供15% 購股補助。",
+    "greenwashing_factor": "雖然強調尊重員工權益和提供福利，但缺乏對勞資會議運作情況的詳細說明，例如，勞資雙方意見分歧時如何解決、員工訴求的實現程度等。此外，未說明員工購股計畫的參與率和收益情況，難以判斷員工是否真正受益。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Executive Compensati",
+    "page_number": "173",
+    "report_claim": "台灣廠區核定現金獎金及酬勞總額達新台幣1,405億9,256萬元，同時民國113年49%的年度調薪作業仍依既訂規畫執行。",
+    "greenwashing_factor": "僅列出獎金總額和調薪比例，缺乏對薪酬結構和分配公平性的分析。此外，未說明高階主管和普通員工的薪酬差距，可能存在薪酬不平等問題。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Benefits",
+    "page_number": "174",
+    "report_claim": "提供完善福利，於各廠區設立哺（集）乳室，方便女性員工集乳需求。台積寶寶茁壯計畫正式實施，計畫涵蓋從孕前、孕期、生產、 歲前、 歲至 歲及 歲前各階段，予以相應資源",
+    "greenwashing_factor": "詳細列出公司提供的福利，但缺乏對這些福利的實際使用情況和員工滿意度的評估。此外，未說明公司如何平衡員工工作和家庭生活，可能存在員工工作壓力過大問題。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Retention",
+    "page_number": "175",
+    "report_claim": "穩固的退休金制度，台灣廠區及采鈺公司每月按員工薪資總額 %提撥員工退休金基金。設立台積幼兒園，可容納 名學童，提供員工 至 歲學齡前子女安全優質的學習環境",
+    "greenwashing_factor": "雖然強調退休金制度和幼兒園福利，但缺乏對退休金制度的可持續性和幼兒園服務質量的評估。此外，未說明公司如何幫助員工規劃退休生活，可能存在員工退休後生活質量下降風險。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Retention",
+    "page_number": "176",
+    "report_claim": "新人職場適應學習方案，推出包含繁體中文、簡體中文、英文及日文的多語系 WeCare Survey問卷，定期瞭解全球新進員工適應狀況，民國113年全體員工離職率為3.5%。",
+    "greenwashing_factor": "儘管報告中提到持續推動新人職場適應訓練以加速新進員工融入職場並提升留任率，但同時指出民國113年內新進員工離職率與民國112年相當，未見顯著改善。若公司僅強調正面資訊，而未對未能改善之情況進行進一步分析或提出改進計畫，可能被視為漂綠。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Health & Sa",
+    "page_number": "181",
+    "report_claim": "台積公司於民國113年成立「高階主管發展委員會」，負責監管高階人才接班計畫，確保人才梯隊完備，並訂定高階主管發展計畫。該委員會推出「高階主管學習與發展計畫」，透過多元學習方式擴展參與者視野，掌握全球領導管理趨勢與最佳實踐，培養跨領域領導力，激發高階管理者的熱情與行動力，以引領公司持續成長。",
+    "greenwashing_factor": "強調高階主管培訓，但未提供具體數據佐證培訓成效，可能過於美化。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Training",
+    "page_number": "182",
+    "report_claim": "台積公司採用「70-20-10」學習法則，聚焦於「經驗學習」、「回饋與指導」與「教育訓練」三大面向，提供同仁多元且彈性的學習與發展資源。113年提供實體課程1萬387堂，完訓人數5萬668人，完訓人次24萬9671人次",
+    "greenwashing_factor": "雖然提供具體的培訓數據，但缺乏對培訓內容和實際效果的評估，難以判斷培訓的實際價值。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Training",
+    "page_number": "183",
+    "report_claim": "台積公司依據「台積公司能力模型」推動全方位人才發展計畫，支持同仁精進職涯發展。新進人員透過「新進人員教育訓練」瞭解公司願景、使命、核心價值及相關資源。",
+    "greenwashing_factor": "描述了人才發展計畫，但缺乏量化指標，難以評估計畫的實際效果。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Training",
+    "page_number": "184",
+    "report_claim": "113年員工全年平均學習時數達100.5小時，較前一年增加17.7%，總訓練費用達新台幣6億920萬元，平均每位員工訓練費用約新台幣13萬395元，較前一年增加15.4%。",
+    "greenwashing_factor": "儘管提供了培訓時數和費用等量化指標，但缺乏對培訓效果的深入分析，例如技能提升、績效改善等。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Training",
+    "page_number": "185",
+    "report_claim": "台積公司採用柯氏四級培訓評估模式（Kirkpatrick Model）驗證訓練的有效性。113年組織規劃發展處舉辦的課程均通過反應評估（Level 1），課程平均推薦度達96.1分。",
+    "greenwashing_factor": "僅呈現了反應評估結果，缺乏對學習、行為和結果評估的詳細數據，難以全面評估培訓的有效性。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Training",
+    "page_number": "186",
+    "report_claim": "台積公司不僅積極引入外部學習資源，亦重視內部講師的養成，透過分享個人經驗及傳授專業知識，促進同仁學習並激發潛能，協助台積公司持續培育卓越人才。",
+    "greenwashing_factor": "強調內部講師的重要性，但缺乏具體的培訓計劃和效果評估，可能過於美化。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Health & Sa",
+    "page_number": "187",
+    "report_claim": "推動以人為本的安全文化，事件發生千人率: 0.133， 失能傷害頻率（FR）：0.26，失能傷害嚴重率（SR）：3",
+    "greenwashing_factor": "僅僅提供數值，缺乏趨勢分析以及與同業的比較，無法看出實際的安全水平。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Health & Sa",
+    "page_number": "188",
+    "report_claim": "台灣廠區及子公司皆已取得ISO 45001職業安全衛生管理系統認證，與供應鏈合作，開發多元尺碼個人防護裝備。",
+    "greenwashing_factor": "只說明取得認證，缺乏具體措施來改善工作環境安全性的描述。強調開發多元尺碼個人防護裝備，但是缺乏數據支持。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Health & Sa",
+    "page_number": "189",
+    "report_claim": "定期鑑別法規，追蹤廠區法規遵循狀況，共23項安全衛生相關法規變更。將《台積公司承攬商環安衛藍皮書》設計為互動式線上教材課程並於「台積公司供應商永續學院｣上線。",
+    "greenwashing_factor": "僅僅提到符合法規，缺乏積極措施來改善工作場所安全性的描述。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Health & Sa",
+    "page_number": "190",
+    "report_claim": "台積公司安全績效指標（SPI）採「四級燈號管理」，113年，台積公司安全績效指標藍燈（優等）比例占84.2%，較民國112年提升4.1%。",
+    "greenwashing_factor": "雖然提到了安全績效指標，但是缺乏具體的指標定義與計算方法，透明度較低。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Health & Sa",
+    "page_number": "191",
+    "report_claim": "為解決同仁及駐廠廠商因個人防護具尺碼不合身而造成絆倒、視線遮蔽及工具操作不便等問題，113年分別調查5,388名同仁及1,074名駐廠廠商。",
+    "greenwashing_factor": "僅僅描述了調查的過程，並未提供解決方案的效果數據，說服力不足。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Health & Sa",
+    "page_number": "192",
+    "report_claim": "優等比例占84.2%，較民國112年提升4.1%。主要改善在於虛驚事件數由民國112年19件下降至18件",
+    "greenwashing_factor": "只是展示優等比例提升和虛驚事件數減少，缺乏解釋原因，難以判斷是真實改善還是統計技巧。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Health & Sa",
+    "page_number": "193",
+    "report_claim": "制定安全管理規範, 要求現場作業人員重新進行管路閥件操作訓練",
+    "greenwashing_factor": "只是簡單提及採取了措施，缺乏實施細節和結果展示，難以評估有效性。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Health & Sa",
+    "page_number": "194",
+    "report_claim": "員工受傷率為0.05%。民國113年，員工失能傷害件數37件、失能傷害總損失工作日數397天，其中男性失能傷害27件、累計336天，女性失能傷害10件、累計61天，員工受傷率為0.05%",
+    "greenwashing_factor": "僅列出統計數據，缺乏對受傷原因的分析，也缺乏同行業的比較",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Health & Sa",
+    "page_number": "195",
+    "report_claim": "民國113年發生一起承攬商人員死亡事件。台積公司重新檢視相關流程，修正安裝冰水閥件時的捲揚機吊裝工法，並新增作業安全注意事項",
+    "greenwashing_factor": "雖然提到了承攬商的死亡事件，但僅僅說明了修正措施，缺乏對事件原因的深入分析和對其他承攬商的保障措施。",
+    "risk_score": "3"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Health & Sa",
+    "page_number": "196",
+    "report_claim": "除了台灣及中國廠區均優於法規設置24小時服務的健康中心外，TSMC Arizona、JASM亦於民國113年開始提供健康中心24小時全天候服務。",
+    "greenwashing_factor": "強調健康服務，但缺乏這些服務的使用率、覆蓋率、以及對員工健康的實質影響。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Health & Sa",
+    "page_number": "197",
+    "report_claim": "民國113年擴大舉辦「世界心理健康月」系列活動，以「3件好事」為主軸開設4場線上講座，共8,564人次參與，整體滿意度達96.3%。",
+    "greenwashing_factor": "儘管滿意度高，但缺乏對心理健康改善的長期追蹤數據，難以評估實際效果。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Health & Sa",
+    "page_number": "198",
+    "report_claim": "與國立臺灣大學醫學院附設醫院新竹臺大分院合作，簽署「新建廠健康管理精進合作備忘錄」，針對建廠專案強化健康管理及照護。",
+    "greenwashing_factor": "僅提到簽署合作備忘錄，缺乏實質行動和具體成果。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Employee Health & Sa",
+    "page_number": "199",
+    "report_claim": "建立台積公司人因作業連續性鑑別指引。落實化學品源頭管控及精進數位化系統，並持續降低手動化學品作業暴露風險",
+    "greenwashing_factor": "僅是政策宣示，缺乏具體實施細節和量化指標，難以評估有效性。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "201",
+    "report_claim": "台積公司建廠專案階段，由承攬商、安全衛生委員會與安全管理中心構成建廠專案協議組織，以三級管理制度守護勞工安全。承攬商於各項施工前須提出「施工安全防護計畫書」及「風險評估」，透過逐一拆解作業內容及施工步驟，將施工方法、程序、機具設備及安衛設施、防護具、管理規章等納入考量，據以實施風險分析，完整辨識工作環境或作業危害。",
+    "greenwashing_factor": "聲稱建立多層級安全管理結構，並對承包商進行風險評估，但未提供具體風險評估指標或實際降低事故率的數據佐證。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "201",
+    "report_claim": "全台建廠專案舉辦 24 場聯合工具箱會議，超過 29,178 人次共襄盛舉，凝聚安全文化與共識",
+    "greenwashing_factor": "描述活動參與人數眾多，但沒有提供這些會議的具體內容、成效評估或是否實際降低工安事件的數據，難以判斷是否真正提升安全文化。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "201",
+    "report_claim": "全台建廠專案舉辦 12 場緊急應變演練，累計 936 人次參加，透過熟悉不同災害情境之應變作為，挽救寶貴生命",
+    "greenwashing_factor": "聲稱舉辦緊急應變演練，但缺乏演練的具體情境、頻率、演練後的改善措施，以及應急響應的有效性等資訊，難以評估實際效果。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "201",
+    "report_claim": "延續熱危害預防作為，全台建廠專案舉行 54 場「清涼抗暑」活動，累計發放 11,956 份冰棒或消暑飲品",
+    "greenwashing_factor": "提及提供消暑飲品，但沒有說明針對高溫作業環境的具體改善措施，如通風、遮陽等，以及是否制定相關的作業標準，僅提供消暑飲品可能無法有效預防熱危害。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "201",
+    "report_claim": "每個建廠專案分別導入 24 小時駐廠救護車及救護技術員，把握黃金救援時間",
+    "greenwashing_factor": "描述提供24小時救護車服務，但未提供實際救援案例、平均響應時間，以及是否有效降低事故死亡率等數據，難以評估實際效益。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "201",
+    "report_claim": "高雄建廠專案與日本建設公司合作精進安全管理，由 24 名承攬商領班組成工地職長會，推動全員 6S 活動及可視化標示，並每月與協議組織召開溝通會議，精進人員安全意識及工地環境",
+    "greenwashing_factor": "提到與日本公司合作及推動6S活動，但沒有提供具體合作內容、6S活動的執行細節，以及改善成效的評估數據，難以判斷是否真正提升安全管理水平。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "201",
+    "report_claim": "累計 1,045 場次主承攬商施工安全宣導，透過「人員防護、作業許可、風險危害、機具安全」四大面向凝聚安全作業的向心力",
+    "greenwashing_factor": "聲稱進行多次安全宣導，但沒有提供宣導的具體內容、參與人數比例，以及是否有效提升工人安全意識和行為習慣的數據，難以評估實際效果。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "202",
+    "report_claim": "民國113年攜手國立臺灣大學醫學院附設醫院新竹臺大分院，以「健康風險、工作前後生理監測、緊急救護流程、追蹤照顧、教育訓練」五大面向提升工地安全性。針對緊急救護流程，全台建廠專案配置24小時駐廠救護車及救護技術員，並廣設AED增強應對突發事件的能力，同時強調即時通報健康狀況不佳的重要性；經推廣與宣導後，即時通報後人員康復率達100%。教育訓練方面，舉辦各類型急救課程提升現場第一線承攬商的急救能力，其中心肺復甦術及自動體外心臟電擊去顫器（AED）急救訓練共1301人完訓、基本救命術共326人完訓。",
+    "greenwashing_factor": "宣稱與醫院合作提升工地安全，並提供急救訓練，但即時通報後康復率達100%的說法缺乏具體數據支持，可能存在選擇性報告，並且缺乏對於健康風險評估、生理監測和追蹤照顧等面向的具體措施和成效說明。",
+    "risk_score": "3"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Community Relations",
+    "page_number": "203",
+    "report_claim": "台積公司攜手「台積電文教基金會」與「台積電慈善基金會」，關注社會需求，整合跨域資源，投入各年齡層學子的教育創新、推動社區共融、孕育藝文涵養、提升生態永續與環保知能並促進健康守護，帶動正向改變。",
+    "greenwashing_factor": "聲稱關注社會需求並投入多個領域，但缺乏具體成果指標和影響力評估，難以判斷實際效益和影響範圍。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Community Relations",
+    "page_number": "203",
+    "report_claim": "藝文活動參與人次 6萬人次",
+    "greenwashing_factor": "僅列出參與人次，缺乏參與者滿意度調查、長期效益追蹤等資訊，難以評估活動的實質影響力。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Community Relations",
+    "page_number": "203",
+    "report_claim": "愛互聯服務獨老人次 18萬人次",
+    "greenwashing_factor": "僅列出服務人次，缺乏服務內容、服務品質、受助者生活改善等資訊，難以評估服務的實質效益。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Community Relations",
+    "page_number": "204",
+    "report_claim": "民國113年，台積公司重新盤點各項計畫、定義問題類別，聚焦「教育創新、社區共融、藝文涵養、生態永續、健康守護」五大主軸，呼應聯合國永續發展目標（SDGs），以具整合性、多元性與策略性的方式投入社會參與，帶來正向改變。",
+    "greenwashing_factor": "聲稱聚焦五大主軸並呼應SDGs，但缺乏具體行動、量化指標和成果驗證，難以判斷實際貢獻和影響力。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Community Relations",
+    "page_number": "204",
+    "report_claim": "社會參與總受益人次 139萬人次",
+    "greenwashing_factor": "僅列出受益人次，缺乏受益者具體情況、受益程度、長期追蹤等資訊，難以評估實際效益。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Community Relations",
+    "page_number": "204",
+    "report_claim": "捐配計畫年度總金額（新台幣）16億7400萬元",
+    "greenwashing_factor": "僅列出捐款金額，缺乏捐款用途、執行機構、受益對象等資訊，難以評估捐款的實際效益。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Community Relations",
+    "page_number": "204",
+    "report_claim": "累積台積志工人數 7萬501人",
+    "greenwashing_factor": "僅列出志工人數，缺乏志工服務時數、服務內容、服務對象等資訊，難以評估志工服務的實際效益。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Community Relations",
+    "page_number": "204",
+    "report_claim": "累積志工投入時數 9萬1787小時",
+    "greenwashing_factor": "僅列出志工服務時數，缺乏服務內容、服務對象、服務成效等資訊，難以評估志工服務的實際效益。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Community Relations",
+    "page_number": "204",
+    "report_claim": "公益專案數 171項",
+    "greenwashing_factor": "僅列出公益專案數量，缺乏專案具體內容、執行情況、成效評估等資訊，難以評估公益專案的實際效益。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Community Relations",
+    "page_number": "204",
+    "report_claim": "公益合作團體數 130個",
+    "greenwashing_factor": "僅列出合作團體數量，缺乏合作內容、合作成效等資訊，難以評估合作的實際效益。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Community Relations",
+    "page_number": "205",
+    "report_claim": "台積公司除長期追蹤投入社會參與的影響程度外，亦擴大民國112年導入的影響力管理計畫（IMP）適用範疇，透過「定義問題（What）、關注對象（Who）、監測改變指標（How Much）、貢獻（Contribution）／影響力、風險（Risk）」五大構面，結合企業社會影響力框架（B4SI）及衝擊報導與投資標準（IRIS）指標，建立一套系統化的社會影響力管理方法，可全面衡量、管理並揭露專案運作對社會與環境的影響，確保每一分資源投入皆能創造長遠且正向的效益。",
+    "greenwashing_factor": "聲稱建立一套系統化的社會影響力管理方法，但缺乏具體應用案例、衡量指標、數據揭露等資訊，難以判斷實際效果和可信度。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Community Relations",
+    "page_number": "207",
+    "report_claim": "民國113年，台積公司依循上述管理方法，攜手二個基金會串聯員工、社區夥伴、供應鏈與跨領域企業，以及地方政府、學術機構、醫療照護機構等非營利組織資源，打造社會參與的多元管道與機會，共計號召7萬501名台積志工，累積投入9萬1787小時，整體社會參與投入總額達新台幣23億1158萬元，總計139萬人次受益。同時，積極回應聯合國永續發展目標，年度資源投入SDG 4（優質教育）、占比達62.46%；其次為SDG 17（多元夥伴關係）、占比9.30%。",
+    "greenwashing_factor": "聲稱積極回應聯合國永續發展目標，但僅列出SDG 4和SDG 17的資源投入比例，缺乏其他SDGs的具體行動和成果驗證，難以判斷是否全面落實永續發展。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Community Relations",
+    "page_number": "221",
+    "report_claim": "台積電文教基金會長期投入藝文發展，每年贊助「灣聲樂團」舉辦戶外大型音樂會，將台灣音樂推向國際舞台，並培養新一代音樂人才。文教基金會首度將贊助版圖拓展至日本熊本，獨家支持灣聲樂團於日本熊本舉行感謝音樂會，透過音樂深化台日文化交流。",
+    "greenwashing_factor": "雖然支持藝文活動有助於提升企業形象，但此處未明確揭露此活動與公司核心業務的關聯性，可能被視為漂綠。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Community Relations",
+    "page_number": "221",
+    "report_claim": "台積電文教基金會舉辦「台積講堂」，推廣中西人文哲學思想，透過學者與專家分享，引領民眾探索歷史、哲學、文學等議題，提升人文涵養。特別邀請知名作家閻連科教授來台舉辦專題講座，深入探討人性及比較中西方志怪作品，帶領觀眾從中重新審視現實世界的真實與虛構，展現文學的深刻洞察力。",
+    "greenwashing_factor": "贊助藝文活動，對社會有正面影響，但與半導體製造本業關聯性較低，有潛在漂綠風險。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Community Relations",
+    "page_number": "222",
+    "report_claim": "台積電文教基金會致力保存與推廣傳統戲曲文化，長期支持台灣文學巨擘白先勇領銜製作的青春版《牡丹亭》，透過創新演繹，成功吸引更多年輕觀眾走近崑曲。青春版《牡丹亭》迎來20週年紀念，並首度移師高雄市衛武營國家藝術文化中心舉行為期3天共6小時的完整演出，讓南台灣的戲迷親身感受崑曲的細膩韻味與戲曲美學的極致表現。",
+    "greenwashing_factor": "此舉措有助於推廣傳統文化，但缺乏量化指標，難以評估實際影響力，可能被認為是形象宣傳。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Community Relations",
+    "page_number": "222",
+    "report_claim": "台積電文教基金會積極扎根戲曲文化，與國光劇團、國立清華大學、東海大學合作推動為期20年的「校園戲曲傳承計畫」，以「戲曲知識、劇本賞析、京劇表演示範與教學」三大面向為核心，促進戲曲文化傳承發展，並拓展新世代觀眾群。",
+    "greenwashing_factor": "校園戲曲傳承計畫有助於文化傳承，但未提供計畫目標達成情況的具體數據，可能被認為是宣傳而非實質行動。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Community Relations",
+    "page_number": "223",
+    "report_claim": "台積電慈善基金會關注「教育培力」、「健康長壽」及「環境保育」三大核心策略，並透過培訓台積公司在職與退休員工擔任志工，協助推展各項關懷行動。民國113年，慈善基金會持續挹注豐富人力及資源，提供偏鄉學子探索未來職涯與產業實習機會；將高齡化社區照護模式推廣至位於日本熊本縣的子公司JASM。",
+    "greenwashing_factor": "提及了多項策略，但缺乏各策略具體量化成果和目標的關聯性，可能被視為空泛的承諾。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Community Relations",
+    "page_number": "224",
+    "report_claim": "台積電慈善基金會總計投入新台幣4億5,722萬元，服務75萬人次。3.54%為現金捐贈，$1,620萬元，28.91%為管理費用$13,216萬元，1.96%連結營運的慈善活動$894萬元，1.10%為單次性慈善活動$504萬元。6%健康長壽 $2,743萬元,3.6% 其他 $1,644萬元, 62.29% 教育培力 $28,482",
+    "greenwashing_factor": "雖然提供了財務數據，但管理費用佔比過高，可能引發對資源分配的質疑。",
+    "risk_score": "3"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Community Relations",
+    "page_number": "225",
+    "report_claim": "慈善基金會號召台積志工發揮科技專業與創意，設計融合趣味性、GPT模型及程式語言的「科普AI教育」系列課程，讓偏鄉學童在互動實作中掌握基礎科技知識與應用能力。除提供科普、數學與語文科目輔導外，慈善基金會亦在輔導活動中加入孝順與倫理價值，並以家人肖像繪畫，促進跨世代理解與溝通。",
+    "greenwashing_factor": "將AI教育與孝道結合，可能過度強調企業的社會責任形象，缺乏對AI教育本身成效的評估。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Workforce Diversity ",
+    "page_number": "234",
+    "report_claim": "本公司董事成員組成具備多元背景，包括不同產業及學術等專業背景，國內及歐美不同國家國籍，其中包含2名女性董事，獨立董事人數占全體董事席次70%，且董事間無具有配偶及二親等以內親屬關係之情形，因此本公司董事會具有獨立性。",
+    "greenwashing_factor": "強調董事會的多元性，但未說明多元性如何影響公司決策，有潛在的漂綠風險。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Business Ethics",
+    "page_number": "236",
+    "report_claim": "台積公司制定《從業道德規範政策》做為實踐誠信經營的指引，在商業行為中如實展現此精神。同時，推行《台積公司供應商行為準則》、《供應商永續標準》，並透過台積電供應商永續學院開設「供應商行為準則―道德篇」、「落實誠信正直的核心價值」等線上課程。",
+    "greenwashing_factor": "宣稱重視誠信經營，但缺乏具體的違規案例和懲處情況的詳細分析，難以評估實際執行效果。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Risk Management",
+    "page_number": "237",
+    "report_claim": "台積公司以董事會核定並由董事長暨總裁簽署的《風險管理政策》為依歸，採用風險－報酬平衡的管理策略，不僅優化商業回報，更保障利害關係人的長期永續價值。",
+    "greenwashing_factor": "聲稱採用風險管理策略，但缺乏具體風險評估和應對措施的細節披露，可能被認為是表面功夫。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "231",
+    "report_claim": "台積電慈善基金會自民國109年起推動「公益綠能計畫」，攜手地方政府與技職學校，以「太陽能創能專案」協助社福機構及偏鄉學校安裝太陽能光電系統，減輕其電費負擔並創造穩定的營運收益。此外，透過「LED節能改造專案」，提升校園照明品質，為學童營造更優質的學習環境，並實現節能減碳目標",
+    "greenwashing_factor": "公益綠能計畫有助於提升企業形象和減少碳排放，但未明確揭露專案與公司核心業務的關聯性，可能被視為漂綠。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Management of the Le",
+    "page_number": "243",
+    "report_claim": "台積公司支持政府制定有助企業創新及促進經濟成長的法規，並由財務長每年審視、核准公司的稅務政策，致力資訊透明化與永續發展。",
+    "greenwashing_factor": "此聲明為一般性的支持政府法規，並未提供具體的行動或承諾。 缺乏量化目標或具體措施來支持其聲明。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Business Ethics",
+    "page_number": "243",
+    "report_claim": "關係企業間交易係依據常規交易原則，並遵循經濟合作暨發展組織（ OECD ）公布的國際公認移轉訂價準則",
+    "greenwashing_factor": "僅聲稱遵循OECD的移轉訂價準則，但未提供任何實際案例或數據來證明其合規性。缺乏透明度，難以驗證。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Management of the Le",
+    "page_number": "243",
+    "report_claim": "民國113年台積公司有效稅率與現金稅率分別為16.6%與13.1%，二者均低於中華民國營利事業所得稅的法定稅率20%，主要係依據《產業創新條例》規定，台積公司適用因投入前瞻創新研究發展支出與購置先進製程的機器或設備，可依法取得投資抵減。",
+    "greenwashing_factor": "聲稱有效稅率低是因為投入研發，但未說明研發投入與稅務減免的關聯性，可能暗示藉由研發避稅。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Data Security",
+    "page_number": "245",
+    "report_claim": "民國113年台積公司新增及修訂25個資安規範，資安相關稽核無重大缺失，亦無違反資訊安全、造成客戶資訊洩漏及罰款等重大資安事件發生；此外，無論是由第三方或主管機關因台積公司違反客戶個人資料保護或客戶資料遺失而向公司投訴，並導致司法行動的案件數為零。",
+    "greenwashing_factor": "僅聲稱沒有重大缺失和事件發生，但缺乏透明度，難以驗證。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "249",
+    "report_claim": "台積公司承諾打造尊重人權與有尊嚴的工作環境，遵循《世界人權宣言》，採用《負責任商業聯盟行為準則》、《經濟合作與發展組織－責任商業行為盡職調查指南》與聯合國人權理事會通過的《聯合國工商企業與人權指導原則》",
+    "greenwashing_factor": "僅聲稱遵循多項人權準則，但未提供具體的行動或承諾。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "250",
+    "report_claim": "民國113年開設線上人權通識課程，帶領同仁認識商業與人權的關聯，期許全體同仁在日常工作中皆能將尊重人權的價值觀融入到每一個決策與行動中，完訓率達89%。",
+    "greenwashing_factor": "僅提及線上課程的完訓率，未揭露課程內容是否有效提升員工對人權議題的認知與敏感度，也未說明課程如何影響實際的商業決策。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Business Ethics",
+    "page_number": "261",
+    "report_claim": "台積公司秉持企業核心價值與經營理念，以永續共好為目標，攜手各界夥伴及利害關係人落實對環境、社會與治理的承諾，持續驅動美好的改變。依循台積公司《公共政策參與指引 》，台積公司積極參與產業公、協會以及與公共政策相關的非營利組織，持續推動產業交流與發展，並關注科技創新、公司治理、環境永續、供應鏈管理與社會共融等重大議題。",
+    "greenwashing_factor": "聲稱致力於永續共好，但未提供具體目標或衡量標準，難以評估其實際影響。",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Business Ethics",
+    "page_number": "261",
+    "report_claim": "台積公司總計共參與 82 個海內外相關公、協會與非營利組織，共支出約新台幣 6,462 萬元。過去 10 年（民國 109 年至民國 113 年）的支出總額約新台幣 2 億 7,422 萬元。",
+    "greenwashing_factor": "揭露參與組織及支出金額，但未說明參與這些組織對公司永續發展的具體貢獻，以及如何確保這些組織的目標與台積公司一致。",
+    "risk_score": "1"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "262",
+    "report_claim": "台積公司以具體行動實踐巴黎協定目標，推動生物多樣性發展、厚植綠色管理於日常營運中，透過導入創新的綠色技術，持續精進能源管理、水管理、資源循環及空氣汙染防治，矢志成為全球環保標竿企業。",
+    "greenwashing_factor": "聲稱以具體行動實踐巴黎協定，但缺乏具體的減碳目標和達成進度，以及如何衡量和驗證其綠色技術的影響力。",
+    "risk_score": "3"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "262",
+    "report_claim": "台積公司除依據《人權政策 》、《全球共融職場宣言 》定期自我檢視外，也要求所有供應商遵循《供應商行為準則 》與恪守其營運據點所在地法規，打造有尊嚴的工作環境，致力促成社會共融的美好。",
+    "greenwashing_factor": "聲稱打造有尊嚴的工作環境，但未提供具體措施和績效指標，以證明其在人權和勞工權益方面的實際行動和成果。僅僅提及政策和準則，缺乏透明度和可驗證性。",
+    "risk_score": "3"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "G",
+    "SASB_topic": "Corporate Governance",
+    "page_number": "263",
+    "report_claim": "經理人薪酬與環境、社會和公司治理（ESG）績效連結",
+    "greenwashing_factor": "雖然連結ESG績效，但是沒有進一步說明連結方式、ESG績效佔薪酬的比例，很難判斷是否真的重視ESG",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "E",
+    "SASB_topic": "Energy Management",
+    "page_number": "266",
+    "report_claim": "溫室氣體排放（公噸－二氧化碳當量）（ 包括範疇一與範疇二市場係數法） 12,783,269",
+    "greenwashing_factor": "雖然有揭露範疇一與範疇二的溫室氣體排放量，但是沒有說明是否計算了範疇三，可能隱藏部分碳排放量",
+    "risk_score": "2"
+  },
+  {
+    "company_id": "2330",
+    "year": 2024,
+    "ESG_category": "S",
+    "SASB_topic": "Labor Practices",
+    "page_number": "270",
+    "report_claim": "公傷死亡人數－承攬商（位） 1",
+    "greenwashing_factor": "揭露了承攬商的公傷死亡人數，雖然有透明度，但是沒有進一步說明公司如何防止承攬商發生公傷事件",
+    "risk_score": "1"
+  }
+]

@@ -1,9 +1,24 @@
 """
-ESG 報告書評分系統
-- 依 SASB + Clarkson et al. (2008)
+ESG 報告書評分系統（SQL Schema 對齊最終版）
+
+SQL Schema：
+company_id VARCHAR(4),
+year INT,
+ESG_category VARCHAR(5),
+SASB_topic VARCHAR(20),
+page_number VARCHAR(3),
+report_claim TEXT(500),
+greenwashing_factor TEXT(500),
+risk_score VARCHAR(3)
+
+特性：
 - 每 20 頁切割 PDF
-- 使用 Google 官方 google-genai SDK
-- 自動 retry / fallback 模型
+- 使用 google-genai SDK
+- retry <= 3，429 直接切模型
+- 斷點續跑
+- 合併 ALL.json
+- Prompt 固定欄位
+- Python 後處理正規化（100% 可 INSERT SQL）
 """
 
 import os
@@ -12,41 +27,75 @@ import time
 import math
 import re
 import configparser
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
+from collections import deque
 
 import pdfplumber
 from google import genai
 
 
 # =========================
-# 主類別
+# Rate Limiter
+# =========================
+class RateLimiter:
+    def __init__(self, max_per_minute: int = 10):
+        self.max_per_minute = max_per_minute
+        self._hits = deque()
+
+    def wait(self):
+        now = time.time()
+        window_start = now - 60
+
+        while self._hits and self._hits[0] < window_start:
+            self._hits.popleft()
+
+        if len(self._hits) >= self.max_per_minute:
+            sleep_sec = 60 - (now - self._hits[0]) + 0.1
+            print(f"[RATE] 等待 {sleep_sec:.1f}s")
+            time.sleep(max(0.2, sleep_sec))
+
+        self._hits.append(time.time())
+
+
+# =========================
+# Main Class
 # =========================
 class ESGReportScorer:
-
     # ---------- 基本設定 ----------
     PDF_PATH = "2330_台積電_2024年永續報告書.pdf"
     OUTPUT_DIR = "output_chunks"
     OUTPUT_PREFIX = "2330_台積電_2024年永續報告書_sasb_score"
-    CHUNK_PAGES = 20
 
-    # ---------- 模型設定（依你實際可用清單） ----------
-    MODEL_PRIMARY = "models/gemini-2.5-flash"
+    CHUNK_PAGES = 20
+    MAX_CHARS_PER_CHUNK = 20000
+
+    # ---------- 模型 ----------
+    MODEL_DEFAULT = "models/gemini-2.0-flash"
     MODEL_FALLBACKS = [
-        "models/gemini-2.0-flash",
+        "models/gemini-2.0-flash-001",
+        "models/gemini-2.0-flash-lite",
+        "models/gemini-flash-lite-latest",
         "models/gemini-flash-latest",
-        "models/gemini-pro-latest",
+        "models/gemini-2.5-flash",
+        "models/gemini-3-flash-preview",
     ]
 
-    # ---------- token 保險 ----------
-    MAX_CHARS_PER_CHUNK = 50000
+    MAX_ATTEMPTS_PER_MODEL = 3
+    MAX_REQ_PER_MINUTE = 10
 
     def __init__(self, config_path: str = "config.ini"):
         self.config = self._load_config(config_path)
-        self.client = self._init_llm()
+        self.client = genai.Client(api_key=self.config["gemini"]["api_key"])
+        self.limiter = RateLimiter(self.MAX_REQ_PER_MINUTE)
+
+        # 固定寫入 SQL 欄位
+        self.company_id = "2330"
+        self.year = 2024
+
         os.makedirs(self.OUTPUT_DIR, exist_ok=True)
 
     # =========================
-    # 初始化
+    # Config
     # =========================
     def _load_config(self, path: str) -> configparser.ConfigParser:
         if not os.path.exists(path):
@@ -61,189 +110,185 @@ class ESGReportScorer:
         cfg["gemini"]["api_key"] = cfg["gemini"]["api_key"].strip().strip('"').strip("'")
         return cfg
 
-    def _init_llm(self):
-        key = self.config["gemini"]["api_key"]
-        print("[INIT] 使用 google-genai SDK")
-        print("[INIT] Primary model:", self.MODEL_PRIMARY)
-        return genai.Client(api_key=key)
-
     # =========================
-    # PDF 處理
+    # PDF
     # =========================
     def extract_pdf_text(self) -> Dict[int, str]:
-        if not os.path.exists(self.PDF_PATH):
-            raise FileNotFoundError(f"找不到 PDF：{self.PDF_PATH}")
-
         text_by_page = {}
         with pdfplumber.open(self.PDF_PATH) as pdf:
             total = len(pdf.pages)
             print(f"[PDF] 共 {total} 頁")
 
             for i, page in enumerate(pdf.pages, start=1):
-                text = page.extract_text()
-                if text:
-                    text_by_page[i] = text.strip()
+                txt = page.extract_text()
+                if txt:
+                    text_by_page[i] = txt.strip()
 
                 if i % 10 == 0 or i == total:
-                    print(f"[PDF] 已讀取 {i}/{total} 頁")
+                    print(f"[PDF] 已讀取 {i}/{total}")
 
         return text_by_page
 
-    def _build_text_chunk(self, pdf_text: Dict[int, str], start: int, end: int) -> str:
+    def _build_chunk(self, pdf_text: Dict[int, str], start: int, end: int) -> str:
         parts = []
         for p in range(start, end + 1):
             if p in pdf_text:
                 parts.append(f"[頁碼: {p}]\n{pdf_text[p]}")
-        joined = "\n\n".join(parts)
-        return joined[: self.MAX_CHARS_PER_CHUNK]
+        return "\n\n".join(parts)[: self.MAX_CHARS_PER_CHUNK]
 
     # =========================
-    # Gemini 呼叫（含 retry / fallback）
+    # Gemini Call
     # =========================
+    def _call_gemini_once(self, model: str, prompt: str) -> str:
+        self.limiter.wait()
+        resp = self.client.models.generate_content(model=model, contents=prompt)
+        return resp.text or ""
+
     def _call_gemini(self, prompt: str) -> str:
-        models = [self.MODEL_PRIMARY] + self.MODEL_FALLBACKS
         last_err = None
-
-        for model in models:
-            for attempt in range(1, 6):
+        for model in [self.MODEL_DEFAULT] + self.MODEL_FALLBACKS:
+            for _ in range(self.MAX_ATTEMPTS_PER_MODEL):
                 try:
-                    resp = self.client.models.generate_content(
-                        model=model,
-                        contents=prompt,
-                    )
-                    return resp.text or ""
-
+                    return self._call_gemini_once(model, prompt)
                 except Exception as e:
                     msg = str(e)
                     last_err = e
-
-                    # 404：模型不可用
-                    if "NOT_FOUND" in msg or "404" in msg:
-                        print(f"  [WARN] {model} 不支援，切換模型")
+                    if "429" in msg or "RESOURCE_EXHAUSTED" in msg or "404" in msg:
+                        print(f"[WARN] {model} 不可用，切換模型")
                         break
-
-                    # 429 / quota
-                    if "RESOURCE_EXHAUSTED" in msg or "429" in msg:
-                        if "limit: 0" in msg:
-                            print(f"  [WARN] {model} 配額=0，切換模型")
-                            break
-
-                        m = re.search(r"Please retry in\s+([\d\.]+)s", msg)
-                        wait = int(float(m.group(1))) if m else 10
-                        print(f"  [429] {model} retry {attempt}/5，等待 {wait}s")
-                        time.sleep(wait)
-                        continue
-
-                    print(f"  [ERROR] {model}: {msg}")
-                    break
-
-        raise Exception(f"Gemini API 呼叫失敗：{last_err}")
+                    print(f"[ERROR] {model}: {msg}")
+        raise Exception(f"Gemini API 失敗：{last_err}")
 
     # =========================
-    # Prompt
+    # Prompt（固定 SQL schema）
     # =========================
     def _create_prompt(self, text: str) -> str:
         return f"""
-請分析以下 ESG 永續報告內容，依 SASB 與 Clarkson et al. (2008) 評分。
+請依 SASB 與 Clarkson et al. (2008) 分析 ESG 報告內容。
 
-評分：
-0 未揭露
-1 軟性承諾
-2 定性措施
-3 定量數據
-4 第三方確信
+【輸出格式】
+請只輸出 JSON array，不要任何其他文字。
 
-請輸出 JSON array，每個物件包含：
-- esg_category ("E","S","G")
-- sasb_topic
-- page_number
-- report_claim
-- greenwashing_factor
-- risk_score (0-4)
+每個物件必須完全符合以下 SQL schema：
+- company_id: STRING (VARCHAR(4))，固定 "{self.company_id}"
+- year: INTEGER (INT)，固定 {self.year}
+- ESG_category: STRING ("E","S","G")
+- SASB_topic: STRING (VARCHAR(20))
+- page_number: STRING (VARCHAR(3))
+- report_claim: STRING (TEXT <=500)
+- greenwashing_factor: STRING (TEXT <=500)
+- risk_score: STRING ("0"~"4")
 
-內容：
+【內容】
 {text}
-
-只輸出 JSON，不要其他文字。
 """
 
     # =========================
-    # JSON 安全解析
+    # JSON Parse
     # =========================
     def _safe_json(self, txt: str) -> List[Dict[str, Any]]:
+        """
+        安全解析 LLM 回傳的 JSON：
+        - 支援 ```json ``` 包裹
+        - 支援 array / 單一 object
+        - 若完全無法解析，丟出「可讀錯誤」
+        """
+        if not txt or not txt.strip():
+            raise ValueError("LLM 回傳為空字串，無法解析 JSON")
+
         txt = txt.strip()
         txt = re.sub(r"^```(?:json)?", "", txt, flags=re.I)
         txt = re.sub(r"```$", "", txt)
 
+        # 嘗試擷取 array
         a0, a1 = txt.find("["), txt.rfind("]")
-        if a0 != -1 and a1 != -1:
-            return json.loads(txt[a0 : a1 + 1])
-        return json.loads(txt)
+        if a0 != -1 and a1 != -1 and a1 > a0:
+            candidate = txt[a0:a1 + 1]
+        else:
+            # 嘗試整段直接 parse（可能是單一 object）
+            candidate = txt
+
+        try:
+            parsed = json.loads(candidate)
+        except json.JSONDecodeError as e:
+            # 把前 300 字丟出來，方便 debug
+            preview = candidate[:300].replace("\n", " ")
+            raise ValueError(
+                f"JSON 解析失敗：{e}. 回傳內容前 300 字：{preview}"
+            )
+
+        # 若模型回傳的是單一 object，包成 array
+        if isinstance(parsed, dict):
+            return [parsed]
+
+        if not isinstance(parsed, list):
+            raise ValueError(f"JSON 解析結果不是 array / object，而是 {type(parsed)}")
+
+        return parsed
 
     # =========================
-    # 主流程：分段分析
+    # Normalize → SQL Safe
+    # =========================
+    def _normalize(self, rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        out = []
+        for r in rows:
+            out.append({
+                "company_id": str(r.get("company_id", self.company_id)).zfill(4)[:4],
+                "year": int(r.get("year", self.year)),
+                "ESG_category": str(r.get("ESG_category", ""))[:5],
+                "SASB_topic": str(r.get("SASB_topic", ""))[:20],
+                "page_number": str(r.get("page_number", ""))[:3],
+                "report_claim": str(r.get("report_claim", ""))[:500],
+                "greenwashing_factor": str(r.get("greenwashing_factor", ""))[:500],
+                "risk_score": str(r.get("risk_score", ""))[:3],
+            })
+        return out
+
+    # =========================
+    # Main Flow
     # =========================
     def score_report(self):
         pdf_text = self.extract_pdf_text()
         max_page = max(pdf_text.keys())
-        chunks = math.ceil(max_page / self.CHUNK_PAGES)
+        total_chunks = math.ceil(max_page / self.CHUNK_PAGES)
 
-        all_results = []
-        errors = []
+        all_rows = []
 
-        for i in range(chunks):
+        for i in range(total_chunks):
             start = i * self.CHUNK_PAGES + 1
             end = min((i + 1) * self.CHUNK_PAGES, max_page)
-            print(f"\n[批次 {i+1}/{chunks}] 頁碼 {start}-{end}")
 
-            chunk_text = self._build_text_chunk(pdf_text, start, end)
-            print(f"[DEBUG] chunk pages {start}-{end}, chars={len(chunk_text)}")
-            prompt = self._create_prompt(chunk_text)
+            out_path = os.path.join(
+                self.OUTPUT_DIR,
+                f"{self.OUTPUT_PREFIX}_p{start:04d}-{end:04d}.json"
+            )
 
-            out_name = f"{self.OUTPUT_PREFIX}_p{start:04d}-{end:04d}.json"
-            out_path = os.path.join(self.OUTPUT_DIR, out_name)
+            if os.path.exists(out_path):
+                print(f"[SKIP] {start}-{end}")
+                with open(out_path, "r", encoding="utf-8") as f:
+                    all_rows.extend(json.load(f))
+                continue
 
-            try:
-                result_text = self._call_gemini(prompt)
-                data = self._safe_json(result_text)
+            print(f"[RUN] 頁碼 {start}-{end}")
+            prompt = self._create_prompt(self._build_chunk(pdf_text, start, end))
 
-                with open(out_path, "w", encoding="utf-8") as f:
-                    json.dump(data, f, ensure_ascii=False, indent=2)
+            raw = self._call_gemini(prompt)
+            data = self._normalize(self._safe_json(raw))
 
-                print(f"  ✓ 輸出 {out_path}")
-                all_results.extend(data)
+            with open(out_path, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
 
-            except Exception as e:
-                print(f"  ✗ 錯誤：{e}")
-                err = {"page_range": f"{start}-{end}", "error": str(e)}
-                errors.append(err)
+            all_rows.extend(data)
 
-                err_path = os.path.join(
-                    self.OUTPUT_DIR,
-                    f"{self.OUTPUT_PREFIX}_p{start:04d}-{end:04d}_ERROR.json",
-                )
-                with open(err_path, "w", encoding="utf-8") as f:
-                    json.dump(err, f, ensure_ascii=False, indent=2)
-
-        # 合併輸出
         all_path = os.path.join(self.OUTPUT_DIR, f"{self.OUTPUT_PREFIX}_ALL.json")
         with open(all_path, "w", encoding="utf-8") as f:
-            json.dump(all_results, f, ensure_ascii=False, indent=2)
+            json.dump(all_rows, f, ensure_ascii=False, indent=2)
 
-        print("\n完成！")
-        print(f"成功項目數：{len(all_results)}")
-        print(f"合併檔案：{all_path}")
-
-        if errors:
-            print(f"⚠️ 有 {len(errors)} 個批次失敗，請查看 *_ERROR.json")
+        print(f"\n完成！合併檔案：{all_path}")
 
 
-# =========================
-# main
-# =========================
 def main():
-    scorer = ESGReportScorer()
-    scorer.score_report()
+    ESGReportScorer().score_report()
 
 
 if __name__ == "__main__":
