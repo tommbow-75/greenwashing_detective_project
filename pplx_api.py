@@ -1,16 +1,21 @@
-from flask import Flask, request, jsonify
+#➡️需和app.py, index.htnl整合code⬅️
+from flask import Flask, request, jsonify, render_template
+from flask_cors import CORS #pip install flask-cors
 import requests
 import json
 import os
 from perplexity import Perplexity
 from google import genai
-from config import SystemConfig
+from dotenv import load_dotenv
+load_dotenv()
+from pplx_api.config import SystemConfig
+
 
 app = Flask(__name__)
-
+CORS(app)
 # 載入 API 金鑰
-genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
-perplexity_client = Perplexity(api_key=os.getenv('PERPLEXITY_API_KEY'))
+gemini_client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+perplexity_client = Perplexity(api_key=os.environ.get("PERPLEXITY_API_KEY"))
 config = SystemConfig('esg_news_system.json')
 
 # 常數配置
@@ -22,22 +27,29 @@ TIMEOUT = config.get_timeout()
 def generate_urls_with_gemini(company, year):
     """使用 Gemini 生成 ESG 新聞 URL"""
     try:
-        model = genai.GenerativeModel('gemini-2.5-flash')
-        prompt = config.get_gemini_prompt(company, year)
         
-        response = model.generate_content(
-            prompt,
-            generation_config=genai.GenerationConfig(
-                temperature=0,
-                response_mime_type="application/json"
-            )
+        PROMPT = config.get_gemini_prompt(company, year)
+        
+        response = gemini_client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=PROMPT,
+            config={
+                'temperature': 0,
+                'max_tokens' : 500,
+                'response_mime_type': 'application/json'
+            }
         )
         
         result = json.loads(response.text)
-        return result.get('urls', [])
-    
+        if isinstance(result, list):
+            return result
+        # 如果它包在 urls 鍵值裡，則取出來
+        if isinstance(result, dict):
+            return result.get('urls', result.get('news_list', []))
+            
+        return []
     except Exception as e:
-        print(f"Gemini 生成失敗: {e}")
+        print(f"解析失敗: {e}")
         return []
 
 def verify_single_url(url):
@@ -112,8 +124,8 @@ def search_with_perplexity(company, year):
                 {"role": "system", "content": "你是 ESG 新聞搜索專家，只輸出有效的 JSON。"},
                 {"role": "user", "content": prompt}
             ],
-            temperature=0,
-            response_format={"type": "json_object"}
+            temperature=0
+            # response_format={"type": "json_object"}
         )
         
         content = response.choices[0].message.content
@@ -135,7 +147,12 @@ def search_with_perplexity(company, year):
         print(f"Perplexity 搜索失敗: {e}")
         return []
 
-@app.route('/api/search-esg-news', methods=['POST'])
+
+@app.route('/')
+def home():
+    return render_template('index.html') 
+
+@app.route('/api/search-esg-news', methods=['POST'])  #html尾部的const區塊需來fetch這欄
 def search_esg_news():
     """主要 API 端點"""
     try:
