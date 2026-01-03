@@ -361,7 +361,8 @@
 
         .risk-label.low {
             background: rgba(212, 172, 13, 0.1);
-            color: #d4ac0d; /* Dark yellow */
+            color: #d4ac0d;
+            /* Dark yellow */
         }
 
         .risk-label.medium {
@@ -373,7 +374,7 @@
             background: rgba(255, 0, 0, 0.1);
             color: red;
         }
-        
+
         .risk-label.no {
             background: rgba(0, 128, 0, 0.1);
             color: green;
@@ -612,4 +613,64 @@
             background: var(--bg-white);
             border-radius: 8px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            flex-wrap: wrap;
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 1rem;
+        }
+
+        /* 響應式 */
+        @media (max-width: 1024px) {
+            .esg-scores-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .companies-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem 0.5rem;
+            }
+
+            .filter-row {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-section {
+                padding: 1rem;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+                margin-top: 0.5rem !important;
+            }
+
+            .filter-group input,
+            .filter-group select {
+                width: 100%;
+            }
+
+            .comparison-table {
+                font-size: 0.8rem;
+            }
+
+            .comparison-table td {
+                padding: 0.5rem;
+                max-width: 150px;
+                /* Adjust for scroll view */
+            }
+
+            /* Ensure main table scrolls nicely */
+            .dashboard-table th,
+            .dashboard-table td {
+                white-space: nowrap;
+            }
         }

@@ -83,24 +83,26 @@
         </div>
 
         <div id="resultsDashboard" class="results-dashboard" style="margin-top: 2rem; display: none;">
-            <table class="dashboard-table"
-                style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                <thead style="background: var(--primary); color: white;">
-                    <tr>
-                        <th style="padding: 1rem;">公司名稱</th>
-                        <th style="padding: 1rem;">股票代號</th>
-                        <th style="padding: 1rem;">產業別</th>
-                        <th style="padding: 1rem;">年份</th>
-                        <th style="padding: 1rem;">總風險</th>
-                        <th style="padding: 1rem;">E風險</th>
-                        <th style="padding: 1rem;">S風險</th>
-                        <th style="padding: 1rem;">G風險</th>
-                        <th style="padding: 1rem;">操作</th>
-                    </tr>
-                </thead>
-                <tbody id="companiesContainer">
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="dashboard-table"
+                    style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); min-width: 800px;">
+                    <thead style="background: var(--primary); color: white;">
+                        <tr>
+                            <th style="padding: 1rem;">公司名稱</th>
+                            <th style="padding: 1rem;">股票代號</th>
+                            <th style="padding: 1rem;">產業別</th>
+                            <th style="padding: 1rem;">年份</th>
+                            <th style="padding: 1rem;">總風險</th>
+                            <th style="padding: 1rem;">E風險</th>
+                            <th style="padding: 1rem;">S風險</th>
+                            <th style="padding: 1rem;">G風險</th>
+                            <th style="padding: 1rem;">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="companiesContainer">
+                    </tbody>
+                </table>
+            </div>
             <div id="paginationControls" class="pagination-controls" style="margin-top: 1rem; display: none;">
                 <button id="prevPage" class="btn" style="padding: 0.5rem 1rem; margin-right: 0.5rem;">上一頁</button>
                 <span id="pageInfo" style="margin: 0 1rem; color: var(--text-secondary);"></span>
@@ -125,41 +127,45 @@
             <div id="layer4" class="analysis-section">
                 <h3 class="section-title">🔍 第四層：內部比對 </h3>
                 <p style="color: var(--text-secondary); margin-bottom: 1rem;">分析報告內容與實際績效的一致性</p>
-                <table class="comparison-table">
-                    <thead>
-                        <tr>
-                            <th width="10%">esg_category</th>
-                            <th width="20%">sasb_topic</th>
-                            <th width="8%">page_number</th>
-                            <th width="20%">report_claim</th>
-                            <th width="15%">greenwashing_factor</th>
-                            <th width="12%">risk_score</th>
+                <div class="table-responsive">
+                    <table class="comparison-table" style="min-width: 600px;">
+                        <thead>
+                            <tr>
+                                <th width="10%">esg_category</th>
+                                <th width="20%">sasb_topic</th>
+                                <th width="8%">page_number</th>
+                                <th width="20%">report_claim</th>
+                                <th width="15%">greenwashing_factor</th>
+                                <th width="12%">risk_score</th>
 
-                        </tr>
-                    </thead>
-                    <tbody id="layer4Table">
-                    </tbody>
-                </table>
+                            </tr>
+                        </thead>
+                        <tbody id="layer4Table">
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <div id="layer5" class="analysis-section hidden">
                 <h3 class="section-title">📰 第五層：外部新聞揭露對比</h3>
                 <p style="color: var(--text-secondary); margin-bottom: 1rem;">對標外部新聞與監管文件的一致性</p>
-                <table class="comparison-table">
-                    <thead>
-                        <tr>
-                            <th>esg_category</th>
-                            <th>report_claim</th>
-                            <th>external_evidence</th>
-                            <th>external_evidence_url</th>
-                            <th>consistency_status</th>
-                            <th>MSCI_flag</th>
-                            <th>adjustment_score</th>
-                        </tr>
-                    </thead>
-                    <tbody id="layer5Table">
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="comparison-table" style="min-width: 600px;">
+                        <thead>
+                            <tr>
+                                <th>esg_category</th>
+                                <th>report_claim</th>
+                                <th>external_evidence</th>
+                                <th>external_evidence_url</th>
+                                <th>consistency_status</th>
+                                <th>MSCI_flag</th>
+                                <th>adjustment_score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="layer5Table">
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <div id="layer6" class="analysis-section hidden">
