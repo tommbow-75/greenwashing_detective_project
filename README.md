@@ -75,7 +75,7 @@ flowchart TD
         PDF[["永續報告書<br/>PDF 檔案"]]:::outputData
         JSON["結構化數據<br/>JSON"]:::outputData
         DB_Node[("MySQL<br/>資料庫")]:::db
-        PNG[/"詞雲<br/>PNG"/]:::outputData
+        wc_json["詞雲<br/>JSON"]:::outputData
     end
 
     %% --- 連線邏輯 ---
@@ -92,8 +92,8 @@ flowchart TD
     Gemini --> JSON
 
     %% 詞雲生成流
-    PDF --> Word_cloud --> PNG
-    PNG --> Flask
+    PDF --> Word_cloud --> wc_json
+    wc_json --> Flask
 
     %% JSON 數據分流
     JSON --> Config --> Pplx --> Flask
