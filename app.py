@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 import pymysql
 from pymysql.cursors import DictCursor
 import os
@@ -85,6 +85,11 @@ def index():
         conn.close()
 
     return render_template('index.html', companies=companies_data)
+
+# Serve word cloud JSON files
+@app.route('/wordcloud/<filename>')
+def serve_wordcloud(filename):
+    return send_from_directory('word_cloud/wc_output', filename)
 
 # 如果需要 API 格式 (Optional)
 @app.route('/api/companies')

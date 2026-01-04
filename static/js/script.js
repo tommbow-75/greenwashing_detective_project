@@ -388,43 +388,121 @@ function renderLayer6(company) {
 // [Layer 7] 文字雲生成
 function generateWordcloud(company) {
     const wordcloudArea = document.getElementById('wordcloudArea');
+
+    // Dispose existing chart if any, to avoid memory leaks or conflicts
+    const existingChart = echarts.getInstanceByDom(wordcloudArea);
+    if (existingChart) {
+        existingChart.dispose();
+    }
+
     wordcloudArea.innerHTML = '';
+    // Set explicit dimensions for Echarts
+    wordcloudArea.style.width = '100%';
+    wordcloudArea.style.height = '500px';
 
     // Error handling if stockId or year is missing
     if (!company.stockId || !company.year) {
         console.warn('generateWordcloud: Missing stockId or year', company);
         wordcloudArea.innerHTML = '<div style="padding:1rem; color: #666;">無法顯示文字雲：資料缺漏 (StockID 或 Year)</div>';
+        wordcloudArea.style.height = 'auto';
         return;
     }
 
-    // Trim just in case of whitespace
     const stockId = String(company.stockId).trim();
     const year = String(company.year).trim();
 
-    // Construct path
-    const imgPath = `/static/images/${stockId}_${year}_word_cloud.png`;
-    console.log(`[WordCloud] Attempting to load: ${imgPath}`, { stockId, year });
+    // Construct path to JSON
+    // Note: User mentioned file name format 1102_2024_wc.json
+    const jsonPath = `/wordcloud/${stockId}_${year}_wc.json`;
+    console.log(`[WordCloud] Attempting to load JSON: ${jsonPath}`, { stockId, year });
 
-    const img = document.createElement('img');
-    img.src = imgPath;
-    img.alt = `${company.name} 文字雲`;
-    img.style.maxWidth = '100%';
-    img.style.height = 'auto';
-    img.style.display = 'block';
-    img.style.margin = '0 auto';
+    // Show loading state
+    wordcloudArea.innerHTML = '<div style="display:flex; justify-content:center; align-items:center; height:100%; color:#666;">載入文字雲中...</div>';
 
-    // Success handler
-    img.onload = function () {
-        console.log(`[WordCloud] Successfully loaded: ${imgPath}`);
-    };
+    fetch(jsonPath)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Clear loading message
+            wordcloudArea.innerHTML = '';
 
-    // Error handler
-    img.onerror = function () {
-        console.error(`[WordCloud] Failed to load image: ${imgPath}`);
-        wordcloudArea.innerHTML = `<div style="padding:1rem; color: #666;">尚無此公司的文字雲圖片<br><small style="color:#999">(${stockId}_${year}_word_cloud.png)</small></div>`;
-    };
+            const chart = echarts.init(wordcloudArea);
 
-    wordcloudArea.appendChild(img);
+            // Determine size range based on screen width
+            const isDesktop = window.innerWidth > 768;
+            const sizeRange = isDesktop ? [30, 90] : [12, 50];
+
+            const option = {
+                tooltip: {
+                    show: true,
+                    formatter: '{b}: {c}'
+                },
+                series: [{
+                    type: 'wordCloud',
+                    shape: 'circle',
+                    left: 'center',
+                    top: 'center',
+                    width: '95%',
+                    height: '95%',
+                    right: null,
+                    bottom: null,
+                    sizeRange: sizeRange,
+                    rotationRange: [-45, 90],
+                    rotationStep: 45,
+                    gridSize: 8,
+                    drawOutOfBound: false,
+                    layoutAnimation: true,
+                    textStyle: {
+                        fontFamily: 'sans-serif',
+                        fontWeight: 'bold',
+                        color: function () {
+                            // Random colors
+                            return 'rgb(' + [
+                                Math.round(Math.random() * 160),
+                                Math.round(Math.random() * 160),
+                                Math.round(Math.random() * 160)
+                            ].join(',') + ')';
+                        }
+                    },
+                    emphasis: {
+                        focus: 'self',
+                        textStyle: {
+                            shadowBlur: 10,
+                            shadowColor: '#333'
+                        }
+                    },
+                    data: data
+                }]
+            };
+
+            chart.setOption(option);
+
+            // Handle window resize
+            window.addEventListener('resize', function () {
+                chart.resize();
+
+                // 動態調整文字大小範圍
+                const newIsDesktop = window.innerWidth > 768;
+                const newSizeRange = newIsDesktop ? [30, 90] : [12, 50];
+
+                chart.setOption({
+                    series: [{
+                        sizeRange: newSizeRange
+                    }]
+                });
+            });
+        })
+        .catch(err => {
+            console.error('[WordCloud] Load failed:', err);
+            wordcloudArea.innerHTML = `<div style="padding:1rem; color: #666; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;">
+                <p>無法載入文字雲資料</p>
+                <small style="color:#999">(${stockId}_${year}_wc.json)</small>
+            </div>`;
+        });
 }
 
 // --- 輔助函式與資料讀取 (Helpers & Data) ---

@@ -93,7 +93,7 @@ for word, count in keywords_found.items():
 print("-" * 30)
 print("正在輸出JSON檔...")
 
-word_cloud_json = [{"name": word, "value": count} for word, count in word_counts.most_common(80)]
+word_cloud_json = [{"name": word, "value": count} for word, count in word_counts.most_common(100)]
 output_dir = os.path.join(base_dir, "wc_output")
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
@@ -154,7 +154,4 @@ execution_time = end_time - start_time
 print(f"程式執行時間: {execution_time:.2f} 秒")
 
 # 待加強功能---
-# wordcloud.png title 改成公司或不顯示 company_name="", year="" f"{company_name}_{year}_word_cloud.png"
-# 直接丟到網頁上，不要圖片
-# 存檔改成公司代號
 # 需分成讀取PDF以及抓取現有資料
