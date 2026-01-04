@@ -509,6 +509,17 @@
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 1.5rem;
             margin-top: 1rem;
+            transition: all 0.5s ease;
+            max-height: 2000px;
+            opacity: 1;
+            overflow: hidden;
+        }
+
+        .source-grid.collapsed {
+            max-height: 0;
+            opacity: 0;
+            margin-top: 0;
+            gap: 0;
         }
 
         .source-card {
@@ -537,11 +548,11 @@
             gap: 0.5rem;
         }
 
-        .source-list li:before {
+        /* .source-list li:before {
             content: "✓";
             color: var(--success);
             font-weight: bold;
-        }
+        } */
 
         /* 響應式 */
         @media (max-width: 1024px) {

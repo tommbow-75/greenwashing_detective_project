@@ -188,72 +188,74 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div id="layer8" class="analysis-section">
-                <h3 class="section-title">📊 第八層：資料來源與驗證</h3>
-                <div class="source-grid">
-                    <div class="source-card">
-                        <div class="source-title">📰 新聞資料來源</div>
-                        <ul class="source-list">
-                            <li>聯合報 ESG 報導</li>
-                            <li>經濟日報企業動態</li>
-                            <li>台灣證交所公告</li>
-                            <li>環保署新聞稿</li>
-                            <li>PTT 看板討論</li>
-                            <li>Glassdoor 員工評論</li>
-                            <li>新聞爬蟲更新頻率: 每日</li>
-                        </ul>
-                    </div>
-                    <div class="source-card">
-                        <div class="source-title">📊 數據資料來源</div>
-                        <ul class="source-list">
-                            <li>TEJ ESG Database</li>
-                            <li>MSCI ESG Rating</li>
-                            <li>環保署罰款紀錄</li>
-                            <li>公開資訊觀測站</li>
-                            <li>Sustainalytics</li>
-                            <li>排放量資料來源</li>
-                            <li>數據同步: 即時更新</li>
-                        </ul>
-                    </div>
-                    <div class="source-card">
-                        <div class="source-title">⏰ 更新與準確性</div>
-                        <ul class="source-list">
-                            <li>ESG報告更新: 2025/12/17</li>
-                            <li>新聞爬蟲: 每日 09:00 更新</li>
-                            <li>罰款紀錄: 即時同步</li>
-                            <li>排放數據: 季度更新</li>
-                            <li>🟢 數據准確率: 95%</li>
-                            <li>🟢 模型可信度: 高</li>
-                            <li>🟢 信息完整度: 92%</li>
-                        </ul>
-                    </div>
+        <div id="layer8" class="analysis-section">
+            <h3 class="section-title">
+                📊 第八層：參考資料
+                <button
+                    style="margin-left: 10px; padding: 5px; font-size: 1.2rem; border: none; background: transparent; cursor: pointer; color: var(--text-secondary); line-height: 1;"
+                    onclick="var el=document.getElementById('layer8Content'); el.classList.toggle('collapsed'); this.innerText = el.classList.contains('collapsed') ? '▶' : '▼';">
+                    ▼
+                </button>
+            </h3>
+            <span id="layer8Content" class="source-grid">
+                <div class="source-card">
+                    <div class="source-title">📰 資料來源</div>
+                    <ul class="source-list" style="font-size: 14px;">
+                        <li><a href="https://www.sciencedirect.com/science/article/abs/pii/S0361368207000451"
+                                target="_blank" rel="noopener noreferrer">Clarkson et al. (2008) 模型</a></li>
+                        <li><a href="https://www.ares-registration.com/?sub=services&cat=esg&item=AA1000#gsc.tab=0"
+                                target="_blank" rel="noopener noreferrer">AA1000 AP 2018 當責性原則標準</a></li>
+                        <li><a href="https://www.ardf.org.tw/html/opinion/au/3000.pdf" target="_blank"
+                                rel="noopener noreferrer">國際確信準則 3000 號</a></li>
+                        <li><a href="https://www.globalreporting.org/standards/" target="_blank"
+                                rel="noopener noreferrer">GRI八大原則</a></li>
+                        <li><a href="https://www.investopedia.com/sustainability-accounting-standards-board-7484327"
+                                target="_blank" rel="noopener noreferrer">SASB 標準</a></li>
+                        <li><a href="https://www.msci.com/downloads/web/msci-com/data-and-analytics/sustainability-solutions/MSCI%20ESG%20Government%20Ratings%20Methodology.pdf"
+                                target="_blank" rel="noopener noreferrer">MSCI ESG 政府評分方法論</a></li>
+                        <li><a href="https://www.metzler.com/downloads/Metzler/Download-Dokumente-MAM/Nachhaltigkeit/MAM-MSCI-ESG-Controversies-and-Global-Norms-Methodology.pdf"
+                                target="_blank" rel="noopener noreferrer">MSCI ESG 樣板方法論</a></li>
+                    </ul>
                 </div>
+            </span>
+        </div>
+
+        <div id="layer9" class="analysis-section" style="box-shadow: none; background: transparent; padding: 0;">
+            <div style="padding: 1rem; border-top: 1px solid #e2e8f0;">
+                <p style="color: #94a3b8; font-size: 0.85rem; line-height: 1.5; text-align: center;">
+                    免責聲明：本平台之分析結果僅供學術研究與初步篩選參考，並非專業投資建議。所有數據來源均為公開資訊，本團隊已盡力確保資料正確性，但無法保證其絕對無誤。使用者在參考本平台資訊進行任何決策前，請務必自行查證或諮詢專業人士。
+                </p>
+                <p
+                    style="color: #94a3b8; font-size: 0.85rem; line-height: 1.5; text-align: center; margin-top: 0.5rem;">
+                    © 2024 Greenwashing Detective. All Rights Reserved.
+                    本網站之所有內容（包括但不限於文字、圖表、程式碼及演算法）均受智慧財產權法保護，未經授權不得重製、散布或用於商業用途。
+                </p>
             </div>
         </div>
-    </div>
 
-    <!-- 從 Flask 傳入的 JSON 資料，先以純 JSON 形式嵌入，避免與 JS 語法衝突 -->
-    <script id="companies-data" type="application/json">
+        <!-- 從 Flask 傳入的 JSON 資料，先以純 JSON 形式嵌入，避免與 JS 語法衝突 -->
+        <script id="companies-data" type="application/json">
         {{ companies | tojson | safe }}
     </script>
 
-    <script>
-        // 讀取並解析後端嵌入的 JSON 資料
-        const companiesData = JSON.parse(
-            document.getElementById("companies-data").textContent || "[]"
-        );
+        <script>
+            // 讀取並解析後端嵌入的 JSON 資料
+            const companiesData = JSON.parse(
+                document.getElementById("companies-data").textContent || "[]"
+            );
 
-        // 圖片基礎路徑 (給 script.js 使用，目前沒用到)
-        const imgBasePath = "{{ url_for('static', filename='images/') }}";
+            // 圖片基礎路徑 (給 script.js 使用，目前沒用到)
+            const imgBasePath = "{{ url_for('static', filename='images/') }}";
 
-        // SASB JSON 路徑
-        const sasbJsonPath = "{{ url_for('static', filename='data/SASB_weightMap.json') }}";
+            // SASB JSON 路徑
+            const sasbJsonPath = "{{ url_for('static', filename='data/SASB_weightMap.json') }}";
 
-        console.log("資料庫已載入:", companiesData.length, "筆公司資料");
-    </script>
+            console.log("資料庫已載入:", companiesData.length, "筆公司資料");
+        </script>
 
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 
 </html>
