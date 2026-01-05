@@ -1,7 +1,10 @@
--- 1. 公司基本資料表
+drop table if exists company_report;
+drop table if exists company;
+
+-- 1. 詳細 ESG 分析數據表 (用於計算)
 CREATE TABLE company_report(
-ESG_id VARCHAR(8) NOT NULL PRIMARY KEY,
-company_id VARCHAR(4),
+ESG_id VARCHAR(8) NOT NULL PRIMARY KEY,  -- 格式：年份+股票代號 (Unique)
+company_id VARCHAR(4),  -- 股票代號
 year INT,  -- 報告年份
 ESG_category VARCHAR(5),  -- ESG 分類
 SASB_topic VARCHAR(20),  -- SASB 議題
@@ -16,20 +19,22 @@ MSCI_flag VARCHAR(100),  -- MSCI 旗號
 adjustment_score DECIMAL(5,2)  -- 調整分數 (扣分項)
 );
 
--- 2. 詳細 ESG 分析數據表 (用於計算)
+-- 2. 公司基本資料表
 CREATE TABLE company(
-ESG_id VARCHAR(8) NOT NULL PRIMARY KEY,
-company_name VARCHAR(20),
+id INT AUTO_INCREMENT PRIMARY KEY,  -- [新增] 流水號作為主鍵
+ESG_id VARCHAR(8) NOT NULL,  -- 格式：年份+股票代號 (Unique)
+company_name VARCHAR(20),  -- 公司名稱
 industry VARCHAR(20),  -- 對應 JSON 中的產業欄位名稱
 company_code VARCHAR(4),  -- 股票代號
 Report_year INT,  -- 報告年份
-total_score DECIMAL(5,2),
-URL VARCHAR(24)  -- 永續報告書的連結
+total_score DECIMAL(5,2),  -- 總分數(目前沒有用，先忽略)
+URL VARCHAR(24),  -- 永續報告書的連結
+analysis_status VARCHAR(20) DEFAULT 'completed'  -- 分析狀態：processing, completed, failed
 );
 
 -- 0. 清除舊測試資料 (選擇性執行，避免 ID 重複錯誤)
-DELETE FROM company_report;
-DELETE FROM company;
+-- DELETE FROM company_report;
+-- DELETE FROM company;
 
 -- 1. 插入公司基本資料 (company 表)
 -- 對應欄位: ESG_id, company_name, industry, company_code, Report_year, total_score, URL

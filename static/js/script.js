@@ -83,15 +83,25 @@ function handleSearch() {
         closeDetail();
     }
 
-    filterCompanies();
+    // 取得輸入的公司代碼和年份
+    const companyCode = document.getElementById('searchInput').value.trim();
+    const year = document.getElementById('yearFilter').value;
 
-    // 隱藏初始提示，顯示結果
-    document.getElementById('initialPrompt').style.display = 'none';
-    document.getElementById('resultsDashboard').style.display = 'block';
+    // 如果有輸入公司代碼，則呼叫新的查詢 API
+    if (companyCode && year) {
+        queryCompanyData(parseInt(year), companyCode);
+    } else {
+        // 否則使用舊的篩選邏輯
+        filterCompanies();
+
+        // 隱藏初始提示，顯示結果
+        document.getElementById('initialPrompt').style.display = 'none';
+        document.getElementById('resultsDashboard').style.display = 'block';
+    }
 }
 
 function filterCompanies() {
-    const search = document.getElementById('searchInput').value.toLowerCase().trim();
+    const search = document.getElementById('searchInput').value.toUpperCase().trim();
     const industry = document.getElementById('industryFilter').value;
     const year = document.getElementById('yearFilter').value;
 
@@ -99,8 +109,8 @@ function filterCompanies() {
 
     // 使用全域的 companiesData (來自 HTML)
     filteredData = companiesData.filter(c => {
-        const matchSearch = c.name.toLowerCase().includes(search) ||
-            (c.stockId && c.stockId.includes(search));
+        // 只比對公司代碼（stockId）
+        const matchSearch = !search || (c.stockId && c.stockId.includes(search));
         const matchIndustry = !industry || c.industry === industry;
         const matchYear = !year || c.year.toString() === year;
         return matchSearch && matchIndustry && matchYear;
@@ -571,4 +581,191 @@ function getRiskLabel(score) {
     }
 
     return `<span class="risk-label ${labelClass}">${labelText}</span>`;
+}
+
+// --- 自動抓取與分析功能 ---
+
+// 查詢公司資料（呼叫新API）
+async function queryCompanyData(year, companyCode) {
+    try {
+        // 先顯示載入中狀態/或重置狀態，避免舊錯誤訊息殘留
+        showAnalysisStatus('processing', '查詢資料中...');
+
+        const response = await fetch('/api/query_company', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                year: year,
+                company_code: companyCode,
+                auto_fetch: false  // 先不自動抓取，等用戶確認
+            })
+        });
+
+        // 檢查回應是否成功
+        if (!response.ok) {
+            // 嘗試解析 JSON 錯誤訊息
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.indexOf("application/json") !== -1) {
+                const errData = await response.json();
+                throw new Error(errData.message || `伺服器錯誤: ${response.status}`);
+            } else {
+                // 如果回傳的不是 JSON (例如 HTML 錯誤頁面)
+                const text = await response.text();
+                console.error("非 JSON 回應:", text.substring(0, 200)); // 只印出前200字避免洗版
+                throw new Error(`伺服器回應異常 (${response.status})，請稍後再試`);
+            }
+        }
+
+        const result = await response.json();
+        console.log('Query result:', result);
+
+        // 隱藏初始提示
+        document.getElementById('initialPrompt').style.display = 'none';
+
+        // 根據不同狀態顯示結果
+        showAnalysisStatus(result.status, result.message, result.data, year, companyCode);
+
+    } catch (error) {
+        console.error('查詢錯誤:', error);
+        // 處理 JSON 解析錯誤 (Unexpected token <)
+        let msg = error.message;
+        if (msg.includes("Unexpected token") || msg.includes("JSON")) {
+            msg = "系統錯誤 (解析失敗)，可能伺服器發生異常";
+        }
+        showAnalysisStatus('error', msg);
+    }
+}
+
+// 顯示不同狀態的內容
+function showAnalysisStatus(status, message, data = null, year = null, companyCode = null) {
+    const statusDisplay = document.getElementById('statusDisplay');
+    const statusContent = document.getElementById('statusContent');
+    const resultsDashboard = document.getElementById('resultsDashboard');
+
+    // 清空舊內容
+    statusContent.innerHTML = '';
+
+    if (status === 'completed') {
+        // ✅ 已完成：顯示資料
+        statusDisplay.style.display = 'none';
+        resultsDashboard.style.display = 'block';
+
+        // 使用現有的 renderCompanies 函式顯示資料
+        filteredData = [data];
+        currentPage = 1;
+        renderCompanies(filteredData);
+
+    } else if (status === 'processing') {
+        // ⏳ 處理中
+        statusDisplay.style.display = 'block';
+        resultsDashboard.style.display = 'none';
+
+        statusContent.innerHTML = `
+            <div style="text-align: center; padding: 2rem;">
+                <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 1rem;"></div>
+                <h3 style="color: var(--primary);">⏳ ${message}</h3>
+                <p style="color: var(--text-secondary);">系統正在進行分析，這可能需要數分鐘...</p>
+            </div>
+            <style>
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            </style>
+        `;
+
+    } else if (status === 'failed') {
+        // ❌ 失敗
+        statusDisplay.style.display = 'block';
+        resultsDashboard.style.display = 'none';
+
+        statusContent.innerHTML = `
+            <div style="text-align: center; padding: 2rem; background: #fff3cd; border-radius: 8px;">
+                <h3 style="color: #856404;">❌ 分析失敗</h3>
+                <p style="color: #856404;">${message}</p>
+                <button class="btn" onclick="confirmAutoFetch(${year}, '${companyCode}')" style="margin-top: 1rem;">
+                    🔄 重新啟動分析
+                </button>
+            </div>
+        `;
+
+    } else if (status === 'validation_needed') {
+        // ❓ 需要確認
+        statusDisplay.style.display = 'block';
+        resultsDashboard.style.display = 'none';
+
+        statusContent.innerHTML = `
+            <div style="text-align: center; padding: 2rem; background: #d1ecf1; border-radius: 8px;">
+                <h3 style="color: #0c5460;">❓ ${message}</h3>
+                <p style="color: #0c5460; margin: 1rem 0;">此操作將自動下載永續報告書並進行 AI 分析，可能需要較長時間。</p>
+                <button class="btn" onclick="confirmAutoFetch(${year}, '${companyCode}')" style="margin-top: 1rem; background: var(--primary); color: white;">
+                    ✅ 確認啟動
+                </button>
+                <button class="btn" onclick="cancelAutoFetch()" style="margin-top: 1rem; margin-left: 1rem; background: #6c757d; color: white;">
+                    ❌ 取消
+                </button>
+            </div>
+        `;
+
+    } else if (status === 'not_found') {
+        // ❌ 查無報告
+        statusDisplay.style.display = 'block';
+        resultsDashboard.style.display = 'none';
+
+        statusContent.innerHTML = `
+            <div style="text-align: center; padding: 2rem; background: #f8d7da; border-radius: 8px;">
+                <h3 style="color: #721c24;">❌ ${message}</h3>
+                <p style="color: #721c24;">請確認公司代碼與年度是否正確。</p>
+            </div>
+        `;
+
+    } else {
+        // 🔴 錯誤
+        statusDisplay.style.display = 'block';
+        resultsDashboard.style.display = 'none';
+
+        statusContent.innerHTML = `
+            <div style="text-align: center; padding: 2rem; background: #f8d7da; border-radius: 8px;">
+                <h3 style="color: #721c24;">🔴 ${message}</h3>
+            </div>
+        `;
+    }
+}
+
+// 確認啟動自動抓取
+async function confirmAutoFetch(year, companyCode) {
+    try {
+        // 顯示處理中狀態
+        showAnalysisStatus('processing', '正在啟動自動抓取與分析...');
+
+        const response = await fetch('/api/query_company', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                year: year,
+                company_code: companyCode,
+                auto_fetch: true  // 同意自動抓取
+            })
+        });
+
+        const result = await response.json();
+        console.log('Auto-fetch result:', result);
+
+        // 顯示最終結果
+        showAnalysisStatus(result.status, result.message, result.data, year, companyCode);
+
+    } catch (error) {
+        console.error('自動抓取錯誤:', error);
+        showAnalysisStatus('error', `系統錯誤: ${error.message}`);
+    }
+}
+
+// 取消自動抓取
+function cancelAutoFetch() {
+    document.getElementById('statusDisplay').style.display = 'none';
+    document.getElementById('initialPrompt').style.display = 'block';
 }

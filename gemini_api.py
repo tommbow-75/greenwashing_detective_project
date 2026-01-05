@@ -246,5 +246,111 @@ def main():
     scorer.score_report()
 
 
+# =========================
+# 自動抓取分析功能的接口（預留）
+# =========================
+def analyze_esg_report(pdf_path: str, year: int, company_code: str) -> dict:
+    """
+    分析 ESG 永續報告書並產生結構化資料（尚未實作）
+    
+    Args:
+        pdf_path: PDF 檔案的絕對路徑
+        year: 報告年份
+        company_code: 公司代碼
+    
+    Returns:
+        dict: 包含 company_report 表所需的所有欄位
+        {
+            'company_name': str,
+            'industry': str,
+            'url': str,
+            'analysis_items': [
+                {
+                    'ESG_category': str,
+                    'SASB_topic': str,
+                    'page_number': str,
+                    'report_claim': str,
+                    'greenwashing_factor': str,
+                    'risk_score': str,
+                    'external_evidence': str,
+                    'external_evidence_url': str,
+                    'consistency_status': str,
+                    'MSCI_flag': str,
+                    'adjustment_score': float
+                },
+                ...
+            ]
+        }
+    """
+    # TODO: 實際 AI 分析邏輯
+    # 1. 使用 ESGReportScorer 或其他方式解析 PDF
+    # 2. 呼叫 Gemini API 進行分析
+    # 3. 整理成標準化格式回傳
+    raise NotImplementedError("AI 分析模組尚未實作，請使用 analyze_esg_report_mock() 進行測試")
+
+
+def analyze_esg_report_mock(pdf_path: str, year: int, company_code: str) -> dict:
+    """
+    模擬 AI 分析結果（測試用）
+    
+    回傳假資料以供測試整體流程
+    """
+    import random
+    
+    # 模擬公司名稱
+    company_names = {
+        '2330': '台積電',
+        '1314': '中石化',
+        '1102': '亞洲水泥',
+        '2454': '聯發科',
+        '2317': '鴻海'
+    }
+    
+    # 模擬產業
+    industries = {
+        '2330': '半導體業',
+        '1314': '油電燃氣業',
+        '1102': '水泥工業',
+        '2454': '半導體業',
+        '2317': '電腦及週邊設備業'
+    }
+    
+    company_name = company_names.get(company_code, f'公司{company_code}')
+    industry = industries.get(company_code, '其他')
+    
+    # 模擬分析項目（2-4 筆）
+    sasb_topics = ['溫室氣體排放', '水資源與廢水處理管理', '員工健康與安全', '商業道德', '空氣品質', '廢棄物與有害物質管理']
+    categories = ['E', 'S', 'G']
+    
+    num_items = random.randint(2, 4)
+    analysis_items = []
+    
+    for i in range(num_items):
+        category = random.choice(categories)
+        topic = random.choice(sasb_topics)
+        risk = random.randint(2, 4)
+        
+        analysis_items.append({
+            'ESG_category': category,
+            'SASB_topic': topic,
+            'page_number': str(random.randint(10, 80)),
+            'report_claim': f'承諾在 {topic} 方面達成目標，並持續改善相關指標。',
+            'greenwashing_factor': '' if risk >= 3 else '缺乏具體數據',
+            'risk_score': str(risk),
+            'external_evidence': '已通過第三方驗證' if risk == 4 else '',
+            'external_evidence_url': '',
+            'consistency_status': '一致' if risk >= 3 else '待確認',
+            'MSCI_flag': random.choice(['AAA', 'AA', 'A', 'BBB']),
+            'adjustment_score': 0.0 if risk >= 3 else round(random.uniform(0.5, 1.5), 2)
+        })
+    
+    return {
+        'company_name': company_name,
+        'industry': industry,
+        'url': f'https://esg.tw/{company_code}',  # 縮短 URL 避免超出欄位長度
+        'analysis_items': analysis_items
+    }
+
+
 if __name__ == "__main__":
     main()
