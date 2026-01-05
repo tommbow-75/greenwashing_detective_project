@@ -193,6 +193,8 @@ def insert_analysis_results(esg_id, company_name, industry, url, analysis_items)
                     cursor.execute("DELETE FROM company_report WHERE company_id = %s AND year = %s", (company_code, year))
                     
                     # 批次插入
+                    # 注意：id 欄位由資料庫自動生成 (AUTO_INCREMENT)
+                    # ESG_id 欄位現在儲存 company 的 ESG_id（用於關聯）
                     insert_sql = """
                         INSERT INTO company_report 
                         (ESG_id, company_id, year, ESG_category, SASB_topic, page_number, 
@@ -201,19 +203,9 @@ def insert_analysis_results(esg_id, company_name, industry, url, analysis_items)
                         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     """
                     
-                    for idx, item in enumerate(analysis_items, 1):
-                        # 產生唯一的細項 ID（8碼以內）：年份後2碼 + 公司代碼（最多4碼）+ 流水號2碼
-                        # 例如：23 + 2330 + 01 = 23233001（8碼）
-                        year_suffix = str(year)[-2:]  # 取年份最後2碼
-                        item_id = f"{year_suffix}{company_code}{idx:02d}"
-                        
-                        # 確保不超過 8 碼
-                        if len(item_id) > 8:
-                            # 如果超過 8 碼，使用替代方案：R + 自增編號（簡化版）
-                            item_id = f"R{year_suffix}{idx:04d}"  # R + 年份後2碼 + 4位流水號 = 7碼
-                        
+                    for item in analysis_items:
                         cursor.execute(insert_sql, (
-                            item_id,
+                            esg_id,  # 儲存 company 的 ESG_id（如 20242330）
                             company_code,
                             year,
                             item.get('ESG_category', ''),

@@ -83,6 +83,9 @@ function handleSearch() {
         closeDetail();
     }
 
+    // 隱藏狀態顯示區域（清除之前的錯誤或成功訊息）
+    document.getElementById('statusDisplay').style.display = 'none';
+
     // 取得輸入的公司代碼和年份
     const companyCode = document.getElementById('searchInput').value.trim();
     const year = document.getElementById('yearFilter').value;
