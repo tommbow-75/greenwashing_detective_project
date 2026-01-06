@@ -1,0 +1,14 @@
+.env
+__pycache__/
+*.pyc
+
+# 虛擬環境
+venv/
+.venv/
+env/
+ENV/
+bin/
+lib/
+
+# python預加載資料
+__pycache__
