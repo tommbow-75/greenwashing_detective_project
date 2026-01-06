@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ESG 綠洗風險監測儀表板</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.1.0/dist/echarts-wordcloud.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.1.0/dist/echarts-wordcloud.min.js"></script>
 </head>
 
 <body>
@@ -20,8 +20,8 @@
         <div class="filter-section">
             <div class="filter-row">
                 <div class="filter-group">
-                    <label>🔍 公司名稱</label>
-                    <input type="text" id="searchInput" placeholder="公司名稱...">
+                    <label>🔍 公司代碼</label>
+                    <input type="text" id="searchInput" placeholder="請輸入公司代碼（如 2330）...">
                 </div>
                 <div class="filter-group">
                     <label>🏢 產業別</label>
@@ -82,6 +82,11 @@
                     class="prompt-gif">
                 <p class="prompt-text">請使用上方篩選條件進行搜尋，以查看 ESG 綠洗風險監測結果</p>
             </div>
+        </div>
+
+        <!-- 狀態顯示區域 -->
+        <div id="statusDisplay" class="status-display" style="margin-top: 2rem; display: none;">
+            <div id="statusContent" class="status-content"></div>
         </div>
 
         <div id="resultsDashboard" class="results-dashboard" style="margin-top: 2rem; display: none;">
