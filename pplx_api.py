@@ -1,4 +1,4 @@
-#➡️需和app.py, index.htnl整合code⬅️
+#➡️需和app.py, index.html整合code⬅️
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS #pip install flask-cors
 import requests
@@ -189,6 +189,7 @@ def search_esg_news():
                     'title': news['page_title'],
                     'url': news['url'],
                     'source': 'gemini_verified',
+                    'is_verified': True,
                     'validation_status': 'verified'
                 }
                 for news in validated_results['valid_urls']
