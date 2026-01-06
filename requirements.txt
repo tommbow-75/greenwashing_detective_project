@@ -21,6 +21,7 @@ flask-cors==6.0.2
 fonttools==4.61.1
 frozenlist==1.8.0
 google-auth==2.45.0
+google-genai
 idna==3.11
 itsdangerous==2.2.0
 jieba==0.42.1

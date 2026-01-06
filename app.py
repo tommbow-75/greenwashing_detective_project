@@ -5,6 +5,8 @@ import os
 import json
 from dotenv import load_dotenv
 from app.calculate_esg import calculate_esg_scores
+from google.cloud.sql.connector import Connector, IPTypes
+import pymysql.cursors
 
 load_dotenv()
 
@@ -13,15 +15,16 @@ app = Flask(__name__)
 
 # --- 資料庫連線設定 ---
 def get_db_connection():
-    return pymysql.connect(
-        host=os.getenv('DB_HOST'),
-        port=int(os.getenv('DB_PORT')),
-        user=os.getenv('DB_USER'), 
-        password=os.getenv('DB_PASSWORD'), 
-        db=os.getenv('DB_NAME'), 
-        charset='utf8mb4',
-        cursorclass=DictCursor
-    )
+    connector = Connector()
+    return connector.connect(
+            os.getenv('INSTANCE_CONNECTION_NAME'),
+            "pymysql",
+            user=os.getenv('DB_USER'),
+            password=os.getenv('DB_PASSWORD'), # 更改為自己的使用者密碼，沒有就不用動
+            db=os.getenv('DB_NAME'),
+            enable_iam_auth=False, # 關鍵：關閉 IAM 驗證
+            ip_type=IPTypes.PUBLIC # 如果你的實例只開私有 IP，請改為 IPTypes.PRIVATE
+        )
 
 @app.route('/')
 def index():
@@ -32,7 +35,7 @@ def index():
     companies_data = []
     
     try:
-        with conn.cursor() as cursor:
+        with conn.cursor(pymysql.cursors.DictCursor) as cursor:
             # --- [Update] 資料庫讀取段落 (取得所有公司) ---
             # 資料表名稱變更: companies -> company
             # 欄位對應: id -> ESG_id (或忽略), name -> company_name, stock_id -> company_code
