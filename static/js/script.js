@@ -31,7 +31,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 2. 設置按鈕事件監聽
     setupEventListeners();
 
-    // 3. (選擇性) 如果想要一進來就顯示列表，可以打開下面這行
+    // 3. 創建動態驗證 tooltip
+    createVerifiedTooltip();
+
+    // 4. (選擇性) 如果想要一進來就顯示列表，可以打開下面這行
     // renderCompanies(companiesData);
 });
 
@@ -341,11 +344,22 @@ function renderLayer5(company) {
 
         const evidenceText = row.external_evidence || '-';
         const evidenceUrl = row.external_evidence_url;
+        const isVerified = row.is_verified === true || row.is_verified === 1; // 支援 boolean 或 int
 
-        // 如果有 URL，將證據文字變成超連結
-        const evidenceDisplay = evidenceUrl
-            ? `<a href="${evidenceUrl}" target="_blank" onclick="event.stopPropagation();" style="color: var(--primary); text-decoration: underline;" title="${evidenceText}">${cutString(evidenceText, 15)}</a>`
-            : `<span title="${evidenceText}">${cutString(evidenceText, 15)}</span>`;
+        // 驗證徽章 (綠色圓形勾勾)
+        const verifiedBadge = isVerified
+            ? '<span class="verified-badge" style="display:inline-block; width:16px; height:16px; background:#4CAF50; border-radius:50%; color:white; text-align:center; line-height:16px; font-size:12px; margin-right:4px;">✓</span>'
+            : '';
+
+        // 如果有 URL，將證據文字變成超連結（已驗證時，整個區域都能觸發懸停提示）
+        let evidenceDisplay;
+        if (evidenceUrl) {
+            const verifiedClass = isVerified ? ' verified-evidence' : '';
+            evidenceDisplay = `<a href="${evidenceUrl}" target="_blank" onclick="event.stopPropagation();" class="evidence-link${verifiedClass}" style="color: var(--primary); text-decoration: underline; position: relative;">${verifiedBadge}${cutString(evidenceText, 15)}</a>`;
+        } else {
+            const verifiedClass = isVerified ? ' verified-evidence' : '';
+            evidenceDisplay = `<span class="evidence-text${verifiedClass}" style="position: relative;">${verifiedBadge}${cutString(evidenceText, 15)}</span>`;
+        }
 
         const status = row.consistency_status || '待確認';
         const msci = row.MSCI_flag || '-';
@@ -362,7 +376,7 @@ function renderLayer5(company) {
         tr.innerHTML = `
             <td>${row.ESG_category}</td>
             <td title="${row.report_claim}">${cutString(row.report_claim, 15)}</td>
-            <td>${evidenceDisplay}</td>
+            <td class="evidence-cell">${evidenceDisplay}</td>
             <td style="color:${statusColor}; font-weight:bold;">${status}</td>
             <td>${msci}</td>
             <td>${getRiskLabel(netScore)}</td>
@@ -733,4 +747,47 @@ function getRiskLabel(score) {
     }
 
     return `<span class="risk-label ${labelClass}">${labelText}</span>`;
+}
+
+// --- 動態驗證 Tooltip 功能 ---
+function createVerifiedTooltip() {
+    // 創建 tooltip 元素
+    const tooltip = document.createElement('div');
+    tooltip.id = 'verified-tooltip';
+    tooltip.textContent = '已驗證';
+    document.body.appendChild(tooltip);
+
+    // 追蹤滑鼠位置
+    let mouseX = 0;
+    let mouseY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+
+        // 如果 tooltip 是顯示狀態，更新位置
+        if (tooltip.style.display === 'block') {
+            tooltip.style.left = (mouseX + 15) + 'px';
+            tooltip.style.top = (mouseY + 15) + 'px';
+        }
+    });
+
+    // 使用事件委派處理所有的 verified-badge 和 verified-evidence
+    document.addEventListener('mouseover', (e) => {
+        if (e.target.classList.contains('verified-badge') ||
+            e.target.classList.contains('verified-evidence') ||
+            e.target.closest('.verified-evidence')) {
+            tooltip.style.display = 'block';
+            tooltip.style.left = (mouseX + 15) + 'px';
+            tooltip.style.top = (mouseY + 15) + 'px';
+        }
+    });
+
+    document.addEventListener('mouseout', (e) => {
+        if (e.target.classList.contains('verified-badge') ||
+            e.target.classList.contains('verified-evidence') ||
+            e.target.closest('.verified-evidence')) {
+            tooltip.style.display = 'none';
+        }
+    });
 }
