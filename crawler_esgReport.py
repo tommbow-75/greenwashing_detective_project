@@ -6,6 +6,11 @@ import time
 # 隱藏安全連線警告
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+# 取得程式檔案所在的目錄
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+# 設定預設的 ESG 報告儲存目錄
+DEFAULT_SAVE_DIR = os.path.join(SCRIPT_DIR, 'temp_data', 'esgReport')
+
 
 # ==================== 可程式化呼叫的函式 ====================
 
@@ -23,6 +28,7 @@ def validate_report_exists(year, company_code, market_type=0):
         report_info 包含: {
             'company_code': str,
             'company_name': str,
+            'sector': str,
             'download_url': str,
             'file_name': str
         }
@@ -68,18 +74,14 @@ def validate_report_exists(year, company_code, market_type=0):
             # 新版邏輯 (2023+)
             stock_code = item.get('code')
             company_name = item.get('shortName')
-            # 新增開始
-            sector = item.get('sector') # 2023+ 使用 sector 欄位
-            # 新增結束
+            sector = item.get('sector')  # 2023+ 使用 sector 欄位
             report_id = item.get('twFirstReportDownloadId')
             download_url = f"https://esggenplus.twse.com.tw/api/api/MopsSustainReport/data/FileStream?id={report_id}" if report_id else None
         else:
             # 舊版邏輯 (2022-)
             stock_code = item.get('companY_ID')
             company_name = item.get('companY_ABBR_NAME')
-            # 新增開始
-            sector = item.get('name') # 2022- 使用 name 欄位
-            # 新增結束
+            sector = item.get('name')  # 2022- 使用 name 欄位
             file_name_api = item.get('filE_NAME')
             download_url = f"https://mopsov.twse.com.tw/server-java/FileDownLoad?step=9&filePath=/home/html/nas/protect/t100/&fileName={file_name_api}" if file_name_api else None
         
@@ -89,9 +91,7 @@ def validate_report_exists(year, company_code, market_type=0):
         report_info = {
             'company_code': stock_code,
             'company_name': company_name,
-            # 新增開始
             'sector': sector,
-            # 新增結束
             'download_url': download_url,
             'file_name': f"{year}_{stock_code}_{company_name}_永續報告書.pdf"
         }
@@ -103,7 +103,7 @@ def validate_report_exists(year, company_code, market_type=0):
         return (False, None)
 
 
-def download_esg_report(year, company_code, market_type=0, save_dir='./ESG_Reports'):
+def download_esg_report(year, company_code, market_type=0, save_dir=None):
     """
     下載永續報告書
     
@@ -118,6 +118,10 @@ def download_esg_report(year, company_code, market_type=0, save_dir='./ESG_Repor
         若成功，回傳 (True, PDF檔案的完整路徑)
         若失敗，回傳 (False, 錯誤訊息)
     """
+    # 使用預設儲存目錄（如果未指定）
+    if save_dir is None:
+        save_dir = DEFAULT_SAVE_DIR
+    
     # 先驗證報告是否存在
     exists, report_info = validate_report_exists(year, company_code, market_type)
     
@@ -215,7 +219,7 @@ if __name__ == '__main__':
         "companyCode": companyCode
     }
     
-    save_path = "./ESG_Reports"
+    save_path = DEFAULT_SAVE_DIR
     if not os.path.exists(save_path):
         os.makedirs(save_path)
     

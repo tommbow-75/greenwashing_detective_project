@@ -12,3 +12,8 @@ lib/
 
 # python預加載資料
 __pycache__
+
+# uv generated files
+.uv/
+uv.lock
+.python-version

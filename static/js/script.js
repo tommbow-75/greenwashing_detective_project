@@ -31,7 +31,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 2. 設置按鈕事件監聽
     setupEventListeners();
 
-    // 3. (選擇性) 如果想要一進來就顯示列表，可以打開下面這行
+    // 3. 創建動態驗證 tooltip
+    createVerifiedTooltip();
+
+    // 4. (選擇性) 如果想要一進來就顯示列表，可以打開下面這行
     // renderCompanies(companiesData);
 });
 
@@ -162,15 +165,21 @@ function renderCompanies(data) {
         tr.style.cursor = 'pointer';
         tr.style.borderBottom = '1px solid #eee';
 
+        // 獲取風險等級對應的圖片路徑
+        const totalImg = getRiskImage(totalRisk.level);
+        const eImg = getRiskImage(eLevel.level);
+        const sImg = getRiskImage(sLevel.level);
+        const gImg = getRiskImage(gLevel.level);
+
         tr.innerHTML = `
             <td style="padding: 1rem; font-weight: bold; color: var(--primary);">${company.name}</td>
             <td style="padding: 1rem;">${company.stockId || '-'}</td>
             <td style="padding: 1rem;">${company.industry}</td>
             <td style="padding: 1rem;">${company.year}</td>
-            <td style="padding: 1rem;color: ${totalRisk.color}; font-weight: bold;">${totalRisk.text}</td>
-            <td style="padding: 1rem;color: ${eLevel.color};">${eLevel.text}</td>
-            <td style="padding: 1rem;color: ${sLevel.color};">${sLevel.text}</td>
-            <td style="padding: 1rem;color: ${gLevel.color};">${gLevel.text}</td>
+            <td style="padding: 1rem;"><img src="${totalImg}" alt="${totalRisk.text}" style="width: 80px; height: auto; display: block; margin: 0 auto;"></td>
+            <td style="padding: 1rem;"><img src="${eImg}" alt="${eLevel.text}" style="width: 80px; height: auto; display: block; margin: 0 auto;"></td>
+            <td style="padding: 1rem;"><img src="${sImg}" alt="${sLevel.text}" style="width: 80px; height: auto; display: block; margin: 0 auto;"></td>
+            <td style="padding: 1rem;"><img src="${gImg}" alt="${gLevel.text}" style="width: 80px; height: auto; display: block; margin: 0 auto;"></td>
             <td style="padding: 1rem;">
                 <button class="btn" style="padding: 5px 10px; font-size: 0.8rem;">查看詳情</button>
             </td>
@@ -214,12 +223,18 @@ function updatePaginationControls(totalPages) {
 function getRiskColor(score) {
     // 確保 score 是數字
     const num = parseFloat(score);
-    // 假設: 0-25 高風險(紅), 26-50 中風險(黃), 51-75 低風險(橘), >75 無風險(綠)
-    if (num <= 25) return { text: '高', color: 'red' };
-    if (num <= 50) return { text: '中', color: 'orange' };
-    if (num <= 75) return { text: '低', color: '#d4ac0d' };
-    return { text: '無', color: 'green' };
+    // 假設: 0-39 高風險(紅), 40-59 中風險(橘紅), 60-84 低風險(金黃), >84 無風險(綠)
+    if (num <= 39) return { text: '高', color: 'red', level: 'high' };
+    if (num <= 59) return { text: '中', color: '#FF6B35', level: 'medium' };  // 更明顯的橘紅色
+    if (num <= 84) return { text: '低', color: '#FFC107', level: 'low' };  // 更明亮的金黃色
+    return { text: '無', color: 'green', level: 'no' };
 };
+
+// 輔助函式：根據風險等級返回圖片路徑
+function getRiskImage(level) {
+    const basePath = '/static/images/';
+    return `${basePath}${level}_risk.png`;
+}
 
 // --- 第三部分：詳細視圖 (Detail View) ---
 
@@ -287,7 +302,7 @@ function renderLayer4(company) {
         return;
     }
 
-    company.layer4Data.forEach(row => {
+    company.layer4Data.forEach((row, index) => {
         // 1. 計算調整後的分數 (Net Score)
         const initialRisk = parseFloat(row.risk_score) || 0;
         // const deduction = parseFloat(row.adjustment_score) || 0;
@@ -295,6 +310,10 @@ function renderLayer4(company) {
         // const netScore = Math.max(0, initialRisk - deduction).toFixed(1);
 
         const tr = document.createElement('tr');
+        tr.style.cursor = 'pointer';
+        tr.style.transition = 'background-color 0.2s';
+        const expandId = `layer4-expand-${index}`;
+
         tr.innerHTML = `
             <td>${row.ESG_category || ''}</td>
             <td title="${row.SASB_topic}">${row.SASB_topic || ''}</td> 
@@ -307,6 +326,25 @@ function renderLayer4(company) {
 
             <td>${getRiskLabel(initialRisk)}</td>
         `;
+
+        // Hover 效果
+        tr.addEventListener('mouseenter', function () {
+            this.style.backgroundColor = '#f8f9fa';
+        });
+        tr.addEventListener('mouseleave', function () {
+            this.style.backgroundColor = '';
+        });
+
+        // 整行點擊展開
+        tr.addEventListener('click', function () {
+            toggleExpandRow(expandId, {
+                type: 'layer4',
+                sasbTopic: row.SASB_topic || '-',
+                reportClaim: row.report_claim || '-',
+                greenwashingFactor: row.greenwashing_factor || '-'
+            }, tr);
+        });
+
         tableBody.appendChild(tr);
     });
 }
@@ -319,36 +357,76 @@ function renderLayer5(company) {
     const dataWithEvidence = company.layer4Data;
 
     if (!dataWithEvidence || dataWithEvidence.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">無相關外部證據資料</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">無相關外部證據資料</td></tr>';
         return;
     }
 
-    dataWithEvidence.forEach(row => {
+    dataWithEvidence.forEach((row, index) => {
         // 計算 Net Score
         const initialRisk = parseFloat(row.risk_score) || 0;
         const deduction = parseFloat(row.adjustment_score) || 0;
         const netScore = Math.max(0, initialRisk - deduction).toFixed(1);
 
-        const evidence = row.external_evidence || '-';
+        const evidenceText = row.external_evidence || '-';
+        const evidenceUrl = row.external_evidence_url;
+        const isVerified = row.is_verified === true || row.is_verified === 1; // 支援 boolean 或 int
+
+        // 驗證徽章 (綠色圓形勾勾)
+        const verifiedBadge = isVerified
+            ? '<span class="verified-badge" style="display:inline-block; width:16px; height:16px; background:#4CAF50; border-radius:50%; color:white; text-align:center; line-height:16px; font-size:12px; margin-right:4px;">✓</span>'
+            : '';
+
+        // 如果有 URL，將證據文字變成超連結（已驗證時，整個區域都能觸發懸停提示）
+        let evidenceDisplay;
+        if (evidenceUrl) {
+            const verifiedClass = isVerified ? ' verified-evidence' : '';
+            evidenceDisplay = `<a href="${evidenceUrl}" target="_blank" onclick="event.stopPropagation();" class="evidence-link${verifiedClass}" style="color: var(--primary); text-decoration: underline; position: relative;">${verifiedBadge}${cutString(evidenceText, 15)}</a>`;
+        } else {
+            const verifiedClass = isVerified ? ' verified-evidence' : '';
+            evidenceDisplay = `<span class="evidence-text${verifiedClass}" style="position: relative;">${verifiedBadge}${cutString(evidenceText, 15)}</span>`;
+        }
+
         const status = row.consistency_status || '待確認';
         const msci = row.MSCI_flag || '-';
-        const url = row.external_evidence_url ? `<a href="${row.external_evidence_url}" target="_blank">連結</a>` : '-';
 
         let statusColor = 'black';
         if (status.includes('不一致')) statusColor = 'var(--danger)';
         else if (status.includes('一致')) statusColor = 'var(--success)';
 
         const tr = document.createElement('tr');
+        tr.style.cursor = 'pointer';
+        tr.style.transition = 'background-color 0.2s';
+        const expandId = `layer5-expand-${index}`;
+
         tr.innerHTML = `
             <td>${row.ESG_category}</td>
             <td title="${row.report_claim}">${cutString(row.report_claim, 15)}</td>
-            <td title="${evidence}">${cutString(evidence, 15)}</td>
-            <td>${url}</td>
+            <td class="evidence-cell">${evidenceDisplay}</td>
             <td style="color:${statusColor}; font-weight:bold;">${status}</td>
             <td>${msci}</td>
-            
             <td>${getRiskLabel(netScore)}</td>
         `;
+
+        // Hover 效果
+        tr.addEventListener('mouseenter', function () {
+            this.style.backgroundColor = '#f8f9fa';
+        });
+        tr.addEventListener('mouseleave', function () {
+            this.style.backgroundColor = '';
+        });
+
+        // 整行點擊展開
+        tr.addEventListener('click', function (e) {
+            // 如果點擊的是連結，不觸發展開
+            if (e.target.tagName === 'A') return;
+
+            toggleExpandRow(expandId, {
+                type: 'layer5',
+                reportClaim: row.report_claim || '-',
+                externalEvidence: evidenceText
+            }, tr);
+        });
+
         tableBody.appendChild(tr);
     });
 }
@@ -451,8 +529,7 @@ function generateWordcloud(company) {
 
             const option = {
                 tooltip: {
-                    show: true,
-                    formatter: '{b}: {c}'
+                    show: false
                 },
                 series: [{
                     type: 'wordCloud',
@@ -520,6 +597,117 @@ function generateWordcloud(company) {
 
 // --- 輔助函式與資料讀取 (Helpers & Data) ---
 
+// 切換展開行顯示
+function toggleExpandRow(expandId, data, parentRow) {
+    const existingExpandRow = document.getElementById(expandId);
+
+    if (existingExpandRow) {
+        // 已存在，則移除（收縮動畫）
+        const contentDiv = existingExpandRow.querySelector('td > div');
+
+        // 添加收縮動畫
+        existingExpandRow.style.opacity = '0';
+        if (contentDiv) {
+            contentDiv.style.transform = 'translateY(-10px)';
+        }
+
+        // 動畫結束後移除元素
+        setTimeout(() => {
+            existingExpandRow.remove();
+        }, 300);
+    } else {
+        // 不存在，則創建展開行
+        const expandRow = document.createElement('tr');
+        expandRow.id = expandId;
+        expandRow.style.backgroundColor = '#f8fbff';
+        expandRow.style.opacity = '0';
+        expandRow.style.transition = 'opacity 0.3s ease-out';
+
+        const colCount = parentRow.cells.length;
+
+        let content = '';
+
+        if (data.type === 'layer4') {
+            // 第四層：顯示 sasb_topic、report_claim、greenwashing_factor
+            content = `
+                <div style="padding: 1.5rem; line-height: 1.8; color: #333; transform: translateY(-10px); transition: transform 0.5s ease-out;">
+                    <div style="display: grid; gap: 1rem;">
+                        <div style="background: white; padding: 1rem; border-radius: 8px; border-left: 4px solid #4CAF50;">
+                            <div style="font-weight: bold; color: #2c3e50; margin-bottom: 0.5rem; font-size: 0.9em;">
+                                📊 SASB 議題
+                            </div>
+                            <div style="color: #34495e;">
+                                ${data.sasbTopic}
+                            </div>
+                        </div>
+                        
+                        <div style="background: white; padding: 1rem; border-radius: 8px; border-left: 4px solid #2196F3;">
+                            <div style="font-weight: bold; color: #2c3e50; margin-bottom: 0.5rem; font-size: 0.9em;">
+                                📝 ESG 報告宣稱
+                            </div>
+                            <div style="color: #34495e; white-space: pre-wrap; word-wrap: break-word;">
+                                ${data.reportClaim}
+                            </div>
+                        </div>
+                        
+                        <div style="background: white; padding: 1rem; border-radius: 8px; border-left: 4px solid #FF9800;">
+                            <div style="font-weight: bold; color: #2c3e50; margin-bottom: 0.5rem; font-size: 0.9em;">
+                                ⚠️ 漂綠因子
+                            </div>
+                            <div style="color: #34495e;">
+                                ${data.greenwashingFactor}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else if (data.type === 'layer5') {
+            // 第五層：顯示 report_claim、external_evidence
+            content = `
+                <div style="padding: 1.5rem; line-height: 1.8; color: #333; transform: translateY(-10px); transition: transform 0.5s ease-out;">
+                    <div style="display: grid; gap: 1rem;">
+                        <div style="background: white; padding: 1rem; border-radius: 8px; border-left: 4px solid #2196F3;">
+                            <div style="font-weight: bold; color: #2c3e50; margin-bottom: 0.5rem; font-size: 0.9em;">
+                                📝 ESG 報告宣稱
+                            </div>
+                            <div style="color: #34495e; white-space: pre-wrap; word-wrap: break-word;">
+                                ${data.reportClaim}
+                            </div>
+                        </div>
+                        
+                        <div style="background: white; padding: 1rem; border-radius: 8px; border-left: 4px solid #9C27B0;">
+                            <div style="font-weight: bold; color: #2c3e50; margin-bottom: 0.5rem; font-size: 0.9em;">
+                                🔍 外部證據
+                            </div>
+                            <div style="color: #34495e; white-space: pre-wrap; word-wrap: break-word;">
+                                ${data.externalEvidence}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        expandRow.innerHTML = `
+            <td colspan="${colCount}" style="padding: 0; border-left: 3px solid var(--primary);">
+                ${content}
+            </td>
+        `;
+
+        // 在當前行後插入展開行
+        parentRow.parentNode.insertBefore(expandRow, parentRow.nextSibling);
+
+        // 觸發展開動畫（使用 requestAnimationFrame 確保 DOM 更新後才開始動畫）
+        requestAnimationFrame(() => {
+            expandRow.style.opacity = '1';
+            const contentDiv = expandRow.querySelector('td > div');
+            if (contentDiv) {
+                contentDiv.style.transform = 'translateY(0)';
+            }
+        });
+    }
+}
+
 // 讀取 SASB JSON
 async function loadSasbData() {
     try {
@@ -584,6 +772,50 @@ function getRiskLabel(score) {
     }
 
     return `<span class="risk-label ${labelClass}">${labelText}</span>`;
+}
+
+
+// --- 動態驗證 Tooltip 功能 ---
+function createVerifiedTooltip() {
+    // 創建 tooltip 元素
+    const tooltip = document.createElement('div');
+    tooltip.id = 'verified-tooltip';
+    tooltip.textContent = '已驗證';
+    document.body.appendChild(tooltip);
+
+    // 追蹤滑鼠位置
+    let mouseX = 0;
+    let mouseY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+
+        // 如果 tooltip 是顯示狀態，更新位置
+        if (tooltip.style.display === 'block') {
+            tooltip.style.left = (mouseX + 15) + 'px';
+            tooltip.style.top = (mouseY + 15) + 'px';
+        }
+    });
+
+    // 使用事件委派處理所有的 verified-badge 和 verified-evidence
+    document.addEventListener('mouseover', (e) => {
+        if (e.target.classList.contains('verified-badge') ||
+            e.target.classList.contains('verified-evidence') ||
+            e.target.closest('.verified-evidence')) {
+            tooltip.style.display = 'block';
+            tooltip.style.left = (mouseX + 15) + 'px';
+            tooltip.style.top = (mouseY + 15) + 'px';
+        }
+    });
+
+    document.addEventListener('mouseout', (e) => {
+        if (e.target.classList.contains('verified-badge') ||
+            e.target.classList.contains('verified-evidence') ||
+            e.target.closest('.verified-evidence')) {
+            tooltip.style.display = 'none';
+        }
+    });
 }
 
 // --- 自動抓取與分析功能 ---
