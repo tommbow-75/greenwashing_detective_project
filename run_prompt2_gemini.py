@@ -189,7 +189,7 @@ def process_esg_news_verification(input_json_path, output_json_path):
 
 if __name__ == "__main__":
     # 設定檔案路徑
-    input_path = './data/1229亞泥P1_test11.json'
-    output_path = './data/1229亞泥P2_test6.json'
+    input_path = './temp_data/prompt1_json/2024_1102_p1.json'
+    output_path = './temp_data/prompt2_json/2024_1102_p2.json'
     
     process_esg_news_verification(input_path, output_path) 
