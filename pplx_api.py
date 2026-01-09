@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from googleapiclient.discovery import build
 from perplexity import Perplexity
 import glob
+import time
 
 load_dotenv()
 
@@ -40,13 +41,16 @@ def search_with_perplexity(query):
     """使用 Perplexity 搜尋"""
     try:
         perplexity_client = Perplexity(api_key=os.environ.get("PERPLEXITY_API_KEY"))
-        prompt = f"提供關於「{query}」的1個可靠資訊來源網址。僅輸出JSON格式：{{\"urls\": [\"url1\", \"url2\"]}}"
+        prompt = f"提供關於「{query}」的1個可靠資訊來源網址。僅輸出JSON格式：{{\"urls\": [\"url1\"]}}"
         
         response = perplexity_client.chat.completions.create(
             model="sonar",
             messages=[{"role": "user", "content": prompt}]
         )
         
+        usage = response.usage  # Access prompt_tokens, completion_tokens, total_tokens
+        print(f"Perplexity API: Input={usage.prompt_tokens}, Output={usage.completion_tokens}, Total={usage.total_tokens}")
+
         content = response.choices[0].message.content
         clean_json = content.replace('```json', '').replace('```', '').strip()
         result = json.loads(clean_json)
@@ -118,9 +122,12 @@ def process_json_file(input_file, output_file):
         
         print()
     
-    # 儲存結果
+    # 儲存結果 & 讀取json檔案輸出時間
+    start_json_time = time.time()
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
+    json_time = time.time() - start_json_time
+    print(f"JSON write time: {json_time:.2f}s")
     
     print(f"✅ 處理完成！")
     print(f"📊 統計結果:")
