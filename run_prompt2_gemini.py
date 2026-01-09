@@ -1,9 +1,9 @@
-import json
-import os
-import re
+import json, os, re, tiktoken, time
 from dotenv import load_dotenv # 新增：導入載入工具
 from google import genai
 from google.genai import types
+from datetime import datetime
+
 
 # 1. 載入 .env 檔案並初始化 Client
 load_dotenv() # 自動尋找並載入同目錄下的 .env
@@ -14,7 +14,17 @@ if not api_key:
 
 client = genai.Client(api_key=api_key)
 
+# ===== Token estimation utilities =====
+enc = tiktoken.get_encoding("cl100k_base")
+
+def estimate_tokens(text: str) -> int:
+    if not text:
+        return 0
+    return len(enc.encode(text))
+
+
 def process_esg_news_verification(input_json_path, output_json_path):
+    total_start_time = time.perf_counter()
     # 2. 讀取第一個 JSON 檔 (原檔)
     try:
         with open(input_json_path, 'r', encoding='utf-8') as f:
@@ -72,25 +82,39 @@ def process_esg_news_verification(input_json_path, output_json_path):
     # 將 JSON1 的內容轉為字串放進 Prompt
     user_input = f"以下為原檔數據：\n{json.dumps(original_data, ensure_ascii=False)}"
 
+    # ===== Token count (input) =====
+    input_token_est = estimate_tokens(prompt_template + user_input)
+
     # 4. 呼叫 Gemini API
     print("正在呼叫 Gemini API 並檢索外部資訊，請稍候...")
+
+    api_start_time = time.perf_counter()
+
     try:
         response = client.models.generate_content(
-            model="gemini-2.0-flash", 
+            model="gemini-2.5-pro", 
             contents=user_input,
             config=types.GenerateContentConfig(
                 system_instruction=prompt_template,
                 tools=[types.Tool(google_search=types.GoogleSearch())],
-                response_mime_type="application/json"
             )
         )
     except Exception as e:
         print(f"API 呼叫失敗: {e}")
         return
 
+    api_end_time = time.perf_counter()
+    api_elapsed = api_end_time - api_start_time
+
+    print(f"✅ Gemini API 呼叫完成，耗時 {api_elapsed:.2f} 秒")
+
     # 5. 處理與儲存結果 (沿用強效解析版)
     raw_text = response.text.strip()
-    
+
+    # ===== Token count (output) =====
+    output_token_est = estimate_tokens(raw_text)
+    total_token_est = input_token_est + output_token_est
+
     try:
         all_arrays = re.findall(r'(\[.*\])', raw_text, re.DOTALL)
         if all_arrays:
@@ -101,37 +125,71 @@ def process_esg_news_verification(input_json_path, output_json_path):
                 clean_json_str = clean_json_str.split("] [")[0] + "]"
 
             final_json = json.loads(clean_json_str)
+
+            # ===== MERGE 原檔 + 外部驗證結果 =====
+            if not isinstance(original_data, list) or not isinstance(final_json, list):
+                raise ValueError("原檔或 Gemini 輸出不是 list，無法進行 merge")
+
+            if len(original_data) != len(final_json):
+                raise ValueError(
+                    f"筆數不一致：原檔 {len(original_data)} 筆，Gemini 輸出 {len(final_json)} 筆"
+                )
+
+            merged_results = []
+            for orig, ext in zip(original_data, final_json):
+                merged_results.append({
+                    **orig,   # 原檔所有欄位
+                    **ext     # 外部驗證欄位（會覆蓋同名 key）
+                })
             
             os.makedirs(os.path.dirname(output_json_path), exist_ok=True)
             with open(output_json_path, 'w', encoding='utf-8') as f:
-                json.dump(final_json, f, ensure_ascii=False, indent=2)
+                json.dump(merged_results, f, ensure_ascii=False, indent=2)
             print(f"成功！結果已儲存至 {output_json_path}")
         else:
             raise ValueError("模型回傳內容中找不到任何 JSON 陣列結構")
 
     except json.JSONDecodeError:
-        print("正在嘗試極端修復模式...")
+        print("正在嘗試修復模式...")
         try:
             start = raw_text.find('[')
             count = 0
             for i in range(start, len(raw_text)):
-                if raw_text[i] == '[': count += 1
-                elif raw_text[i] == ']': count -= 1
+                if raw_text[i] == '[':
+                    count += 1
+                elif raw_text[i] == ']':
+                    count -= 1
                 if count == 0:
                     extreme_clean = raw_text[start:i+1]
                     final_json = json.loads(extreme_clean)
                     with open(output_json_path, 'w', encoding='utf-8') as f:
                         json.dump(final_json, f, ensure_ascii=False, indent=2)
-                    print(f"極端修復成功！結果儲存至 {output_json_path}")
+                    print(f"修復成功！結果儲存至 {output_json_path}")
                     break
         except Exception as e:
             print(f"解析失敗：{e}")
     except Exception as e:
         print(f"發生非預期錯誤: {e}")
 
+    # ===== TOKEN USAGE & TIME COST =====
+    print("\n===== Token usage & Time cost=====")
+    print(f"Input tokens : {input_token_est}")
+    print(f"Output tokens: {output_token_est}")
+    print(f"Total tokens : {total_token_est}")
+
+    total_end_time = time.perf_counter()
+    total_elapsed = total_end_time - total_start_time
+
+    minutes = int(total_elapsed // 60)
+    seconds = total_elapsed % 60
+
+    print(f"Total execution time: {total_elapsed:.2f} 秒")
+
+
+
 if __name__ == "__main__":
     # 設定檔案路徑
     input_path = './data/1229亞泥P1_test11.json'
-    output_path = './data/1229亞泥P2_test1.json'
+    output_path = './data/1229亞泥P2_test6.json'
     
-    process_esg_news_verification(input_path, output_path)
+    process_esg_news_verification(input_path, output_path) 
