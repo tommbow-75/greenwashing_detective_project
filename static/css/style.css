@@ -685,3 +685,28 @@
                 white-space: nowrap;
             }
         }
+
+        /* 驗證徽章與動態 Tooltip */
+        .evidence-cell {
+            position: relative;
+        }
+
+        .evidence-cell .verified-badge {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        /* 動態 Tooltip 樣式 */
+        #verified-tooltip {
+            position: fixed;
+            background: #6b7280;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 10000;
+            pointer-events: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            display: none;
+        }

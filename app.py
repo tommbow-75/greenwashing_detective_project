@@ -99,7 +99,7 @@ def index():
                     SELECT ESG_category, SASB_topic, risk_score, adjustment_score, 
                            report_claim, page_number, greenwashing_factor,
                            external_evidence, external_evidence_url, 
-                           consistency_status, MSCI_flag
+                           consistency_status, MSCI_flag, is_verified
                     FROM company_report 
                     WHERE company_id = %s AND year = %s
                 """
