@@ -165,11 +165,13 @@ function renderCompanies(data) {
         tr.style.cursor = 'pointer';
         tr.style.borderBottom = '1px solid #eee';
 
-        // 獲取風險等級對應的圖片路徑
+        // 獲取風險等級對應的圖片路徑（總風險保持使用圖片）
         const totalImg = getRiskImage(totalRisk.level);
-        const eImg = getRiskImage(eLevel.level);
-        const sImg = getRiskImage(sLevel.level);
-        const gImg = getRiskImage(gLevel.level);
+
+        // E/S/G 使用文字+底色顯示風險等級
+        const eRiskLabel = getRiskTextLabel(eLevel.level);
+        const sRiskLabel = getRiskTextLabel(sLevel.level);
+        const gRiskLabel = getRiskTextLabel(gLevel.level);
 
         tr.innerHTML = `
             <td style="padding: 1rem; font-weight: bold; color: var(--primary);">${company.name}</td>
@@ -177,9 +179,9 @@ function renderCompanies(data) {
             <td style="padding: 1rem;">${company.industry}</td>
             <td style="padding: 1rem;">${company.year}</td>
             <td style="padding: 1rem;"><img src="${totalImg}" alt="${totalRisk.text}" style="width: 80px; height: auto; display: block; margin: 0 auto;"></td>
-            <td style="padding: 1rem;"><img src="${eImg}" alt="${eLevel.text}" style="width: 80px; height: auto; display: block; margin: 0 auto;"></td>
-            <td style="padding: 1rem;"><img src="${sImg}" alt="${sLevel.text}" style="width: 80px; height: auto; display: block; margin: 0 auto;"></td>
-            <td style="padding: 1rem;"><img src="${gImg}" alt="${gLevel.text}" style="width: 80px; height: auto; display: block; margin: 0 auto;"></td>
+            <td style="padding: 1rem;">${eRiskLabel}</td>
+            <td style="padding: 1rem;">${sRiskLabel}</td>
+            <td style="padding: 1rem;">${gRiskLabel}</td>
             <td style="padding: 1rem;">
                 <button class="btn" style="padding: 5px 10px; font-size: 0.8rem;">查看詳情</button>
             </td>
@@ -234,6 +236,20 @@ function getRiskColor(score) {
 function getRiskImage(level) {
     const basePath = '/static/images/';
     return `${basePath}${level}_risk.png`;
+}
+
+// 輔助函式：根據風險等級返回帶底色的文字標籤（用於第二層表格）
+// 與 getRiskLabel 類似，但不顯示分數，只顯示風險等級文字
+function getRiskTextLabel(level) {
+    const riskInfo = {
+        'no': '無風險',
+        'low': '低風險',
+        'medium': '中風險',
+        'high': '高風險'
+    };
+
+    const text = riskInfo[level] || '未知';
+    return `<span class="risk-label ${level}">${text}</span>`;
 }
 
 // --- 第三部分：詳細視圖 (Detail View) ---
