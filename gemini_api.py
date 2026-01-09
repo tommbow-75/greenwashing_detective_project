@@ -221,6 +221,58 @@ def analyze_esg_report(pdf_path: str, year: int, company_code: str) -> dict:
             ]
         }
     """
+    # 測試開始，由AI產生，實作拿到json後需要執行的動作
+    from db_service import update_analysis_status,insert_analysis_results
+    """
+    接收 PDF 路徑，讀取對應產出的 JSON 檔案，並上傳雲端資料庫
+    """
+    esg_id = f"{year}{company_code}"
+    # 這裡假設 JSON 檔案會出現在 PDF 相同的資料夾下
+    json_path = pdf_path.replace(".pdf", ".json") 
+    
+    print(f"[*] 準備處理分析結果上傳: {esg_id}")
+    
+    try:
+        # 1. 檢查 JSON 檔案是否存在 (可能需要一點等待時間，視他人功能的同步性而定)
+        if not os.path.exists(json_path):
+            error_msg = f"找不到對應的 JSON 分析檔案: {json_path}"
+            update_analysis_status(esg_id, 'failed')
+            return {"success": False, "message": error_msg}
+
+        # 2. 讀取 JSON 內容
+        with open(json_path, 'r', encoding='utf-8') as f:
+            analysis_items = json.load(f)
+
+        # 3. 取得必要資訊（這裡可由先前的爬蟲結果或預設值提供）
+        # 註：如果之後有 company_name 和 industry，建議也從參數傳入
+        company_name = "" 
+        industry = ""     
+        report_url = ""   
+
+        # 4. 呼叫 db_service 寫入雲端
+        # insert_analysis_results 內部會自動處理 DELETE 舊資料與 INSERT 新資料
+        success, db_msg = insert_analysis_results(
+            esg_id=esg_id,
+            company_name=company_name, 
+            industry=industry,
+            url=report_url,
+            analysis_items=analysis_items
+        )
+
+        if success:
+            # 更新總表狀態為完成
+            update_analysis_status(esg_id, 'completed')
+            print(f" [OK] {esg_id} 雲端資料庫更新成功")
+            return {"success": True, "data": analysis_items}
+        else:
+            update_analysis_status(esg_id, 'failed')
+            return {"success": False, "message": f"資料庫寫入失敗: {db_msg}"}
+
+    except Exception as e:
+        print(f" [!] 處理 JSON 上傳時發生意外錯誤: {str(e)}")
+        update_analysis_status(esg_id, 'failed')
+        return {"success": False, "message": str(e)}
+    # 測試結束
     # TODO: 實際 AI 分析邏輯
     # 1. 使用 ESGReportScorer 或其他方式解析 PDF
     # 2. 呼叫 Gemini API 進行分析
