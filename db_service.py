@@ -202,8 +202,8 @@ def insert_analysis_results(esg_id, company_name, industry, url, analysis_items)
                         INSERT INTO company_report 
                         (ESG_id, company_id, year, ESG_category, SASB_topic, page_number, 
                          report_claim, greenwashing_factor, risk_score, external_evidence, 
-                         external_evidence_url, consistency_status, MSCI_flag, adjustment_score)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                         external_evidence_url, consistency_status, MSCI_flag, adjustment_score, is_verified)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 1)
                     """
                     
                     for item in analysis_items:

@@ -7,7 +7,13 @@ from dotenv import load_dotenv
 from app.calculate_esg import calculate_esg_scores
 from google.cloud.sql.connector import Connector, IPTypes
 import pymysql.cursors
-
+# 新增開始
+import requests
+HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+}
+TIMEOUT = 20
+# 新增結束
 load_dotenv()
 
 # ==============Flask 部分========================
@@ -25,6 +31,36 @@ def get_db_connection():
             enable_iam_auth=False, # 關鍵：關閉 IAM 驗證
             ip_type=IPTypes.PUBLIC # 如果你的實例只開私有 IP，請改為 IPTypes.PRIVATE
         )
+
+# 新增開始
+def verify_single_url(url):
+    """驗證單一 URL 的有效性並提取標題"""
+    try:
+        url = url.strip().strip('"').strip("'")
+        response = requests.get(url, headers=HEADERS, timeout=TIMEOUT, allow_redirects=True)
+        if response.status_code in [200, 403]:
+            text = response.text
+            title_start = text.find('<title>') + 7
+            title_end = text.find('</title>', title_start)
+            page_title = text[title_start:title_end].strip() if title_start > 6 else "ESG News Link"
+            return {"url": url, "is_valid": True, "page_title": page_title, "status_code": response.status_code}
+    except Exception:
+        pass
+    return {"url": url, "is_valid": False, "page_title": None}
+
+def verify_urls_batch(urls):
+    """批次驗證並篩選有效 URL"""
+    valid_list = []
+    for url in urls:
+        if not url: continue
+        try:
+            res = requests.get(url, headers=HEADERS, timeout=TIMEOUT)
+            if res.status_code in [200, 403]:
+                valid_list.append({"url": url, "title": "Verified"})
+        except Exception as e:
+            print(f"  ❌ 請求錯誤: {url}")
+    return valid_list
+# 新增結束
 
 @app.route('/')
 def index():
@@ -56,7 +92,7 @@ def index():
                     SELECT ESG_category, SASB_topic, risk_score, adjustment_score, 
                            report_claim, page_number, greenwashing_factor,
                            external_evidence, external_evidence_url, 
-                           consistency_status, MSCI_flag
+                           consistency_status, MSCI_flag, is_verified
                     FROM company_report 
                     WHERE company_id = %s AND year = %s
                 """
@@ -211,6 +247,9 @@ def query_company():
                     year=year,
                     company_code=company_code,
                     company_name=report_info.get('company_name', ''),
+                    # 新增開始
+                    industry=report_info.get('sector', ''),
+                    # 新增結束
                     status='processing'
                 )
                 
@@ -237,7 +276,15 @@ def query_company():
                 pdf_path = pdf_path_or_error
                 
                 # Step 3: AI 分析（使用模擬版本）
-                analysis_result = analyze_esg_report_mock(pdf_path, year, company_code)
+                analysis_result = analyze_esg_report_mock(
+                    pdf_path, 
+                    year, 
+                    company_code,
+                    # 新增開始
+                    company_name=report_info.get('company_name', ''), # <-- 補回公司名稱
+                    industry=report_info.get('sector', '')
+                    # 新增結束
+                )
                 
                 # Step 4: 插入分析結果至資料庫
                 insert_success, insert_msg = insert_analysis_results(

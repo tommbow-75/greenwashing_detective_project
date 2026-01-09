@@ -68,12 +68,18 @@ def validate_report_exists(year, company_code, market_type=0):
             # 新版邏輯 (2023+)
             stock_code = item.get('code')
             company_name = item.get('shortName')
+            # 新增開始
+            sector = item.get('sector') # 2023+ 使用 sector 欄位
+            # 新增結束
             report_id = item.get('twFirstReportDownloadId')
             download_url = f"https://esggenplus.twse.com.tw/api/api/MopsSustainReport/data/FileStream?id={report_id}" if report_id else None
         else:
             # 舊版邏輯 (2022-)
             stock_code = item.get('companY_ID')
             company_name = item.get('companY_ABBR_NAME')
+            # 新增開始
+            sector = item.get('name') # 2022- 使用 name 欄位
+            # 新增結束
             file_name_api = item.get('filE_NAME')
             download_url = f"https://mopsov.twse.com.tw/server-java/FileDownLoad?step=9&filePath=/home/html/nas/protect/t100/&fileName={file_name_api}" if file_name_api else None
         
@@ -83,6 +89,9 @@ def validate_report_exists(year, company_code, market_type=0):
         report_info = {
             'company_code': stock_code,
             'company_name': company_name,
+            # 新增開始
+            'sector': sector,
+            # 新增結束
             'download_url': download_url,
             'file_name': f"{year}_{stock_code}_{company_name}_永續報告書.pdf"
         }
