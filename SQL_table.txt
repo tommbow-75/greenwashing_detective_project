@@ -1,0 +1,76 @@
+drop table if exists company_report;
+drop table if exists company;
+
+-- 1. 詳細 ESG 分析數據表 (用於計算)
+CREATE TABLE company_report(
+id INT AUTO_INCREMENT PRIMARY KEY,  -- 流水號作為主鍵
+ESG_id VARCHAR(8) NOT NULL,  -- 格式：年份+股票代號 (Unique)
+company_id VARCHAR(4),  -- 股票代號
+year INT,  -- 報告年份
+ESG_category VARCHAR(5),  -- ESG 分類
+SASB_topic VARCHAR(20),  -- SASB 議題
+page_number VARCHAR(3),  -- 報告宣稱所在的頁碼
+report_claim TEXT(500),  -- 報告宣稱
+greenwashing_factor TEXT(500),  -- 原因
+risk_score VARCHAR(3),  -- 初始分數 (0-4)
+external_evidence TEXT(500),  -- 外部證據
+external_evidence_url VARCHAR(100),  -- 外部證據連結
+consistency_status VARCHAR(100),  -- 一致程度
+MSCI_flag VARCHAR(100),  -- MSCI 旗號
+adjustment_score DECIMAL(5,2)  -- 調整分數 (扣分項)
+);
+
+-- 2. 公司基本資料表
+CREATE TABLE company(
+ESG_id VARCHAR(8) NOT NULL PRIMARY KEY,  -- 格式：年份+股票代號 (Unique)
+company_name VARCHAR(20),  -- 公司名稱
+industry VARCHAR(20),  -- 對應 JSON 中的產業欄位名稱
+company_code VARCHAR(4),  -- 股票代號
+Report_year INT,  -- 報告年份
+total_score DECIMAL(5,2),  -- 總分數(目前沒有用，先忽略)
+URL VARCHAR(24),  -- 永續報告書的連結
+analysis_status VARCHAR(20) DEFAULT 'completed'  -- 分析狀態：processing, completed, failed
+);
+
+-- 0. 清除舊測試資料 (選擇性執行，避免 ID 重複錯誤)
+-- DELETE FROM company_report;
+-- DELETE FROM company;
+
+-- 1. 插入公司基本資料 (company 表)
+-- 對應欄位: ESG_id, company_name, industry, company_code, Report_year, total_score, URL
+INSERT INTO company (ESG_id, company_name, industry, company_code, Report_year, total_score, URL) VALUES
+('20242330', '台積電', '半導體業', '2330', 2024, 85.5, 'https://esg.tsmc.com'),
+('20241314', '中石化', '油電燃氣業', '1314', 2024, 45.0, 'https://www.cpdc.com.tw'),
+('20241102', '亞洲水泥', '水泥工業', '1102', 2024, 60.2, 'https://acc.com.tw');
+
+-- 2. 插入詳細 ESG 分析數據 (company_report 表)
+-- 注意：這裡模擬了「模範生」、「漂綠風險戶」與「一般戶」三種情境
+
+INSERT INTO company_report 
+(ESG_id, company_id, year, ESG_category, SASB_topic, page_number, report_claim, greenwashing_factor, risk_score, external_evidence, external_evidence_url, consistency_status, MSCI_flag, adjustment_score) 
+VALUES
+-- ==========================================
+-- 案例 A: 台積電 (半導體業) - 模範生案例
+-- 特徵：高分、一致性高、無重大扣分
+-- ==========================================
+('20242330', '2330', 2024, 'E', '溫室氣體排放', '15', '承諾 2050 年達到淨零排放，並於 2030 年達到 RE100 目標。', NULL, '4', '科學基礎減量目標倡議 (SBTi) 審核通過', 'https://sciencebasedtargets.org', '一致', 'AAA', 0.00),
+('20242330', '2330', 2024, 'E', '水資源與廢水處理管理', '22', '製程水回收率達到 90% 以上，不僅符合法規更優於同業標準。', NULL, '4', '南部科學園區管理局用水查核報告', '', '一致', 'AAA', 0.00),
+('20242330', '2330', 2024, 'S', '員工健康與安全', '45', '推動零事故職場，職業災害率低於 0.01%。', NULL, '4', NULL, '', '一致', 'AAA', 0.00),
+('20242330', '2330', 2024, 'G', '商業道德', '60', '建立完善的誠信經營守則，並設有獨立舉報管道。', NULL, '4', '無相關負面新聞', '', '一致', 'AAA', 0.00),
+
+-- ==========================================
+-- 案例 B: 中石化 (油電燃氣業) - 高風險漂綠案例
+-- 特徵：宣稱完美但外部證據打臉、狀態「不一致」、有扣分
+-- ==========================================
+('20241314', '1314', 2024, 'E', '空氣品質', '10', '本年度空氣污染物排放皆符合國家標準，且無重大違規紀錄。', '隱匿裁罰紀錄', '1', '環保署公開資料顯示，2023年因空汙違規遭罰款 3 次，累計金額 200 萬。', 'https://www.epa.gov.tw', '不一致 (重大)', 'CCC', 3.00),
+('20241314', '1314', 2024, 'E', '廢棄物與有害物質管理', '18', '有害廢棄物皆委託合格廠商處理，處理流程透明。', '模糊其詞', '2', '新聞報導指出合作廠商涉嫌非法傾倒，公司未善盡監督責任。', 'https://news.example.com/waste', '部分不一致', 'B', 1.50),
+('20241314', '1314', 2024, 'S', '員工健康與安全', '32', '重視員工安全，定期舉辦安衛演習。', '缺乏具體數據', '2', '勞動部職安署公告列為高風險檢查對象。', '', '待確認', 'B', 0.50),
+('20241314', '1314', 2024, 'G', '系統性風險管理', '55', '已建立完善的風險管理委員會。', NULL, '3', NULL, '', '一致', 'B', 0.00),
+
+-- ==========================================
+-- 案例 C: 亞洲水泥 (水泥工業) - 混合型案例
+-- 特徵：部分項目有爭議，部分項目良好
+-- ==========================================
+('20241102', '1102', 2024, 'E', '生態影響', '25', '積極進行礦區復育，植生覆蓋率達 85%。', '選擇性揭露', '2', '環保團體抗議復育樹種單一，且影響當地原住民狩獵權益。', 'https://news.example.com/protest', '不一致', 'BB', 1.00),
+('20241102', '1102', 2024, 'E', '溫室氣體排放', '30', '導入低碳製程，降低熟料係數。', NULL, '3', '碳排放量確實逐年下降，符合預期。', '', '一致', 'BB', 0.00),
+('20241102', '1102', 2024, 'S', '人權與社區關係', '40', '尊重原住民權益，建立溝通平台。', '言行不一', '2', '法院判決撤銷部分礦權展限，指稱未落實諮商同意權。', 'https://court.gov.tw', '不一致', 'CCC', 2.00);

@@ -361,7 +361,8 @@
 
         .risk-label.low {
             background: rgba(212, 172, 13, 0.1);
-            color: #d4ac0d; /* Dark yellow */
+            color: #d4ac0d;
+            /* Dark yellow */
         }
 
         .risk-label.medium {
@@ -373,7 +374,7 @@
             background: rgba(255, 0, 0, 0.1);
             color: red;
         }
-        
+
         .risk-label.no {
             background: rgba(0, 128, 0, 0.1);
             color: green;
@@ -508,6 +509,17 @@
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 1.5rem;
             margin-top: 1rem;
+            transition: all 0.5s ease;
+            max-height: 2000px;
+            opacity: 1;
+            overflow: hidden;
+        }
+
+        .source-grid.collapsed {
+            max-height: 0;
+            opacity: 0;
+            margin-top: 0;
+            gap: 0;
         }
 
         .source-card {
@@ -536,11 +548,11 @@
             gap: 0.5rem;
         }
 
-        .source-list li:before {
+        /* .source-list li:before {
             content: "✓";
             color: var(--success);
             font-weight: bold;
-        }
+        } */
 
         /* 響應式 */
         @media (max-width: 1024px) {
@@ -612,4 +624,89 @@
             background: var(--bg-white);
             border-radius: 8px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            flex-wrap: wrap;
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 1rem;
+        }
+
+        /* 響應式 */
+        @media (max-width: 1024px) {
+            .esg-scores-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .companies-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem 0.5rem;
+            }
+
+            .filter-row {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-section {
+                padding: 1rem;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+                margin-top: 0.5rem !important;
+            }
+
+            .filter-group input,
+            .filter-group select {
+                width: 100%;
+            }
+
+            .comparison-table {
+                font-size: 0.8rem;
+            }
+
+            .comparison-table td {
+                padding: 0.5rem;
+                max-width: 150px;
+                /* Adjust for scroll view */
+            }
+
+            /* Ensure main table scrolls nicely */
+            .dashboard-table th,
+            .dashboard-table td {
+                white-space: nowrap;
+            }
+        }
+
+        /* 驗證徽章與動態 Tooltip */
+        .evidence-cell {
+            position: relative;
+        }
+
+        .evidence-cell .verified-badge {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        /* 動態 Tooltip 樣式 */
+        #verified-tooltip {
+            position: fixed;
+            background: #6b7280;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 10000;
+            pointer-events: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            display: none;
         }

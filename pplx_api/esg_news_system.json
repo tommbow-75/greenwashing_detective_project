@@ -1,0 +1,338 @@
+{
+  "system_info": {
+    "name": "ESG新聞URL驗證系統",
+    "description": "自動驗證AI生成的ESG新聞連結，當Gemini產生幻覺時自動切換至Perplexity即時搜索",
+    "version": "1.0",
+    "purpose": "確保ESG新聞連結的真實性與有效性"
+  },
+  "architecture": {
+    "components": [
+      "前端介面",
+      "Gemini API",
+      "URL驗證模組",
+      "Perplexity API",
+      "整合輸出模組"
+    ],
+    "workflow_type": "sequential_with_fallback"
+  },
+  "workflow": {
+    "step_1_user_input": {
+      "step_number": 1,
+      "name": "使用者輸入",
+      "description": "收集查詢參數",
+      "inputs": {
+        "company_name": {
+          "type": "string",
+          "required": true,
+          "example": "台積電",
+          "validation": "non-empty string"
+        },
+        "year": {
+          "type": "integer",
+          "required": true,
+          "example": 2024,
+          "validation": "valid year (2000-2099)"  
+        }
+      },
+      "output": {
+        "query_params": {
+          "company": "{company_name}",
+          "year": "{year}"
+        }
+      },
+      "next_step": "step_2_gemini_task"
+    },
+    "step_2_gemini_task": {
+      "step_number": 2,
+      "name": "Gemini 任務 A",
+      "description": "生成ESG相關新聞預測網址",
+      "api": "Gemini API",
+      "task": {
+        "objective": "生成該公司該年份的ESG相關新聞網址",
+        "output_count": "2-4",
+        "output_format": "URL list"
+      },
+      "prompt_template": {
+        "system": "你是一個ESG新聞專家，請根據公司名稱和年份，提供可能的ESG新聞網址。",
+        "user": "提供{company}在{year}年2~4個ESG相關新聞的URL。僅輸出網址列表，每行一個URL。"
+      },
+      "expected_output": {
+        "format": "array of URLs",
+        "count": {
+          "min": 2,
+          "max": 4
+        },
+        "example": [
+          "https://example.com/news/tsmc-esg-2024-report",
+          "https://news.example.com/tsmc-sustainability-2024",
+          "https://esg.example.com/taiwan-semiconductor-2024"
+        ]
+      },
+      "error_handling": {
+        "timeout": 30,
+        "retry_attempts": 2,
+        "fallback": "直接進入step_4使用Perplexity"
+      },
+      "next_step": "step_3_verification"
+    },
+    "step_3_verification": {
+      "step_number": 3,
+      "name": "驗證階段",
+      "description": "Python程式逐一測試網址HTTP狀態碼",
+      "module": "URL驗證模組",
+      "process": {
+        "method": "sequential_verification",
+        "for_each_url": {
+          "actions": [
+            {
+              "action": "send_http_request",
+              "method": "GET",
+              "timeout": 10,
+              "headers": {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+              }
+            },
+            {
+              "action": "check_status_code",
+              "valid_codes": [200, 201, 202],
+              "invalid_codes": [404, 403, 500, 502, 503]
+            },
+            {
+              "action": "extract_page_info",
+              "fields": [
+                "page_title",
+                "meta_description",
+                "publish_date"
+              ]
+            }
+          ]
+        }
+      },
+      "validation_criteria": {
+        "http_status": "200-299 range",
+        "content_type": "text/html",
+        "response_time": "< 10 seconds"
+      },
+      "output": {
+        "valid_urls": [],
+        "invalid_urls": [],
+        "validation_summary": {
+          "total_checked": 0,
+          "valid_count": 0,
+          "invalid_count": 0
+        }
+      },
+      "next_step": "step_4_decision_point"
+    },
+    "step_4_decision_point": {
+      "step_number": 4,
+      "name": "決策點",
+      "description": "根據驗證結果決定下一步行動",
+      "decision_logic": {
+        "condition_success": {
+          "criteria": "valid_count > 0",
+          "description": "至少有一個有效URL",
+          "action": "直接回傳有效URL列表",
+          "next_step": "step_5_integration_output"
+        },
+        "condition_failure": {
+          "criteria": "valid_count == 0",
+          "description": "所有URL都無效或Gemini產生幻覺",
+          "action": "觸發Perplexity API進行即時搜索",
+          "next_step": "step_4b_perplexity_fallback"
+        }
+      },
+      "logging": {
+        "log_decision": true,
+        "log_message": "決策結果: {action} - 有效URL數量: {valid_count}"
+      }
+    },
+    "step_4b_perplexity_fallback": {
+      "step_number": "4b",
+      "name": "Perplexity 備援搜索",
+      "description": "使用Perplexity即時聯網搜索真實URL",
+      "api": "Perplexity API",
+      "trigger_condition": "Gemini生成的URL全部無效",
+      "task": {
+        "objective": "即時搜索該公司該年份的真實ESG新聞",
+        "search_mode": "real_time_web_search"
+      },
+      "api_config": {
+        "model": "sonar",
+        "temperature": 0,
+        "max_tokens": 1000,
+        "search_domain_filter": "news",
+        "search_recency_filter": "year"
+      },
+      "prompt_template": {
+        "system": "你是一個即時新聞搜索助手，請搜索真實存在的ESG新聞報導並提供有效網址。",
+        "user": "針對「{company_name}」在{year}年的ESG相關新聞，提供2-4個真實有效的新聞網址。要求：1 網址必須真實存在 2 與ESG主題相關。以JSON格式輸出"
+      },
+      "expected_output": {
+        "format": "json",
+        "schema": {
+          "news_list": [
+            {
+              "title": "string",
+              "url": "string",
+              "source": "string",
+              "publish_date": "string",
+              "summary": "string"
+            }
+          ]
+        }
+      },
+      "verification": {
+        "verify_perplexity_urls": true,
+        "method": "使用step_3的驗證模組再次驗證"
+      },
+      "error_handling": {
+        "timeout": 30,
+        "retry_attempts": 1,
+        "fallback": "返回空結果並通知使用者"
+      },
+      "next_step": "step_5_integration_output"
+    },
+    "step_5_integration_output": {
+      "step_number": 5,
+      "name": "整合輸出",
+      "description": "前端顯示最終有效的ESG新聞列表",
+      "module": "整合輸出模組",
+      "process": {
+        "data_aggregation": {
+          "sources": [
+            "Gemini驗證成功的URL",
+            "Perplexity搜索的URL"
+          ],
+          "deduplication": true,
+          "sorting": {
+            "primary": "publish_date",
+            "order": "descending"
+          }
+        },
+        "enrichment": {
+          "add_metadata": true,
+          "metadata_fields": [
+            "source_api",
+            "verification_timestamp",
+            "validation_status"
+          ]
+        }
+      },
+      "output_format": {
+        "type": "json",
+        "schema": {
+          "query_info": {
+            "company": "string",
+            "year": "integer",
+            "search_timestamp": "datetime"
+          },
+          "results": {
+            "total_count": "integer",
+            "news_list": [
+              {
+                "title": "string",
+                "url": "string",
+                "source": "string",
+                "publish_date": "string",
+                "validation_status": "verified"
+              }
+            ]
+          },
+          "metadata": {
+            "gemini_urls_count": "integer",
+            "perplexity_urls_count": "integer",
+            "failed_urls_count": "integer",
+            "used_fallback": "boolean"
+          }
+        }
+      },
+      "frontend_display": {
+        "format": "card_list",
+        "elements": [
+          {
+            "component": "news_card",
+            "fields": [
+              "title",
+              "source",
+              "publish_date",
+              "summary",
+              "url_link"
+            ]
+          }
+        ],
+        "empty_state": {
+          "message": "未找到相關ESG新聞",
+          "suggestion": "請嘗試調整搜索年份或公司名稱"
+        }
+      },
+      "next_step": "complete"
+    }
+  },
+  "error_handling": {
+    "global_timeout": 120,
+    "retry_strategy": {
+      "max_retries": 2,
+      "backoff_multiplier": 2
+    },
+    "fallback_chain": [
+      "Gemini API",
+      "Perplexity API",
+      "返回空結果"
+    ],
+    "error_messages": {
+      "gemini_failure": "Gemini API 暫時無法使用，已切換至 Perplexity 搜索",
+      "perplexity_failure": "無法獲取ESG新聞，請稍後再試",
+      "validation_failure": "網址驗證失敗，正在嘗試備援方案",
+      "no_results": "未找到相關ESG新聞"
+    }
+  },
+  "performance_optimization": {
+    "caching": {
+      "enabled": true,
+      "cache_duration": "24 hours",
+      "cache_key_format": "{company}_{year}",
+      "cache_verified_urls": true
+    },
+    "parallel_processing": {
+      "url_verification": true,
+      "max_concurrent_requests": 5
+    },
+    "rate_limiting": {
+      "gemini_api": "60 requests/minute",
+      "perplexity_api": "20 requests/minute"
+    }
+  },
+  "monitoring": {
+    "metrics": [
+      "gemini_success_rate",
+      "perplexity_fallback_rate",
+      "average_response_time",
+      "url_validation_success_rate"
+    ],
+    "logging": {
+      "level": "INFO",
+      "log_steps": true,
+      "log_api_calls": true,
+      "log_validation_results": true
+    }
+  },
+  "security": {
+    "api_keys": {
+      "storage": "environment_variables",
+      "required_keys": [
+        "GEMINI_API_KEY",
+        "PERPLEXITY_API_KEY"
+      ]
+    },
+    "input_validation": {
+      "sanitize_company_name": true,
+      "validate_year_range": true,
+      "prevent_injection": true
+    },
+    "output_sanitization": {
+      "validate_urls": true,
+      "check_malicious_content": true
+    }
+  }
+}
