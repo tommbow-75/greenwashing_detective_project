@@ -519,9 +519,9 @@ function generateWordcloud(company) {
     const year = String(company.year).trim();
 
     // Construct path to JSON
-    // Note: User mentioned file name format 1102_2024_wc.json
-    const jsonPath = `/wordcloud/${stockId}_${year}_wc.json`;
-    console.log(`[WordCloud] Attempting to load JSON: ${jsonPath}`, { stockId, year });
+    // Note: File name format {year}_{company_code}_wc.json
+    const jsonPath = `/wordcloud/${year}_${stockId}_wc.json`;
+    console.log(`[WordCloud] Attempting to load JSON: ${jsonPath}`, { year, stockId });
 
     // Show loading state
     wordcloudArea.innerHTML = '<div style="display:flex; justify-content:center; align-items:center; height:100%; color:#666;">載入文字雲中...</div>';
