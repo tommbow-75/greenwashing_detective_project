@@ -119,15 +119,8 @@ def process_json_file(input_file, output_file):
             else:
                 item["is_verified"] = "Failed"
             
-        
         print()
     
-    # 儲存結果 & 讀取json檔案輸出時間
-    start_json_time = time.time()
-    with open(output_file, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
-    json_time = time.time() - start_json_time
-    print(f"JSON write time: {json_time:.2f}s")
     
     print(f"✅ 處理完成！")
     print(f"📊 統計結果:")
@@ -143,6 +136,9 @@ def get_latest_file(folder_path, extension=".json"):
     return max(files, key=os.path.getmtime) if files else None
 
 if __name__ == "__main__":
+    # (time-1) 記錄程式開始的最早時間點
+    script_start_time = time.perf_counter()
+
     # 1. 路徑設定
     INPUT_FOLDER = "./temp_data/prompt2_json"
     OUTPUT_FOLDER = "./temp_data/prompt3_json"
@@ -166,11 +162,12 @@ if __name__ == "__main__":
             # 直接在呼叫函式時組合路徑與檔名
             output_file = f"{OUTPUT_FOLDER}/{year}_{company}_P3.json"
 
-            # print(f"📖 讀取最新檔: {latest_path}")
-            # print(f"🚀 準備輸出至: {output_file}")
-
             # 5. 執行核心驗證邏輯
             process_json_file(latest_path, output_file)
 
         except Exception as e:
             print(f"❌ 解析檔案內容時發生錯誤: {e}")
+
+        # (time-2) 計算總耗時
+        total_duration = time.perf_counter() - script_start_time
+        print(f"⏱️ 執行總耗時: {total_duration:.2f} 秒")    
