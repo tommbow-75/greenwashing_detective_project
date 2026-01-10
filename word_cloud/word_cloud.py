@@ -1,16 +1,17 @@
 import jieba
 import os
-import matplotlib.pyplot as plt
 from collections import Counter
-from wordcloud import WordCloud
 import pdfplumber
 import time
 import json
+import glob
 
 start_time = time.time()
 
-
 def extract_text_from_pdf(pdf_path):
+    '''
+    讀取 PDF 並提取文字（返回字符串）
+    '''
     print(f"正在讀取 PDF: {pdf_path} ...")
     text = ""
     try:
@@ -27,34 +28,38 @@ def extract_text_from_pdf(pdf_path):
         print(f"PDF 讀取失敗: {e}")
         return ""
 
-# 指定 PDF 路徑 (請依需求修改)
-pdf_file_path = r"../esgReport/亞泥2024永續報告書.pdf"
+# 設定參數 (用於 demo 或從外部傳入)
+company_code = "1102" 
+year = "2024"
 
-# 取得 PDF 絕對路徑
-base_dir = os.path.dirname(os.path.abspath(__file__)) # word_cloud 資料夾
-# 因為檔案是在 word_cloud/esgReport 下，所以直接接 base_dir
-pdf_full_path = os.path.join(base_dir, "esgReport", "亞泥2024永續報告書.pdf")
+# 取得 PDF 所在目錄的絕對路徑
+base_dir = os.path.dirname(os.path.abspath(__file__))  # word_cloud 資料夾
+pdf_dir = os.path.join(base_dir, "..", "temp_data", "esgReport")
+pdf_dir = os.path.abspath(pdf_dir)  # 轉換為絕對路徑
 
-# 如果檔案不存在，嘗試另一個範例或報錯
-if not os.path.exists(pdf_full_path):
-    print(f"找不到檔案: {pdf_full_path}")
-    # Fallback to hardcoded text if file not found (or raise error)
-    text = '''本公司深知氣候變遷對全球環境帶來的嚴峻挑戰... (檔案讀取失敗，使用預設文字)'''
+# 使用 glob 匹配符合格式的 PDF 檔案: {year}_{company_code}_*.pdf
+pattern = os.path.join(pdf_dir, f"{year}_{company_code}_*.pdf")
+matched_files = glob.glob(pattern)
+
+if not matched_files:
+    error_msg = f"找不到符合格式的 PDF 檔案: {pattern}\n請確認檔案存在於: {pdf_dir}"
+    print(error_msg)
+    raise FileNotFoundError(error_msg)
+elif len(matched_files) > 1:
+    error_msg = f"找到多個符合的檔案: {matched_files}\n將使用第一個檔案: {matched_files[0]}"
+    print(error_msg)
+    text = extract_text_from_pdf(matched_files[0])
 else:
-    text = extract_text_from_pdf(pdf_full_path)
+    print(f"找到檔案: {matched_files[0]}")
+    text = extract_text_from_pdf(matched_files[0])
 
-#####讀取自訂辭檔#####
+##### 讀取自訂辭檔 #####
 filePath = os.path.dirname(os.path.abspath(__file__))
 
-custom_keywords = set()
 try:
     for filename in ["esg_dict.txt", "fuzzy_dict.txt"]:
         full_path = f"{filePath}/{filename}"
         jieba.load_userdict(full_path)
-        with open(full_path, "r", encoding="utf-8") as f:
-            for line in f:
-                custom_keywords.add(line.split()[0])
-
 except Exception as e:
     print(f"提醒：字典檔讀取失敗 ({e})，將僅使用預設斷詞。")
 
@@ -65,45 +70,20 @@ with open(f'{filePath}/stopword_list.txt', 'r', encoding='utf-8') as f:
 # 3. 斷詞並過濾雜訊
 words = jieba.lcut(text)
 
-# 過濾掉標點符號和單字 (長度 < 2 的通常是雜訊，如 "的", "在")
-filtered_words = [w for w in words if len(w) >= 2 and w != '\n']
+# 過濾掉停用詞、標點符號和單字 (長度 < 2 的通常是雜訊，如 "的", "在")
+filtered_words = [w for w in words if len(w) >= 2 and w != '\n' and w not in stopwords]
 
 # 4. 計算字頻，使用Counter將輸入轉化為次數
 word_counts = Counter(filtered_words)
 
-# 5. 進行關鍵詞統計
-keywords_found = {k: v for k, v in word_counts.items() if k in custom_keywords}
-total_keyword_count = sum(keywords_found.values())
-
-# --- 顯示結果 ---
-
-print(f"【總詞彙量 (去除標點後)】: {len(filtered_words)}")
-print("-" * 30)
-
-print(f"【全文章 - 出現頻率最高的 5 個詞】:")
-for word, count in word_counts.most_common(5):
-    print(f"{word}: {count}")
-print("-" * 30)
-
-print(f"【自訂關鍵詞統計 (共 {total_keyword_count} 次)】:")
-for word, count in keywords_found.items():
-    print(f"  - {word}: {count}")
-
 # 輸出JSON檔供前端生成文字雲
-print("-" * 30)
-print("正在輸出JSON檔...")
-
 word_cloud_json = [{"name": word, "value": count} for word, count in word_counts.most_common(100)]
 output_dir = os.path.join(base_dir, "wc_output")
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
-# demo用
-company_code = "1102" 
-year = "2024"
-
-# 檔名範例 company_code_year_wc.json
-output_filename = f"{company_code}_{year}_wc.json"
+# 輸出 JSON 檔名格式: {year}_{company_code}_wc.json
+output_filename = f"{year}_{company_code}_wc.json"
 output_path = os.path.join(output_dir, output_filename)
 with open(output_path, "w", encoding="utf-8") as f:
     json.dump(word_cloud_json, f, ensure_ascii=False, indent=2)
@@ -152,6 +132,3 @@ print(f"JSON檔已儲存至: {output_path}")
 end_time = time.time()
 execution_time = end_time - start_time
 print(f"程式執行時間: {execution_time:.2f} 秒")
-
-# 待加強功能---
-# 需分成讀取PDF以及抓取現有資料
