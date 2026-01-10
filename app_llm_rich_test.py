@@ -1,6 +1,6 @@
 import os
 import re
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 from dotenv import load_dotenv
 from flask import Flask, request, abort
@@ -22,6 +22,13 @@ LINE_CHANNEL_SECRET = os.getenv("LINE_CHANNEL_SECRET", "").strip()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini").strip()
 
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash").strip()
+
+# 可選：指定用哪家（openai / gemini / auto）
+# auto：有 openai 先用 openai，沒有才用 gemini
+LLM_PROVIDER = os.getenv("LLM_PROVIDER", "auto").strip().lower()
+
 # 1) 嘗試匯入 DB 函式（缺少也不會讓 A 爆炸）
 get_company_reports = None
 get_company_updates = None
@@ -36,11 +43,12 @@ try:
     from db_service_local import get_company_updates as _get_company_updates  # type: ignore
     get_company_updates = _get_company_updates
 except Exception as e:
-    # C 的資料介面可先沒有（你剛剛測到 [] 就是這層資料不足），但主程式仍可保底回覆
+    # C 的資料介面可先沒有，但主程式仍可保底回覆
     print(f"⚠️ 匯入 get_company_updates 失敗（C 仍可保底回覆）：{e}")
 
 # 2) Flask / LINE 初始化
 app = Flask(__name__)
+
 
 def require_env():
     missing = []
@@ -58,6 +66,7 @@ def require_env():
             + "3) 內容沒有多餘引號或空白\n"
         )
 
+
 require_env()
 
 configuration = Configuration(access_token=LINE_CHANNEL_ACCESS_TOKEN)
@@ -66,37 +75,31 @@ api_client = ApiClient(configuration)
 line_bot_api = MessagingApi(api_client)
 
 # 3) Session（每個使用者的狀態）
-# user_sessions[user_id] 結構：
-# {
-#   "state": "WAITING_CODE" | "LOCKED",
-#   "company_input": "1102" or "亞泥",
-#   "company_id": "1102",
-#   "company_name": "亞泥",
-#   "last_updates": [ {"title":..., "date":..., "content":..., "url":...}, ... ],
-#   "awaiting_update_choice": True/False
-# }
 user_sessions: Dict[str, Dict[str, Any]] = {}
+
 
 def normalize(text: str) -> str:
     return (text or "").strip().replace(" ", "")
 
+
 def is_trigger_a(norm: str) -> bool:
     return ("企業ESG分析" in norm) or ("開始分析" in norm)
 
+
 def is_trigger_b(norm: str) -> bool:
-    # 你的 Rich Menu B 文案可能是：⚖【企業 ESG風險分析】 or 風險分析
     return ("ESG風險" in norm) or ("風險分析" in norm) or ("風險快覽" in norm)
 
+
 def is_trigger_c(norm: str) -> bool:
-    # 你的 Rich Menu C 文案可能是：最新消息
     return ("最新消息" in norm) or ("企業最新消息" in norm) or ("動態" in norm)
 
+
 def is_choice_number(norm: str) -> Optional[int]:
-    # 使用者回覆 1~9 看詳情
     m = re.fullmatch(r"[1-9]", norm)
     if not m:
         return None
     return int(norm)
+
 
 # 4) OpenAI 摘要（B / C 可共用）
 def summarize_with_openai(prompt: str) -> Optional[str]:
@@ -105,6 +108,7 @@ def summarize_with_openai(prompt: str) -> Optional[str]:
     try:
         # 新版 openai 套件（openai>=1.x）
         from openai import OpenAI  # type: ignore
+
         client = OpenAI(api_key=OPENAI_API_KEY)
         resp = client.chat.completions.create(
             model=OPENAI_MODEL,
@@ -120,19 +124,59 @@ def summarize_with_openai(prompt: str) -> Optional[str]:
         print(f"⚠️ OpenAI 摘要失敗：{e}")
         return None
 
-# 5) B：把 DB 資料整理成「5~8行」風險快覽（含保底）
+
+# 5) Gemini 摘要（B / C 可共用）
+def summarize_with_gemini(prompt: str) -> Optional[str]:
+    if not GEMINI_API_KEY:
+        return None
+
+    try:
+        # 新版 Google GenAI SDK
+        from google import genai  # type: ignore
+
+        client = genai.Client(api_key=GEMINI_API_KEY)
+        resp = client.models.generate_content(
+            model=GEMINI_MODEL,
+            contents=[
+                "你是嚴謹的ESG分析助理，輸出需精簡、條列、避免浮誇。",
+                prompt,
+            ],
+        )
+        text = getattr(resp, "text", "") or ""
+        return text.strip()
+
+    except Exception as e:
+        print(f"⚠️ Gemini 摘要失敗：{e}")
+        return None
+
+# 6) 統一摘要入口：依 env 決定用哪家
+def summarize(prompt: str) -> Optional[str]:
+    provider = LLM_PROVIDER
+
+    if provider == "openai":
+        return summarize_with_openai(prompt)
+
+    if provider == "gemini":
+        return summarize_with_gemini(prompt)
+
+    # auto：有 openai 先走 openai，沒有再走 gemini
+    out = summarize_with_openai(prompt)
+    if out:
+        return out
+    return summarize_with_gemini(prompt)
+
+
+# 7) B：把 DB 資料整理成「5~8行」風險快覽（含保底）
 def build_b_risk_brief(company_id: str, company_name: str) -> str:
     if not get_company_reports:
         return "⚠️ 目前無法讀取資料庫（DB 模組未載入），請稍後再試。"
 
     rows = []
     try:
-        # 這裡用 company_id 作為 user_input（你的 DB 函式支援 id 或 name）
         rows = get_company_reports(company_id) or []
     except Exception as e:
         return f"⚠️ 讀取資料庫失敗：{e}"
 
-    # 若 DB 沒資料，仍要回話
     if not rows:
         return (
             f"⚖️【{company_name} ESG風險快覽】\n"
@@ -141,9 +185,7 @@ def build_b_risk_brief(company_id: str, company_name: str) -> str:
             "• 你也可以先測試 C（最新消息）按鈕。"
         )
 
-    # 取前幾筆資料當摘要素材（避免 prompt 太長）
     sample = rows[:6]
-    # 把可能有用的欄位拼成素材（欄位名不確定，所以用 get）
     bullets = []
     for r in sample:
         esg = r.get("esg_domain") or r.get("ESG領域") or ""
@@ -151,8 +193,7 @@ def build_b_risk_brief(company_id: str, company_name: str) -> str:
         claim = r.get("report_claim") or r.get("聲稱") or ""
         evidence = r.get("external_evidence") or r.get("新聞/官方資料") or ""
         risk = r.get("risk_score") or r.get("風險評分") or ""
-        line = f"- ({esg}/{topic}) claim:{claim} evidence:{evidence} risk:{risk}"
-        bullets.append(line)
+        bullets.append(f"- ({esg}/{topic}) claim:{claim} evidence:{evidence} risk:{risk}")
 
     prompt = (
         f"公司：{company_id} {company_name}\n"
@@ -165,15 +206,12 @@ def build_b_risk_brief(company_id: str, company_name: str) -> str:
         "素材：\n" + "\n".join(bullets)
     )
 
-    llm = summarize_with_openai(prompt)
+    llm = summarize(prompt)
     if llm:
-        # 確保有標題
         if "【" not in llm[:20]:
             llm = f"⚖️【{company_name} ESG風險快覽】\n" + llm
         return llm
 
-    # 保底（不走 LLM）
-    # 盡量從資料抓到一個風險分數
     risk_score = None
     for r in sample:
         v = r.get("risk_score") or r.get("風險評分")
@@ -190,7 +228,8 @@ def build_b_risk_brief(company_id: str, company_name: str) -> str:
         "• 可繼續點 C 查看最新消息。"
     )
 
-# 6) C：最新消息列表 + 回覆數字看詳情（空資料也要回）
+
+# 8) C：最新消息列表 + 回覆數字看詳情（空資料也要回）
 def build_c_updates_list(company_id: str, company_name: str, updates: List[Dict[str, Any]]) -> str:
     header = f"📢 {company_name}最新消息（更新至 2026/01）"
     if not updates:
@@ -204,7 +243,6 @@ def build_c_updates_list(company_id: str, company_name: str, updates: List[Dict[
     for idx, u in enumerate(updates[:4], start=1):
         title = str(u.get("title") or "動態").strip()
         date = str(u.get("date") or "").strip()
-        # 顯示短一點，避免換行爆版
         title = title.replace("\n", " ")
         if len(title) > 22:
             title = title[:22] + "…"
@@ -212,13 +250,13 @@ def build_c_updates_list(company_id: str, company_name: str, updates: List[Dict[
         lines.append(f"▶ {idx}. {title}{suffix}（回覆 {idx} 查看詳情）")
     return "\n".join(lines)
 
+
 def build_c_update_detail(company_name: str, chosen: Dict[str, Any], idx: int) -> str:
     title = str(chosen.get("title") or "動態").strip()
     date = str(chosen.get("date") or "").strip()
     content = str(chosen.get("content") or "").strip()
     url = str(chosen.get("url") or "").strip()
 
-    # 若內容過長，截短（LINE 一則訊息不要爆）
     if len(content) > 600:
         content = content[:600] + "…"
 
@@ -232,7 +270,8 @@ def build_c_update_detail(company_name: str, chosen: Dict[str, Any], idx: int) -
         msg.append("\n更多連結：\n" + url)
     return "\n".join(msg)
 
-# 7) Callback
+
+# 9) Callback
 @app.route("/callback", methods=["POST"])
 def callback():
     signature = request.headers.get("X-Line-Signature", "")
@@ -245,7 +284,8 @@ def callback():
 
     return "OK", 200
 
-# 8) Message Handler
+
+# 10) Message Handler
 @handler.add(MessageEvent, message=TextMessageContent)
 def handle_message(event):
     user_id = event.source.user_id
@@ -267,7 +307,6 @@ def handle_message(event):
             else:
                 send_reply(event, "❌ 編號超出範圍，請回覆 1~4")
             return
-        # 不是數字就不擋，讓使用者仍可按其他按鈕
 
     # (A) 開始分析
     if is_trigger_a(norm):
@@ -281,7 +320,6 @@ def handle_message(event):
 
     # (A2) 等公司代碼
     if sess.get("state") == "WAITING_CODE":
-        # 目前 demo 仍以 1102/亞泥 為主（你之後可擴充 DB 查 company 表）
         if norm in ["1102", "亞泥", "亞洲水泥", "亞洲水泥股份有限公司"]:
             user_sessions[user_id] = {
                 "state": "LOCKED",
@@ -298,7 +336,6 @@ def handle_message(event):
 
     # 需要先鎖定公司才可做 B / C
     if sess.get("state") != "LOCKED":
-        # 使用者若直接按 B/C，友善引導去按 A
         if is_trigger_b(norm) or is_trigger_c(norm):
             send_reply(event, "⚠️ 請先點 A（開始分析）並輸入公司代碼/名稱完成鎖定。")
         return
@@ -309,7 +346,6 @@ def handle_message(event):
     # (B) 風險分析
     if is_trigger_b(norm):
         brief = build_b_risk_brief(company_id, company_name)
-        # B 的結果回完後，不要卡住數字選單狀態
         sess["awaiting_update_choice"] = False
         user_sessions[user_id] = sess
         send_reply(event, brief)
@@ -321,14 +357,12 @@ def handle_message(event):
         if get_company_updates:
             try:
                 updates = get_company_updates(company_id, 4) or []
-                # 確保是 list[dict]
                 if not isinstance(updates, list):
                     updates = []
             except Exception as e:
                 print(f"⚠️ 取得最新消息失敗：{e}")
                 updates = []
 
-        # 存 session 讓使用者回覆 1~4 看詳情
         sess["last_updates"] = updates[:4]
         sess["awaiting_update_choice"] = True if updates else False
         user_sessions[user_id] = sess
@@ -337,10 +371,10 @@ def handle_message(event):
         send_reply(event, msg)
         return
 
-    # 其他訊息不回（避免亂回）
     return
 
-# 9) Reply helper
+
+# 11) Reply helper
 def send_reply(event, text: str):
     line_bot_api.reply_message(
         ReplyMessageRequest(
@@ -348,6 +382,7 @@ def send_reply(event, text: str):
             messages=[TextMessage(text=text)]
         )
     )
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
