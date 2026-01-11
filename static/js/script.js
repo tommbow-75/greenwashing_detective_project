@@ -520,7 +520,7 @@ function generateWordcloud(company) {
 
     // Construct path to JSON
     // Note: File name format {year}_{company_code}_wc.json
-    const jsonPath = `/wordcloud/${year}_${stockId}_wc.json`;
+    const jsonPath = `/word_cloud/wc_output/${year}_${stockId}_wc.json`;
     console.log(`[WordCloud] Attempting to load JSON: ${jsonPath}`, { year, stockId });
 
     // Show loading state
@@ -606,7 +606,7 @@ function generateWordcloud(company) {
             console.error('[WordCloud] Load failed:', err);
             wordcloudArea.innerHTML = `<div style="padding:1rem; color: #666; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;">
                 <p>無法載入文字雲資料</p>
-                <small style="color:#999">(${stockId}_${year}_wc.json)</small>
+                <small style="color:#999">(${year}_${stockId}_wc.json)</small>
             </div>`;
         });
 }

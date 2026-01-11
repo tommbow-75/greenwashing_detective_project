@@ -362,7 +362,7 @@ def query_company():
         }), 500
 
 # Serve word cloud JSON files
-@app.route('/wordcloud/<filename>')
+@app.route('/word_cloud/wc_output/<filename>')
 def serve_wordcloud(filename):
     return send_from_directory('word_cloud/wc_output', filename)
 
