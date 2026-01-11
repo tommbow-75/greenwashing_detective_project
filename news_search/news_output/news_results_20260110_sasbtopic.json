@@ -1,0 +1,722 @@
+[
+  {
+    "news_id": 1,
+    "sasb_topic": "溫室氣體排放",
+    "title": "亞泥SBTi第一階段目標提前達陣 啟動第二階段計劃 - news.cnyes.com",
+    "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5QX0lCemNrWVp2V3BMSFphZ1diRGlFdHhrb29LVHRySXZra1pYV0pBVy1ybFh3d1J6ZDhwc0FHRG9yYWRkT0I4Y2lFQ1RrSUE?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Wed, 20 Nov 2024 08:00:00 GMT",
+    "publisher": "news.cnyes.com"
+  },
+  {
+    "news_id": 2,
+    "sasb_topic": "溫室氣體排放",
+    "title": "碳費對台泥、亞泥財務影響有多大？碳費成本、企業淨利、減碳成本效益，算給你看 - 今周刊",
+    "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE94YjBJREVoNXk4eFRNYUlYZllOVnNzTlZ4NTM1RU1DZXYyLTBqR1dfTnVYNWU0N0xWNHBwQlpoajdBR1UyOHBYbHliQUYzdm5aUGROQVA2d2RUbjRaV0RNN05CSFdLeV90WU10ZTg4WUJpdHVRbmtVYWJTZWhKaHc?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Tue, 30 Apr 2024 07:00:00 GMT",
+    "publisher": "今周刊"
+  },
+  {
+    "news_id": 3,
+    "sasb_topic": "溫室氣體排放",
+    "title": "亞泥減碳解方 登上COP29 - 財訊",
+    "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE9NOC14YjBtdGZPaS1hXzRVVEZJYXpDa3l2ek1oTFF4elJpRmxNUWZoeGVFeWtjdWtxWGNMY3Zab0JmeUhsdFFDRjJoZUdraEVLUjRJR0dYYVZlS3FvaHhqTm1YZ2RlVW9iUkszMkR6YXRvMXpYNmtkYWVGWQ?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Sun, 24 Nov 2024 08:00:00 GMT",
+    "publisher": "財訊"
+  },
+  {
+    "news_id": 4,
+    "sasb_topic": "溫室氣體排放",
+    "title": "供應鏈邁向淨零鋼鐵、水泥、紡織、科技廠揭減碳策略| 新聞 - Reccessary",
+    "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxORDA4TUdJUGJheHRBVEN6SWJ5YlFlVzY1TXM1dGY5V09KcTJXOUJHc2x2Q3BnVE1tNGVJUzNfMEtZcndvUHJYZ29FU0wtNXZ4dW9yWHZyYUFEQU5CTGZ6NFNyRUZ0N1hhTTIzX0NDQXhWaU9XYkxlSmJoT2FJdFNHNnN0Qm1VMkNTOTlEZHBZT01RT1kwZmRsQldIWU45b0p3cDBhcUR3OWNOOEdsb2Vicg?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Thu, 21 Mar 2024 07:00:00 GMT",
+    "publisher": "Reccessary"
+  },
+  {
+    "news_id": 5,
+    "sasb_topic": "溫室氣體排放",
+    "title": "拚了！台泥、亞泥推低碳水泥 盼減少碳排節能 - 奇摩新聞",
+    "url": "https://news.google.com/rss/articles/CBMirwJBVV95cUxNcTlCQmtHUEM3Z2ZqZGtPVDF3a0RSTmItU0pCenJoSncxODN2QUVUNGx6MWFBVDJaNjZuazlFSnY2ZWVTMlVzVnI2U0RpTG01UjZxdlVnS0hCYVppZHh4OGdMUnZuRVBoXzZsOVRldXh0S1FXNUpRekFGYURrNl9ZOHRpTVRGME5YeU1rcmhKODJ4bkJBU0hrMEQtNzN1NlBhUFQzU2wtSEJJUGFCZGR6YUJEMTlfNENsclFkNHgzUGhHbjhZS0l4RjVLY2VoS2F5OVZ0RGJIZzFYaEltSzg4T0Q0Zl9NczY5Z3NMTzFUZVlkc0lpRE5TUlRZWk1NeDNSeXo0MEFWLW9NbFJqVHRaMXZ1clJlbGp6QzBqQjVUNnBBZFJCSGhNYmxNYkkzRlE?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Sun, 22 Dec 2024 08:00:00 GMT",
+    "publisher": "奇摩新聞"
+  },
+  {
+    "news_id": 6,
+    "sasb_topic": "空氣品質",
+    "title": "亞泥花蓮廠替代燃料起火環保局監控空氣品質| 社會 - 中央社 CNA",
+    "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9sMU1wTWlKMkZUenVYZkNWTEJXR1pxYXcyd3pGblpYd0JGWHk4N0VfVWxVN09qUWNhMHdCZTJlb0FfQlNZVHdZd2xWWGM5QmpENlpqMDVQOG1JcXhEZXQ0?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Thu, 14 Mar 2024 07:00:00 GMT",
+    "publisher": "中央社 CNA"
+  },
+  {
+    "news_id": 7,
+    "sasb_topic": "空氣品質",
+    "title": "【島在現場】花蓮SRF廠悶燒持續進行式｜2024.12.16 ​ - 我們的島",
+    "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE5reHg2X0hHeUpVa3k4R2dTa1dUcERxS2JFbjAyOWtUcm54TVNuejFYeU1JNE1uTVprWEdzSE83eHhyX0xWNjZaM2VTdC1NczJ5RGlidQ?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Thu, 19 Dec 2024 08:00:00 GMT",
+    "publisher": "我們的島"
+  },
+  {
+    "news_id": 8,
+    "sasb_topic": "空氣品質",
+    "title": "花蓮科技執法監測工廠煙道 空汙數據透明 - hakkatv.org.tw",
+    "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE1fenNfQUpsTk1Wb3VwbzVBbkhGS2I2SWhoSlJRRXBnVkRPeHRJTTBBcUlDWld3bEtEUlM1dkpTT3BUZmpyVmdVTVM2UnptdnhXWnFMVlgtSnFseW5seVcyVEoycGpFQQ?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Mon, 19 Feb 2024 08:00:00 GMT",
+    "publisher": "hakkatv.org.tw"
+  },
+  {
+    "news_id": 9,
+    "sasb_topic": "空氣品質",
+    "title": "花蓮再生燃料廠廢棄物堆積飄惡臭環保局：可撤銷營運- 生活 - 工商時報",
+    "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9jUHVUczlqWWNxeVpKZXQ5QTYxa1dxYUNPRkY3cXAwLU1PZlZhaF9Zdm9Kb09ud1hoN0dHTFNYaE9FSUdEcUdERUE4dGZyZjlsU2dsUmk0YnR5bzBQRWRB?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Fri, 13 Dec 2024 08:00:00 GMT",
+    "publisher": "工商時報"
+  },
+  {
+    "news_id": 10,
+    "sasb_topic": "空氣品質",
+    "title": "花蓮亞泥厰火警狂冒濃煙！1小時撲滅　環保局憂空汚急採樣 - ETtoday新聞雲",
+    "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE1ZTVotY0R1QzIwMmZWdXNpX2sydm9yZDBlY0YxRGVBaGpaM2cyNEttY3pIYkpKM1RiT21UOFAzQnNSMi1VMFZHTnByeXB5ektkelU4UFNjdDlmQlZ3ZXfSAWhBVV95cUxQeGl3bllUOThaWkMzY2RHM2N0UVhPUkx1REt5aXhfY2NYeFNCRkxoYUtwMl9xOWUxbjFqSkx3WHo2ekxmV0hWVUVJTFAxejhpWWdyckVNUHE3RWNFT2tSQWlxc195NWFIaw?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Thu, 14 Mar 2024 07:00:00 GMT",
+    "publisher": "ETtoday新聞雲"
+  },
+  {
+    "news_id": 11,
+    "sasb_topic": "能源管理",
+    "title": "拚了！台泥、亞泥推低碳水泥 盼減少碳排節能 - 奇摩新聞",
+    "url": "https://news.google.com/rss/articles/CBMirwJBVV95cUxNcTlCQmtHUEM3Z2ZqZGtPVDF3a0RSTmItU0pCenJoSncxODN2QUVUNGx6MWFBVDJaNjZuazlFSnY2ZWVTMlVzVnI2U0RpTG01UjZxdlVnS0hCYVppZHh4OGdMUnZuRVBoXzZsOVRldXh0S1FXNUpRekFGYURrNl9ZOHRpTVRGME5YeU1rcmhKODJ4bkJBU0hrMEQtNzN1NlBhUFQzU2wtSEJJUGFCZGR6YUJEMTlfNENsclFkNHgzUGhHbjhZS0l4RjVLY2VoS2F5OVZ0RGJIZzFYaEltSzg4T0Q0Zl9NczY5Z3NMTzFUZVlkc0lpRE5TUlRZWk1NeDNSeXo0MEFWLW9NbFJqVHRaMXZ1clJlbGp6QzBqQjVUNnBBZFJCSGhNYmxNYkkzRlE?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Sun, 22 Dec 2024 08:00:00 GMT",
+    "publisher": "奇摩新聞"
+  },
+  {
+    "news_id": 12,
+    "sasb_topic": "能源管理",
+    "title": "水泥低碳產品外… 台泥、亞泥、國產再出招- 日報 - 工商時報",
+    "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE12R2phVWdvOGdtcnJoaDFXeTRLMnN2U3o3U0pBQ3o3dExHakNEYVY4SGRfdjhkczd1eFBxc1h1V19GcFhSNTE0SGFETEMwQTdHc3pNaE5FWlRTeVpJUTJv?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Fri, 06 Sep 2024 07:00:00 GMT",
+    "publisher": "工商時報"
+  },
+  {
+    "news_id": 13,
+    "sasb_topic": "能源管理",
+    "title": "2023台灣排碳大戶綠電使用量比一比！黑馬傳產亞泥、東和鋼鐵表現最好 - 今周刊",
+    "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE1YdlV5M295RVdMemhpOVB6T1diRnpKUU9ERGdEdVlCVU9OX2ZubTU3aVNKMHpaM2ZRd3o5ZUZBcEtWV1B2ZVF0dzVSSkxzYTl4NUM4b0xXNU01LUVUUUdqdGFDR0hZNEhEMTNJXzV3aThSS2dmYnVoS0t5MEdZTms?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Fri, 26 Apr 2024 07:00:00 GMT",
+    "publisher": "今周刊"
+  },
+  {
+    "news_id": 14,
+    "sasb_topic": "能源管理",
+    "title": "供應鏈邁向淨零鋼鐵、水泥、紡織、科技廠揭減碳策略| 新聞 - Reccessary",
+    "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxORDA4TUdJUGJheHRBVEN6SWJ5YlFlVzY1TXM1dGY5V09KcTJXOUJHc2x2Q3BnVE1tNGVJUzNfMEtZcndvUHJYZ29FU0wtNXZ4dW9yWHZyYUFEQU5CTGZ6NFNyRUZ0N1hhTTIzX0NDQXhWaU9XYkxlSmJoT2FJdFNHNnN0Qm1VMkNTOTlEZHBZT01RT1kwZmRsQldIWU45b0p3cDBhcUR3OWNOOEdsb2Vicg?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Thu, 21 Mar 2024 07:00:00 GMT",
+    "publisher": "Reccessary"
+  },
+  {
+    "news_id": 15,
+    "sasb_topic": "能源管理",
+    "title": "台泥、亞泥首季財報出爐！海外、業外帶動獲利成長 - 財訊",
+    "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTFBTYWNzaTJPRDFpZ19Hb3VFRTU2d294NUdqei1hZ1lXS3B5cDlTQXhqck1EdFJ0c2NhODBuaUFmMEU3eHh0QTVMT2NnS2ZIUUFnbVZ3ZmFqY1dOSktnUDA5WkRQck1iSU1UR2VJcUJtVlJ1Vy1kQUFJSmZwaw?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Tue, 14 May 2024 07:00:00 GMT",
+    "publisher": "財訊"
+  },
+  {
+    "news_id": 16,
+    "sasb_topic": "水資源與廢水處理管理",
+    "title": "循環經濟夯水泥廠在陸追求可再生能源穩營運- 產業 - 工商時報",
+    "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE8zWHN4VGh3eEpKT0tFTnZsUGZ2eFNqWG5fbkVhYUY1QzVIbFZWemExaUk3YTJFNkhwTndQbm9IUkNncS0zUkpEMHQwZjVnWDd6RHl2ZU1UbHdiVkR0Q3F3?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Sat, 20 Jul 2024 07:00:00 GMT",
+    "publisher": "工商時報"
+  },
+  {
+    "news_id": 17,
+    "sasb_topic": "水資源與廢水處理管理",
+    "title": "礦業改革後，最後一批「霸王礦場」──宜蘭永侒採礦爭議如何落幕？ - 報導者The Reporter",
+    "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxPTXlFTUF1VVBsSEdUOHhPcS0yRmxvclhxZXZ5T3NkbldQb2c3SUpRUS0xMF9heGpqYzAtd2prZDNaMndmbWNLMUM3SEE3MFJ3OUhPS0JfaGR5ZkJiV1dZcElURWpBS0dtZ0VGZUVDNk1Ucm1xNHBvYXRYOTdPS1VRRWl1ZFduZkZWcmJ4Z3BhZVBKSU9BdGpHZmRManRLeEU?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Wed, 21 Aug 2024 07:00:00 GMT",
+    "publisher": "報導者The Reporter"
+  },
+  {
+    "news_id": 18,
+    "sasb_topic": "水資源與廢水處理管理",
+    "title": "【島在現場】花蓮SRF廠悶燒持續進行式｜2024.12.16 ​ - 我們的島",
+    "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE5reHg2X0hHeUpVa3k4R2dTa1dUcERxS2JFbjAyOWtUcm54TVNuejFYeU1JNE1uTVprWEdzSE83eHhyX0xWNjZaM2VTdC1NczJ5RGlidQ?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Thu, 19 Dec 2024 08:00:00 GMT",
+    "publisher": "我們的島"
+  },
+  {
+    "news_id": 19,
+    "sasb_topic": "水資源與廢水處理管理",
+    "title": "獨家衛星3D地圖》0403震後追蹤：太魯閣上千處坍塌、7年難恢復，花蓮觀光如何重建？ - 天下雜誌",
+    "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBmUXhGV3M3bkNUTi1IdzhPNzNaRGZZNzN2eF9fYXVVaXRkUk1aamVNMlFrbTE5Ry05NzVnYUVQWEY5ZGhpWUxab18wbDNsNkR4U0x3VnRNSVVKM2xiVmE1azdHN2x5SlpBdVAyUmlYTmx0cF91ZUtN?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Tue, 23 Jul 2024 07:00:00 GMT",
+    "publisher": "天下雜誌"
+  },
+  {
+    "news_id": 20,
+    "sasb_topic": "廢棄物與有害物質管理",
+    "title": "水泥低碳產品外… 台泥、亞泥、國產再出招- 日報 - 工商時報",
+    "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE12R2phVWdvOGdtcnJoaDFXeTRLMnN2U3o3U0pBQ3o3dExHakNEYVY4SGRfdjhkczd1eFBxc1h1V19GcFhSNTE0SGFETEMwQTdHc3pNaE5FWlRTeVpJUTJv?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Fri, 06 Sep 2024 07:00:00 GMT",
+    "publisher": "工商時報"
+  },
+  {
+    "news_id": 21,
+    "sasb_topic": "廢棄物與有害物質管理",
+    "title": "亞泥沒和台泥一樣投資歐洲，為何會被歐盟CBAM論壇邀請分享？一次看懂亞泥低碳轉型四大策略 - 今周刊",
+    "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9LN29xYkFHendwOGJnemkzOFp3N1JjRHY4R2VsQjFvZjM3V05vSjVrWFJ1Y0E1blFrd092eVh5Rmp4Y0FkYWVJMjI1c3NvblFEbUhpdVY1aEhnMW1yVkVBZzJYdDhPQlpuNzYzNVJ5eU1RV290SkdOOFhZSVdRNWs?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Thu, 06 Jun 2024 07:00:00 GMT",
+    "publisher": "今周刊"
+  },
+  {
+    "news_id": 22,
+    "sasb_topic": "廢棄物與有害物質管理",
+    "title": "亞泥減碳解方 登上COP29 - 財訊",
+    "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE9NOC14YjBtdGZPaS1hXzRVVEZJYXpDa3l2ek1oTFF4elJpRmxNUWZoeGVFeWtjdWtxWGNMY3Zab0JmeUhsdFFDRjJoZUdraEVLUjRJR0dYYVZlS3FvaHhqTm1YZ2RlVW9iUkszMkR6YXRvMXpYNmtkYWVGWQ?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Sun, 24 Nov 2024 08:00:00 GMT",
+    "publisher": "財訊"
+  },
+  {
+    "news_id": 23,
+    "sasb_topic": "廢棄物與有害物質管理",
+    "title": "亞泥SBTi第一階段目標提前達陣 啟動第二階段計劃 - news.cnyes.com",
+    "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5QX0lCemNrWVp2V3BMSFphZ1diRGlFdHhrb29LVHRySXZra1pYV0pBVy1ybFh3d1J6ZDhwc0FHRG9yYWRkT0I4Y2lFQ1RrSUE?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Wed, 20 Nov 2024 08:00:00 GMT",
+    "publisher": "news.cnyes.com"
+  },
+  {
+    "news_id": 24,
+    "sasb_topic": "廢棄物與有害物質管理",
+    "title": "【島在現場】花蓮SRF廠悶燒持續進行式｜2024.12.16 ​ - 我們的島",
+    "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE5reHg2X0hHeUpVa3k4R2dTa1dUcERxS2JFbjAyOWtUcm54TVNuejFYeU1JNE1uTVprWEdzSE83eHhyX0xWNjZaM2VTdC1NczJ5RGlidQ?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Thu, 19 Dec 2024 08:00:00 GMT",
+    "publisher": "我們的島"
+  },
+  {
+    "news_id": 25,
+    "sasb_topic": "生態影響",
+    "title": "亞泥沒和台泥一樣投資歐洲，為何會被歐盟CBAM論壇邀請分享？一次看懂亞泥低碳轉型四大策略 - 今周刊",
+    "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9LN29xYkFHendwOGJnemkzOFp3N1JjRHY4R2VsQjFvZjM3V05vSjVrWFJ1Y0E1blFrd092eVh5Rmp4Y0FkYWVJMjI1c3NvblFEbUhpdVY1aEhnMW1yVkVBZzJYdDhPQlpuNzYzNVJ5eU1RV290SkdOOFhZSVdRNWs?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Thu, 06 Jun 2024 07:00:00 GMT",
+    "publisher": "今周刊"
+  },
+  {
+    "news_id": 26,
+    "sasb_topic": "生態影響",
+    "title": "亞泥小金雞嘉惠電力前3季營收128億元　3期投逾400億拚5年內商轉 - ETtoday財經雲",
+    "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTFBLMXBGczNTTWg0N2FGLVpVTngwbWVKcnNUbHFtNG1LekNtbmI1MG42RU55azFDS2J6SUxoUlZnMWs2dUgtUk1BWlJYVC04ckk1OHfSAW5BVV95cUxPZU5oUE41UERkS3E0R1V6aVVJX3FDTnlCVWdBS1VuREdTS0hqNWk1X29YQkczRjNRai1YVDBqX2NOaXBBQjZfMmVQcjg0WmlUWmVnZ3d0cVhZWDl2d2dzbEZGSWhzN1BFSG13TUxFQQ?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Wed, 30 Oct 2024 07:00:00 GMT",
+    "publisher": "ETtoday財經雲"
+  },
+  {
+    "news_id": 27,
+    "sasb_topic": "生態影響",
+    "title": "亞泥生態園區邀你走春- 寶島 - 中時新聞網",
+    "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE43ZHl1WWxTanExR05rTVMxT2loeUhXdFFDNk9RMjRJaFh0QkxjYTJ6UHcxaVNJZHNxaEdwUDNFR2lUZ3lVMy16SHBoVU5qWUI3NEZhbjFvRzZMdTE0QjhzYXFhWUZuMUswMzhwdW1B?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Wed, 31 Jan 2024 08:00:00 GMT",
+    "publisher": "中時新聞網"
+  },
+  {
+    "news_id": 28,
+    "sasb_topic": "生態影響",
+    "title": "礦業改革後，最後一批「霸王礦場」──宜蘭永侒採礦爭議如何落幕？ - 報導者The Reporter",
+    "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxPTXlFTUF1VVBsSEdUOHhPcS0yRmxvclhxZXZ5T3NkbldQb2c3SUpRUS0xMF9heGpqYzAtd2prZDNaMndmbWNLMUM3SEE3MFJ3OUhPS0JfaGR5ZkJiV1dZcElURWpBS0dtZ0VGZUVDNk1Ucm1xNHBvYXRYOTdPS1VRRWl1ZFduZkZWcmJ4Z3BhZVBKSU9BdGpHZmRManRLeEU?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Wed, 21 Aug 2024 07:00:00 GMT",
+    "publisher": "報導者The Reporter"
+  },
+  {
+    "news_id": 29,
+    "sasb_topic": "生態影響",
+    "title": "企業祕密花園1》亞泥投入近半世紀生態園區呵護多樣物種！花蓮水泥礦山旁，看不完的生態寶藏 - 財訊",
+    "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE5Zd2U2Ymg1ZTJZQXNGWmVEY2pZNEI3aEp5dHRXQ3ZGUWFPUnpnY1Z3Nmtici12SEhoaTJWVG9xUFdoZWhlMjhuUzdraXFQbm9EZ2xrQmNGQzM0MVRySE9KQjNBWng2SlVBQkpHUTczV1hxS1VIdWRVcm9fWQ?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Wed, 31 Jan 2024 08:00:00 GMT",
+    "publisher": "財訊"
+  },
+  {
+    "news_id": 30,
+    "sasb_topic": "人權與社區關係",
+    "title": "還我土地！ 原民會展開「亞泥礦場」回復計畫 - 原住民族文化事業基金會",
+    "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE1OLWVnaG5NQXlVZGxkT0V4QjhFSlpsTVJoT1lkQkt4XzNjb0U1OTd1dm5fM0pMSmJNQldBYTN2ZlJpVklnLXc?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Sat, 04 May 2024 07:00:00 GMT",
+    "publisher": "原住民族文化事業基金會"
+  },
+  {
+    "news_id": 31,
+    "sasb_topic": "人權與社區關係",
+    "title": "礦業改革後，最後一批「霸王礦場」──宜蘭永侒採礦爭議如何落幕？ - 報導者The Reporter",
+    "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxPTXlFTUF1VVBsSEdUOHhPcS0yRmxvclhxZXZ5T3NkbldQb2c3SUpRUS0xMF9heGpqYzAtd2prZDNaMndmbWNLMUM3SEE3MFJ3OUhPS0JfaGR5ZkJiV1dZcElURWpBS0dtZ0VGZUVDNk1Ucm1xNHBvYXRYOTdPS1VRRWl1ZFduZkZWcmJ4Z3BhZVBKSU9BdGpHZmRManRLeEU?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Wed, 21 Aug 2024 07:00:00 GMT",
+    "publisher": "報導者The Reporter"
+  },
+  {
+    "news_id": 32,
+    "sasb_topic": "人權與社區關係",
+    "title": "花蓮亞泥新城山礦區崩塌擴大 餘震結束後將進行開採整治 - 公視新聞網PNN",
+    "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFAyZmJoV2hfWklFZzZCcDgxNmZHeUlrZ1JFUXRjSHZ2X3BtQkpuWWZFTE45ZmtsOV9oaG1yQWFpeThtUS1RZld0UU1wNFVNNzg?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Thu, 25 Apr 2024 07:00:00 GMT",
+    "publisher": "公視新聞網PNN"
+  },
+  {
+    "news_id": 33,
+    "sasb_topic": "人權與社區關係",
+    "title": "礦業法修法一年後 部落諮商同意ing - 焦點事件",
+    "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE5PT2JDb1FIWnFaRmV6c0puVkJHMlczbFdvN2hkdjJRaDJ0dUZEeGN4MVVoa21zQlNGdmNMY1BDVmp1aHJiVDJPSUFkODJUaXNYS21jbQ?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Mon, 08 Jul 2024 07:00:00 GMT",
+    "publisher": "焦點事件"
+  },
+  {
+    "news_id": 34,
+    "sasb_topic": "人權與社區關係",
+    "title": "企業祕密花園1》亞泥投入近半世紀生態園區呵護多樣物種！花蓮水泥礦山旁，看不完的生態寶藏 - 財訊",
+    "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE5Zd2U2Ymg1ZTJZQXNGWmVEY2pZNEI3aEp5dHRXQ3ZGUWFPUnpnY1Z3Nmtici12SEhoaTJWVG9xUFdoZWhlMjhuUzdraXFQbm9EZ2xrQmNGQzM0MVRySE9KQjNBWng2SlVBQkpHUTczV1hxS1VIdWRVcm9fWQ?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Wed, 31 Jan 2024 08:00:00 GMT",
+    "publisher": "財訊"
+  },
+  {
+    "news_id": 35,
+    "sasb_topic": "顧客隱私",
+    "title": "亞泥花蓮廠替代燃料起火環保局監控空氣品質| 社會 - 中央社 CNA",
+    "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9sMU1wTWlKMkZUenVYZkNWTEJXR1pxYXcyd3pGblpYd0JGWHk4N0VfVWxVN09qUWNhMHdCZTJlb0FfQlNZVHdZd2xWWGM5QmpENlpqMDVQOG1JcXhEZXQ0?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Thu, 14 Mar 2024 07:00:00 GMT",
+    "publisher": "中央社 CNA"
+  },
+  {
+    "news_id": 36,
+    "sasb_topic": "顧客隱私",
+    "title": "亞泥晚間重訊：亞泥中國下市案未獲股東會通過 私有化計畫告終 - 財訊",
+    "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTFBQT1FaYkR5cS15WEdfeFFOR3czZ1RVQ2NhLVJzQ28tcEZ1N24zMVY5RmlXTVByY3lYS3hhZnREOG4xcW82Smd2b2R6eXF4ZzZzYkJGMFZObGU5Njk2aHNJYmNkRTdwZjctbmQ5UGVvZ2RUazdpSmM3WTd5MA?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Mon, 26 Aug 2024 07:00:00 GMT",
+    "publisher": "財訊"
+  },
+  {
+    "news_id": 37,
+    "sasb_topic": "顧客隱私",
+    "title": "專題》水泥霸主PK！提升未來獲利能力台泥、亞泥靠這二招- 產業 - 工商時報",
+    "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE02RGtFZy1XcmJKcTNwdXVjMjZ4M0phTG83aEJaXzh4STBNNFJ2OV9saUtLVUNDY09XNEdfbHRFUW10dnpIVVlJdzJPeWEtaGl0dkJrRVVZUXRBU0hvbWFF?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Mon, 01 Jul 2024 07:00:00 GMT",
+    "publisher": "工商時報"
+  },
+  {
+    "news_id": 38,
+    "sasb_topic": "顧客隱私",
+    "title": "水泥股獲利王！亞泥(1102)配息2.1元，連39年發放股利...徐旭東樂觀看前景：中國不會讓房市繼續下跌 - 今周刊",
+    "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxPSjU1ZllQU0wyVDdJVXZZUVRBQlFZQ1k1ckpwX1pOc0RrVGN1WjYzaUVHdzRNcEotVEYyMmh1bkJ4dGw5REVZdHhwSG5MeGptOHVBX0w1azhaMFRPOFFKc2V0amFaSGN6dkt2RnczZ1NGb24xY3RiZS1ueXhHaXc2eg?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Tue, 25 Jun 2024 07:00:00 GMT",
+    "publisher": "今周刊"
+  },
+  {
+    "news_id": 39,
+    "sasb_topic": "顧客隱私",
+    "title": "水泥需求不振，亞泥(1102)為什麼還能穩穩配息2元以上，殖利率超過5%？ - 優分析UAnalyze",
+    "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFBLckNfLTBfQ2x4ZGlhR0hsVTlLSVRwdnhRTHpFMl9kLXRfNHkzUmlFVUtmREktMnFLR2UzSThTQVB2aTNLeXl4bW1RMkhTbUxacDktUg?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Thu, 19 Dec 2024 08:00:00 GMT",
+    "publisher": "優分析UAnalyze"
+  },
+  {
+    "news_id": 40,
+    "sasb_topic": "資訊安全",
+    "title": "亞泥低碳水泥解方登上COP29 - Yahoo奇摩股市",
+    "url": "https://news.google.com/rss/articles/CBMi2gFBVV95cUxNbVhFTXozejNvdDg5WG4yakxhUnV4dTNDd0JqZ3dwNkstSExGVGk1UTVpZjBEbDVMOHp5Xy1Nc0wtUUFueFBwdE9PYjQxMXlva2xNckxCSFd1bFhaejdwMnhWTnNUU2hCZGxRM0JFQXZZbF9ZNUJGb0FSNGRZQkwtbUxnU08yUVNwanVWUGlKeVdWX29SdnY0dm1KcVU3ZGZFLWxOd3ZPMGdXLVBXZHhVblRBd2c0V1prb0tUalJDcWpoc1dWS0VNUzl5ZVFrMDZ5b0VXSHNZM2NYUQ?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Sun, 24 Nov 2024 08:00:00 GMT",
+    "publisher": "Yahoo奇摩股市"
+  },
+  {
+    "news_id": 41,
+    "sasb_topic": "資訊安全",
+    "title": "存股族看過來！亞泥擬發現金股息2.1元、殖利率逾5% - 財訊",
+    "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE5vcVR0QkJkYk5ZcTBjdXBvN1BMSFh3TjVXOTlFSU9veHBGOUViSV9QRUVLcU1QYnRrdkFVMzY1ODNUQ2JoRkVLOWlKam0waHV4NVFyc08tMWFycWloeUtqUVNWRVl0OXNQUTU5MWpXN0dfY1FfZ0VJeWZvRQ?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Fri, 15 Mar 2024 07:00:00 GMT",
+    "publisher": "財訊"
+  },
+  {
+    "news_id": 42,
+    "sasb_topic": "資訊安全",
+    "title": "抗震重要突破獲台北雙星大樓採用！亞泥旗下亞東預拌開發高性能混凝土 - 元富記帳士事務所",
+    "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTE14VmJOYklEbV9rMWllZ3ZpRlZQZ0ZabUhRcGtCWjdRdnJiQzJRcmx5NXdrekRvS3QtNUxRcHdTd3RLYzBEQkhYN0N1ZnpmYnFVRi16a01YVXdBektSLWwxbGtYVE5qNHYwQnN6Ulk2blJaZGFMaGVFdw?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Fri, 24 May 2024 07:00:00 GMT",
+    "publisher": "元富記帳士事務所"
+  },
+  {
+    "news_id": 43,
+    "sasb_topic": "資訊安全",
+    "title": "存股族注意！亞泥去年每股賺 3.28 元、決議配發現金股利 2.1 元 - TechNews 科技新報",
+    "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1FWEFOS1h2ZnBTUTl5T3I3SWZQV0pBX01jbGV5U3ZnTFZ5Z0g2U2tFU2xhYnF1Rk4tbVRlZlIwbTFBQk01ODFGb1RrMzY3c0l2YjVqVnp4aW92dw?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Sun, 17 Mar 2024 07:00:00 GMT",
+    "publisher": "TechNews 科技新報"
+  },
+  {
+    "news_id": 44,
+    "sasb_topic": "資訊安全",
+    "title": "亞東預拌總經理金崇仁接任台灣混凝土學會理事長 - news.cnyes.com",
+    "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBTMHNQS1lxQmdRMms4aWFTT3RpcVZ1eF8yQXZrTS1wMDNXRFVpazJBQVRmcklZTmFMNW5STUJIQXgxSXl6TllJOVM0S0FKX0U?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Wed, 04 Dec 2024 08:00:00 GMT",
+    "publisher": "news.cnyes.com"
+  },
+  {
+    "news_id": 45,
+    "sasb_topic": "通路與價格",
+    "title": "營建股漲不停，歷史經驗「水泥股高機率補漲」！台泥(1101) VS 亞泥(1102)選誰好？達人一針見血 - 今周刊",
+    "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxQMmVGVVRGSUNVelhqemR5bDdHMXlFcldQMkNXTm5taWFjQmNvdEN6OFoxMmRRazVFb0pjcTZxdks0TkE3Vmw3N3AwTG5VVGVwU3MzNjl6TkdOeWNCVXZSWVNudGJmMzRpTC1ScjBfRHU5WTdMU3hvcnBVQVlROFQ0aA?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Mon, 06 May 2024 07:00:00 GMT",
+    "publisher": "今周刊"
+  },
+  {
+    "news_id": 46,
+    "sasb_topic": "通路與價格",
+    "title": "台泥4月營收年增27％　亞泥被中控拖累月年雙減 - ETtoday財經雲",
+    "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE9KY3pWMFBIX2t5Q3FkVDZyLWJnYVR3VEZJNFd0UEFXNTk2UTlzRUVubHFRTVFtazVTQlF2MkFiclpZak5fSG5Tc2IwcWlydXFfSlHSAW5BVV95cUxOV282WnNnNk5aS1o5NklqNDFVYXZ5WWlEWktfOGN2WGh4dTJGcDl1ZHFuX1NtVHdoZjBQNldhUlZ0VlZ5V3duTFkxakNJYVB0a29IOWdDaTNQTHN3SlAtNTA4OG1IVVdRenh6WUwwUQ?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Fri, 10 May 2024 07:00:00 GMT",
+    "publisher": "ETtoday財經雲"
+  },
+  {
+    "news_id": 47,
+    "sasb_topic": "通路與價格",
+    "title": "亞泥低碳水泥解方登上COP29 - 工商時報",
+    "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5PeW9xaElkN1NMcHY1Sk9fQUdXbUFpRHlLT0piSlpnNXBjT0dzcmpqYm5mZHpMVmdZRUFhMGhoRnQ4eEJLYnVNNWNOaG11RGNDaGJXMEJRX3lWbUszZ2hj?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Mon, 25 Nov 2024 08:00:00 GMT",
+    "publisher": "工商時報"
+  },
+  {
+    "news_id": 48,
+    "sasb_topic": "通路與價格",
+    "title": "亞泥、裕民聯手打造「亞泥九號」首航 投入國內散裝水泥運輸 - news.cnyes.com",
+    "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1sZDByQ0JjcWYzcUFadzFKbmdoWnF0Y0pnbDBtUF9vcHlLOGFCalRybGY2b0gyekVRMGZHQTZpYU00TUlEcl9ETVd4bFFFcWc?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Wed, 19 Jun 2024 07:00:00 GMT",
+    "publisher": "news.cnyes.com"
+  },
+  {
+    "news_id": 49,
+    "sasb_topic": "通路與價格",
+    "title": "預拌混凝土　下半年吹漲風 - 好房網News",
+    "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE4yQkRQaE5hTktUVUtXa2FEX1NyVDduM1NfUWlmYWVjT2tnZVRhRDByeFhjMnJHNWhKLTlMNVRmMTNwM2JjNC15RTh4dDVUNmx6bFRJODFaOTVlT0tuZlhrQVB4aEVoRUNPOWFz0gFwQVVfeXFMT0MwaDBkZzc0YnNhT1lseW5GaEpVSmJYdm03QXZ1TXd3eGRTd3h3R2xhYk04cnFXcktRWURiUkRHOVd3cU5tT3NBMWRDM1RRLVItWDlkcEh0LVNXQ3Z1NXBpc3VzbzMwNUhUOENxZTNzSg?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Tue, 11 Jun 2024 07:00:00 GMT",
+    "publisher": "好房網News"
+  },
+  {
+    "news_id": 50,
+    "sasb_topic": "產品品質與安全",
+    "title": "薪水砍13%、員工宿舍像廢墟！知名食品公司遭爆「黑心企業」…9 成新人落跑不幹了 - 風傳媒",
+    "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBCeURMd3AyZDdCQjd2dFE5M1lRMWhkLUZmVGNsWXZsTjBON1VjajFoSEYyZ2ZWS0l1MEhyQTBEZ05MNFpoUVN1ZmpuejBLZ28?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Fri, 19 Apr 2024 07:00:00 GMT",
+    "publisher": "風傳媒"
+  },
+  {
+    "news_id": 51,
+    "sasb_topic": "勞工法規",
+    "title": "台泥11月營收攀峰亞泥11月營收創一年半以來新高- 產業 - 工商時報",
+    "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE96am1pVm5xZG5keVNjU1llUE9va2daeTQ4S05vZldObTd2anZCYlYxVnlOUGdrcW1ZY2dEaEZLWi10NnkwaWY0T3BJZVVNVUVraFhBOFJqb1lRM0tsTkpJ?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Tue, 10 Dec 2024 08:00:00 GMT",
+    "publisher": "工商時報"
+  },
+  {
+    "news_id": 52,
+    "sasb_topic": "勞工法規",
+    "title": "亞泥花蓮廠替代燃料起火環保局監控空氣品質| 社會 - 中央社 CNA",
+    "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9sMU1wTWlKMkZUenVYZkNWTEJXR1pxYXcyd3pGblpYd0JGWHk4N0VfVWxVN09qUWNhMHdCZTJlb0FfQlNZVHdZd2xWWGM5QmpENlpqMDVQOG1JcXhEZXQ0?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Thu, 14 Mar 2024 07:00:00 GMT",
+    "publisher": "中央社 CNA"
+  },
+  {
+    "news_id": 53,
+    "sasb_topic": "勞工法規",
+    "title": "台股2萬點要居高思危！亞泥(1102)、中租-KY(5871)...達人用3條件精選3檔落難好股撿便宜，殖利率最高4.9 - 今周刊",
+    "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxPZEw5SWNMeG52bDhZSEJremt5Y0RsZ0xJMG1GazNleEZ3d3Ywa0hZTlJLZENzUjJpVGlvaUhKRkhYaFZlV1hTU2dzamdTdEJVVTU5Skt2Xy1sdk5Jd0F1eDYzSzVOcGV0YTB4SmoxaE8xaWZLU3N1bi1lMld1SU92OA?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Thu, 23 May 2024 07:00:00 GMT",
+    "publisher": "今周刊"
+  },
+  {
+    "news_id": 54,
+    "sasb_topic": "勞工法規",
+    "title": "【2024最新】112年「上市櫃公司」員工平均薪資排名揭曉：愛山林、信驊奪冠（附工作機會） - 104招募管理",
+    "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTFBnUnhHdnhuWFdZaHhNOHF5ZW1GdGtGMlBwcGRBdUE5OG54VDVzNzRZbG5ZU2xYTmlZX2JoNE9JMk9Idkc0Q1oxc3lxZFhpaDQ2eFkxVWxTcVZmMXA3MXhXcGNwZ3p2V2x2clE?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Tue, 04 Jun 2024 07:00:00 GMT",
+    "publisher": "104招募管理"
+  },
+  {
+    "news_id": 55,
+    "sasb_topic": "勞工法規",
+    "title": "礦業法修法一年後 部落諮商同意ing - 焦點事件",
+    "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE5PT2JDb1FIWnFaRmV6c0puVkJHMlczbFdvN2hkdjJRaDJ0dUZEeGN4MVVoa21zQlNGdmNMY1BDVmp1aHJiVDJPSUFkODJUaXNYS21jbQ?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Mon, 08 Jul 2024 07:00:00 GMT",
+    "publisher": "焦點事件"
+  },
+  {
+    "news_id": 56,
+    "sasb_topic": "員工健康與安全",
+    "title": "台泥11月營收攀峰亞泥11月營收創一年半以來新高- 產業 - 工商時報",
+    "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE96am1pVm5xZG5keVNjU1llUE9va2daeTQ4S05vZldObTd2anZCYlYxVnlOUGdrcW1ZY2dEaEZLWi10NnkwaWY0T3BJZVVNVUVraFhBOFJqb1lRM0tsTkpJ?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Tue, 10 Dec 2024 08:00:00 GMT",
+    "publisher": "工商時報"
+  },
+  {
+    "news_id": 57,
+    "sasb_topic": "員工健康與安全",
+    "title": "以為接業配很好賺？ 篠崎泫揭背後風險曝「職災照」 - 中時新聞網",
+    "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE5MdGZXYWs2TGxDSHBLRS1DX1JtaTNoNjVEdTVUZGNIS2FIRzRSMFY2UE80N01JVlBxR09CMHc1ZVVWdGJrVTVybC05ZVJycFFHTkdWcmtEakd5RlBReGlDOFE5alM4ejlPckRVcFF3?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Wed, 31 Jul 2024 07:00:00 GMT",
+    "publisher": "中時新聞網"
+  },
+  {
+    "news_id": 58,
+    "sasb_topic": "產品設計與生命週期管理",
+    "title": "拚了！台泥、亞泥推低碳水泥 盼減少碳排節能 - 奇摩新聞",
+    "url": "https://news.google.com/rss/articles/CBMirwJBVV95cUxNcTlCQmtHUEM3Z2ZqZGtPVDF3a0RSTmItU0pCenJoSncxODN2QUVUNGx6MWFBVDJaNjZuazlFSnY2ZWVTMlVzVnI2U0RpTG01UjZxdlVnS0hCYVppZHh4OGdMUnZuRVBoXzZsOVRldXh0S1FXNUpRekFGYURrNl9ZOHRpTVRGME5YeU1rcmhKODJ4bkJBU0hrMEQtNzN1NlBhUFQzU2wtSEJJUGFCZGR6YUJEMTlfNENsclFkNHgzUGhHbjhZS0l4RjVLY2VoS2F5OVZ0RGJIZzFYaEltSzg4T0Q0Zl9NczY5Z3NMTzFUZVlkc0lpRE5TUlRZWk1NeDNSeXo0MEFWLW9NbFJqVHRaMXZ1clJlbGp6QzBqQjVUNnBBZFJCSGhNYmxNYkkzRlE?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Sun, 22 Dec 2024 08:00:00 GMT",
+    "publisher": "奇摩新聞"
+  },
+  {
+    "news_id": 59,
+    "sasb_topic": "產品設計與生命週期管理",
+    "title": "銘傳蒙娜麗莎獲森田藥粧ＤＲ.JOU精華液產品設計金犢獎- 生活 - 中時新聞網",
+    "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE9yWnJjLVRoMDdGMHVnaEZ4VFVHMFVsZGswY0FheGVkVXpSOUFZcndJeWlHNTFyRXFLZ1QtN0NkQkw4Zmk0elhCU01seEdhX0VqV0JkNHFCSXZyenA0aW12Rjc5S0dXZnhvTExDQkJR?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Mon, 29 Jul 2024 07:00:00 GMT",
+    "publisher": "中時新聞網"
+  },
+  {
+    "news_id": 60,
+    "sasb_topic": "商業模式韌性",
+    "title": "亞泥低碳轉型四大策略曝光！挑戰開發三元混合水泥 減碳比例可達50% - 財訊",
+    "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE8xRjlrQk02eGNHeFQ3TmNfUXB0U0Jubm1VQ3lOWU02U0NTd3BjRmk4MTRIWTNydjA1ZERjdzFKOWZYVzdXdGlhN0ZJZEVURGYtc3NLRzMyNUJPLWtqVUlGZmh5UzJNTmlXSElxQlpSajZTWWRhc0RfVHRtaw?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Tue, 04 Jun 2024 07:00:00 GMT",
+    "publisher": "財訊"
+  },
+  {
+    "news_id": 61,
+    "sasb_topic": "商業模式韌性",
+    "title": "淡江AI賦能創新 亞泥全員AI轉型 今日產學簽約 - 中央社 CNA",
+    "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE5TUVBtc1pSRDhiZGZZWDVjNDUxNU0tTk11Mi14dFJaa1c3SkV2bFJ1Zms2enFUd0Y0NHIydmJ5ZDlfVm9BbFRkSkE0ajNybEdPVGdhZGdn?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Wed, 22 May 2024 07:00:00 GMT",
+    "publisher": "中央社 CNA"
+  },
+  {
+    "news_id": 62,
+    "sasb_topic": "商業模式韌性",
+    "title": "中國水泥業陷低谷 水泥雙雄轉型突圍 - 自由財經",
+    "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE1oSzJIaWdMZ0xnb0kxalJXSUN4TGxPWWtaRk11TDFySVF2b3BZTFhmU3Vzamd3d0YtNGplYzFjZ25KalRCS0tlOWFEUXVYQUlPeHJBTVJR0gFbQVVfeXFMTTlDVVZOU2xtOEMxVkFtNUxvdWlQS2tHNUNZRVBQcmNPd2RtVGlaWlFVenYtS2RGNkt3NkFaZERWVEdmanctNTBSajFZZERtWXVweHE1UWd4TzlRdw?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Sat, 29 Jun 2024 07:00:00 GMT",
+    "publisher": "自由財經"
+  },
+  {
+    "news_id": 63,
+    "sasb_topic": "商業模式韌性",
+    "title": "航運也要轉型！裕民、亞泥聯手打造低碳水泥船，力求高效率兼具永續環保 - Smart自學網",
+    "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE5yR2dPMDNHV0NkMFZnZlVPaTdDU0lhYkgzNTJyTTUwcGI3Qi1oNDlCXy11akRfMWhuMi1fOWpndDd4NjJaNFZMcUIzTjl2V2U2LVdXbVVoei1vWVFCZ2w3WlhXM01GN0RMeEhPalVVTTF6em9PWnBlTzJiRW4?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Thu, 27 Jun 2024 07:00:00 GMT",
+    "publisher": "Smart自學網"
+  },
+  {
+    "news_id": 64,
+    "sasb_topic": "商業模式韌性",
+    "title": "水泥低碳產品外… 台泥、亞泥、國產再出招- 日報 - 工商時報",
+    "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE12R2phVWdvOGdtcnJoaDFXeTRLMnN2U3o3U0pBQ3o3dExHakNEYVY4SGRfdjhkczd1eFBxc1h1V19GcFhSNTE0SGFETEMwQTdHc3pNaE5FWlRTeVpJUTJv?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Fri, 06 Sep 2024 07:00:00 GMT",
+    "publisher": "工商時報"
+  },
+  {
+    "news_id": 65,
+    "sasb_topic": "供應鏈管理",
+    "title": "供應鏈邁向淨零鋼鐵、水泥、紡織、科技廠揭減碳策略| 新聞 - Reccessary",
+    "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxORDA4TUdJUGJheHRBVEN6SWJ5YlFlVzY1TXM1dGY5V09KcTJXOUJHc2x2Q3BnVE1tNGVJUzNfMEtZcndvUHJYZ29FU0wtNXZ4dW9yWHZyYUFEQU5CTGZ6NFNyRUZ0N1hhTTIzX0NDQXhWaU9XYkxlSmJoT2FJdFNHNnN0Qm1VMkNTOTlEZHBZT01RT1kwZmRsQldIWU45b0p3cDBhcUR3OWNOOEdsb2Vicg?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Thu, 21 Mar 2024 07:00:00 GMT",
+    "publisher": "Reccessary"
+  },
+  {
+    "news_id": 66,
+    "sasb_topic": "供應鏈管理",
+    "title": "亞泥減碳解方 登上COP29 - 財訊",
+    "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE9NOC14YjBtdGZPaS1hXzRVVEZJYXpDa3l2ek1oTFF4elJpRmxNUWZoeGVFeWtjdWtxWGNMY3Zab0JmeUhsdFFDRjJoZUdraEVLUjRJR0dYYVZlS3FvaHhqTm1YZ2RlVW9iUkszMkR6YXRvMXpYNmtkYWVGWQ?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Sun, 24 Nov 2024 08:00:00 GMT",
+    "publisher": "財訊"
+  },
+  {
+    "news_id": 67,
+    "sasb_topic": "供應鏈管理",
+    "title": "亞泥大秀低碳建材- 日報 - 工商時報",
+    "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9faHZRR2VuWFZFMzNjNURaWl9qcnJnVTBEUURIdHpkUFRIMV9YYUx5M3hWaXBLUUE3SE5vdVNHT1JsSjdNWFh0MnNmNGRfLWllaENjTTQ3ZWNlaWMwY3ZN?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Fri, 13 Dec 2024 08:00:00 GMT",
+    "publisher": "工商時報"
+  },
+  {
+    "news_id": 68,
+    "sasb_topic": "供應鏈管理",
+    "title": "亞泥SBTi第一階段目標提前達陣 啟動第二階段計劃 - news.cnyes.com",
+    "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5QX0lCemNrWVp2V3BMSFphZ1diRGlFdHhrb29LVHRySXZra1pYV0pBVy1ybFh3d1J6ZDhwc0FHRG9yYWRkT0I4Y2lFQ1RrSUE?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Wed, 20 Nov 2024 08:00:00 GMT",
+    "publisher": "news.cnyes.com"
+  },
+  {
+    "news_id": 69,
+    "sasb_topic": "供應鏈管理",
+    "title": "MIT科學家研發全新水泥製程，台泥、亞泥可借鏡的超低碳水泥，關鍵在這兩個溫室氣體來源 - 今周刊",
+    "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE15RnhVTHNrUjdTRS11MEdlaHJrbzk1ZzV0UWNuaC1fWGNlNGNUY25HU0MzOXdNdDFGR082UHBYZ2Q4dDJpS0pyUERDQjctX3gySktSeHo4QnNOSk9FcjF0WXE2cC1URXRRMDEycnBFS1JrNkJvN2NFeXlIRkYxeGc?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Mon, 25 Mar 2024 07:00:00 GMT",
+    "publisher": "今周刊"
+  },
+  {
+    "news_id": 70,
+    "sasb_topic": "材料採購與效率",
+    "title": "MIT科學家研發全新水泥製程，台泥、亞泥可借鏡的超低碳水泥，關鍵在這兩個溫室氣體來源 - 今周刊",
+    "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE15RnhVTHNrUjdTRS11MEdlaHJrbzk1ZzV0UWNuaC1fWGNlNGNUY25HU0MzOXdNdDFGR082UHBYZ2Q4dDJpS0pyUERDQjctX3gySktSeHo4QnNOSk9FcjF0WXE2cC1URXRRMDEycnBFS1JrNkJvN2NFeXlIRkYxeGc?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Mon, 25 Mar 2024 07:00:00 GMT",
+    "publisher": "今周刊"
+  },
+  {
+    "news_id": 71,
+    "sasb_topic": "材料採購與效率",
+    "title": "亞泥大秀低碳建材- 日報 - 工商時報",
+    "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9faHZRR2VuWFZFMzNjNURaWl9qcnJnVTBEUURIdHpkUFRIMV9YYUx5M3hWaXBLUUE3SE5vdVNHT1JsSjdNWFh0MnNmNGRfLWllaENjTTQ3ZWNlaWMwY3ZN?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Fri, 13 Dec 2024 08:00:00 GMT",
+    "publisher": "工商時報"
+  },
+  {
+    "news_id": 72,
+    "sasb_topic": "材料採購與效率",
+    "title": "亞泥低碳水泥解方登上COP29 - Yahoo奇摩股市",
+    "url": "https://news.google.com/rss/articles/CBMi2gFBVV95cUxNbVhFTXozejNvdDg5WG4yakxhUnV4dTNDd0JqZ3dwNkstSExGVGk1UTVpZjBEbDVMOHp5Xy1Nc0wtUUFueFBwdE9PYjQxMXlva2xNckxCSFd1bFhaejdwMnhWTnNUU2hCZGxRM0JFQXZZbF9ZNUJGb0FSNGRZQkwtbUxnU08yUVNwanVWUGlKeVdWX29SdnY0dm1KcVU3ZGZFLWxOd3ZPMGdXLVBXZHhVblRBd2c0V1prb0tUalJDcWpoc1dWS0VNUzl5ZVFrMDZ5b0VXSHNZM2NYUQ?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Sun, 24 Nov 2024 08:00:00 GMT",
+    "publisher": "Yahoo奇摩股市"
+  },
+  {
+    "news_id": 73,
+    "sasb_topic": "材料採購與效率",
+    "title": "【搶賺低碳水泥財2】亞泥挖來半導體研發高手探究水泥奧祕　一舉掌握降碳獨門配方 - 鏡週刊Mirror Media",
+    "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE1BV2lkTTRvTVhENUNzQjQycmYwQ25RdWZJb25renZ0OVhkR1JMb0hpYUhCUDBDOXpQZFlTcWIxU1lxcFkteFJTSHEwZmhCcVJaRzhBQ19INnNWdWvSAWBBVV95cUxNNVVxVC1pazNVcjdMTjE1aUIzUFkxejN4OVpHM2pNa1FrY0VSQzJ5MjJwekxuZXRTVU0zRFJ5X1R6Mm1WTThyazJVMUtVbGgzN2luNlRxSTVPeTFuaFhnVGo?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Thu, 29 Aug 2024 07:00:00 GMT",
+    "publisher": "鏡週刊Mirror Media"
+  },
+  {
+    "news_id": 74,
+    "sasb_topic": "材料採購與效率",
+    "title": "亞泥SBTi第一階段目標提前達陣 啟動第二階段計劃 - news.cnyes.com",
+    "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5QX0lCemNrWVp2V3BMSFphZ1diRGlFdHhrb29LVHRySXZra1pYV0pBVy1ybFh3d1J6ZDhwc0FHRG9yYWRkT0I4Y2lFQ1RrSUE?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Wed, 20 Nov 2024 08:00:00 GMT",
+    "publisher": "news.cnyes.com"
+  },
+  {
+    "news_id": 75,
+    "sasb_topic": "氣候變遷的實質影響",
+    "title": "山陀兒來了｜未來氣候災害的考驗 - 我們的島",
+    "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE5FZ3pxQWFvaklkSXdRTlBzR0hwMFJHaG1xZHF0VzM3WmU3MENQMWZoZkwzQ2h4bTc4dHBBdW9yV1JKcXRnRjVtdDlGLUhtcDVCNldVQQ?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Mon, 07 Oct 2024 07:00:00 GMT",
+    "publisher": "我們的島"
+  },
+  {
+    "news_id": 76,
+    "sasb_topic": "氣候變遷的實質影響",
+    "title": "山陀兒來襲！「颱風概念股」攻短線商機 分析師曝哪些族群受惠、哪些族群恐遭殃 - Yahoo奇摩股市",
+    "url": "https://news.google.com/rss/articles/CBMijARBVV95cUxNNVVVejQ0WnZ4bXc3RjJ5RjBhRkVucnRmeTRlYnljSlBjczdnQUpXR24zVnNtdFgzbDFjU0R2em5wUTlsZ0JCNHBielNPNmdkUHFod3dfLWNUbDcwcHZocHI2RWVraWJWVkhIbzFFZVMtWk0yY0N5elhBS3NIR0VCclltcnBMeHhsNkhhQ1cxZnE5c29sMHlmbVQwTy1NZ256azJaN1Vfd1F5d05TZ3FVU1ZnallMaXFCRW13UWkwSF9na09DeGhHeXE1eHE0Y1NoZXlrM0VIcXBpd3NONVJLVzhtTXlxRmZTRWg4ZkY0anRxSXdPM3RRZWlLNHkxZldTTzBrdWpLSGRFTnV5WFAwV3NYYWdjc1BRRW5WM21XTWo1RzN1Z3BqMVRUVGtnNkVYUU10eURlMmQxZGIyekwwUk9kVWtWT1l0REF1N1J3Zk15VDBjQkRldDc1UkZyVDFISUhsTmlqeWJZNDJsNWVMNzFtV3JGcDZoOGJkTXVCMDY5ZS1JbFpENGVRdUtmUHJTUUlWMnpua3BWNzAxRUFmdW0wbEJfeVJEUjB6al9wRE9mVUZlZmdLTnJDWkZVMlJnenZqcnRWQzduZmJSWkg4OWpTVGVMZDJQcDhkMmVsZ1ROemZmd2RXNjRwQVBXVnFvdzdSZnp2ZTVpUHdWYTQxRTUzckxoOWlzN3VaOA?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Sun, 29 Sep 2024 07:00:00 GMT",
+    "publisher": "Yahoo奇摩股市"
+  },
+  {
+    "news_id": 77,
+    "sasb_topic": "氣候變遷的實質影響",
+    "title": "港去年錄601宗山泥傾瀉報告 - 大紀元新聞網",
+    "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE1EeVRkaFdkM3hSOVYwVERRSjFHNWU1ODFTZy1BbnBYVURUTmVkSmI5MkktWkNGcnpoRThhUEtOWjNfNXlSZUNfM0VnNWxzM0VPZExIR1dKRUszSTlVTXhYYtIBZkFVX3lxTE5xYU90MXpCOTg3STlObEdCY0ZrTno1SVAtY25aTFhlSDlrT2luVXdTYXVpc3Z4czJQWHFXNUNMVDBrUlFSS0lwYkRWclM1ZXZuQVctTTIyQVNDMV9TT3Ffb2FTOVRKZw?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Tue, 28 May 2024 07:00:00 GMT",
+    "publisher": "大紀元新聞網"
+  },
+  {
+    "news_id": 78,
+    "sasb_topic": "氣候變遷的實質影響",
+    "title": "山陀兒來了｜土石流下的社區：台東金峰與太麻里 - 我們的島",
+    "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE1SaGFPeTgteF9RVElQeWU4WmRfUHd1ZkN5Sk1aaEJLX1NscjdwOG0zY1dWYlE3MTA2VzY0TW9NTHJfY3c0dmhBMWtZck1mQllGVDZCdA?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Mon, 07 Oct 2024 07:00:00 GMT",
+    "publisher": "我們的島"
+  },
+  {
+    "news_id": 79,
+    "sasb_topic": "氣候變遷的實質影響",
+    "title": "尼泊爾暴雨引發水災及山泥傾瀉 至少66死69人失蹤 - 香港01",
+    "url": "https://news.google.com/rss/articles/CBMi6wJBVV95cUxOLVhreTdOM1daUVBJdDg2aS02YzU5dVlRM28tU19SVkoxVThfaHFKZUtWX2NNQ3g4cHRFSzhJc2c1Y0FURkpkSE43aWltQ1d1TE1DblJjSGxGZ1NsX21JVUx3N0hOY1lfT25ROE1DU05DOUVXcDljaDdUOG9QbVhibFdaclBxd09VclJNS2dvTmlNTlVKd0x2Yndabkw1LVREak5mdjFuVlhJYklsd0RydXIyMmlRZWdQYjlOOUFwbVlZZndYUlNyWFA5QWFHUTd5QUNFNzlJLVZYMVBjMFhyODFnQUtoVm9feHlJakdJSm9jTlNCcXBlM3ZmTEIzdnM2bjdva0c1OVpGSjU3THpSTGJ3RkxyTFcyRUJ4eVFoMEVMVmdtVkdmbDNGYklSSEdpakRBSmZ6ODN5OFFsU1FuSlF4MXFIajFhVi0zSmgxdnpmMk9PaDd1SnE0MnhZQ3lTWmF3WUFicUhSNjg?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Sun, 29 Sep 2024 07:00:00 GMT",
+    "publisher": "香港01"
+  },
+  {
+    "news_id": 80,
+    "sasb_topic": "商業道德",
+    "title": "【綠高官掏空台鹽】扶植2家白手套公司套利　陳啟昱2招掏空台鹽11億 - 鏡週刊Mirror Media",
+    "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE1GckFfQlFpRGdWRzhvRXR5ZUFMZFlQVGFnT255NjJoV1phWlRnamZONE1pNU9GN0M3NWh4V3YyMXBSNFdjR0NWTW1YdG5laDR5NkJ4ZjVMX2RnajTSAWBBVV95cUxPNWtfaGlVZTJJd2NPZ280NGVNQnJUdTJyYlE4N0RodlFVTEMzZmhVYzdOUkRzMmRtX3RERFIzMU9fQ2hsa2RBekhFdFNyN0Nrc0pmNDRfc1lOTTU0Q3NPLU0?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Tue, 29 Oct 2024 07:00:00 GMT",
+    "publisher": "鏡週刊Mirror Media"
+  },
+  {
+    "news_id": 81,
+    "sasb_topic": "法規遵循",
+    "title": "擬67.46億元收購亞泥中國 亞泥：藉私有化降營運成本 - 公視新聞網PNN",
+    "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5ZN2dqQlZQNUpyanVSZXdaNll4YXlsYzVSZzIyM3BPZ0E2SVpxU0h5RnI3Ulp4eUQzV3ROZktsTjItekhKOVhWOVJwMEVEcms?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Thu, 06 Jun 2024 07:00:00 GMT",
+    "publisher": "公視新聞網PNN"
+  },
+  {
+    "news_id": 82,
+    "sasb_topic": "法規遵循",
+    "title": "亞泥晚間重訊：亞泥中國下市案未獲股東會通過 私有化計畫告終 - 財訊",
+    "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTFBQT1FaYkR5cS15WEdfeFFOR3czZ1RVQ2NhLVJzQ28tcEZ1N24zMVY5RmlXTVByY3lYS3hhZnREOG4xcW82Smd2b2R6eXF4ZzZzYkJGMFZObGU5Njk2aHNJYmNkRTdwZjctbmQ5UGVvZ2RUazdpSmM3WTd5MA?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Mon, 26 Aug 2024 07:00:00 GMT",
+    "publisher": "財訊"
+  },
+  {
+    "news_id": 83,
+    "sasb_topic": "法規遵循",
+    "title": "礦業改革後，最後一批「霸王礦場」──宜蘭永侒採礦爭議如何落幕？ - 報導者The Reporter",
+    "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxPTXlFTUF1VVBsSEdUOHhPcS0yRmxvclhxZXZ5T3NkbldQb2c3SUpRUS0xMF9heGpqYzAtd2prZDNaMndmbWNLMUM3SEE3MFJ3OUhPS0JfaGR5ZkJiV1dZcElURWpBS0dtZ0VGZUVDNk1Ucm1xNHBvYXRYOTdPS1VRRWl1ZFduZkZWcmJ4Z3BhZVBKSU9BdGpHZmRManRLeEU?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Wed, 21 Aug 2024 07:00:00 GMT",
+    "publisher": "報導者The Reporter"
+  },
+  {
+    "news_id": 84,
+    "sasb_topic": "法規遵循",
+    "title": "【搶賺低碳水泥財2】亞泥挖來半導體研發高手探究水泥奧祕　一舉掌握降碳獨門配方 - 鏡週刊Mirror Media",
+    "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE1BV2lkTTRvTVhENUNzQjQycmYwQ25RdWZJb25renZ0OVhkR1JMb0hpYUhCUDBDOXpQZFlTcWIxU1lxcFkteFJTSHEwZmhCcVJaRzhBQ19INnNWdWvSAWBBVV95cUxNNVVxVC1pazNVcjdMTjE1aUIzUFkxejN4OVpHM2pNa1FrY0VSQzJ5MjJwekxuZXRTVU0zRFJ5X1R6Mm1WTThyazJVMUtVbGgzN2luNlRxSTVPeTFuaFhnVGo?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Thu, 29 Aug 2024 07:00:00 GMT",
+    "publisher": "鏡週刊Mirror Media"
+  },
+  {
+    "news_id": 85,
+    "sasb_topic": "法規遵循",
+    "title": "風雨後的彩虹 亞泥辦市集挺部落重建 | 唐可欣 | 品味生活 - 風傳媒",
+    "url": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE93NThBTmc0ZnpFcXNXZGNreUhLRW9lekdMRWZMTGdRdm5UWExRRVZ6Z3RqVEphbi1HdUxxOGR2UDJnTG5nZU9BRWVzaEI?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Mon, 19 Aug 2024 07:00:00 GMT",
+    "publisher": "風傳媒"
+  },
+  {
+    "news_id": 86,
+    "sasb_topic": "系統性風險管理",
+    "title": "亞泥槓桿比改善 中華信評上調評等展望為「穩定」 - news.cnyes.com",
+    "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5VVFRsUEhCaW9nQi12LXo1VEVKS3MydVRuSnV3MFZ2ekVoREd3N0RGNlZMLWlRN0hReC1iM3dNV1NMZjJjMWo2Q0FZZEdiTGs?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Mon, 23 Sep 2024 07:00:00 GMT",
+    "publisher": "news.cnyes.com"
+  },
+  {
+    "news_id": 87,
+    "sasb_topic": "系統性風險管理",
+    "title": "營建股漲不停，歷史經驗「水泥股高機率補漲」！台泥(1101) VS 亞泥(1102)選誰好？達人一針見血 - 今周刊",
+    "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxQMmVGVVRGSUNVelhqemR5bDdHMXlFcldQMkNXTm5taWFjQmNvdEN6OFoxMmRRazVFb0pjcTZxdks0TkE3Vmw3N3AwTG5VVGVwU3MzNjl6TkdOeWNCVXZSWVNudGJmMzRpTC1ScjBfRHU5WTdMU3hvcnBVQVlROFQ0aA?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Mon, 06 May 2024 07:00:00 GMT",
+    "publisher": "今周刊"
+  },
+  {
+    "news_id": 88,
+    "sasb_topic": "系統性風險管理",
+    "title": "亞泥SBTi第一階段目標提前達陣 啟動第二階段計劃 - news.cnyes.com",
+    "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5QX0lCemNrWVp2V3BMSFphZ1diRGlFdHhrb29LVHRySXZra1pYV0pBVy1ybFh3d1J6ZDhwc0FHRG9yYWRkT0I4Y2lFQ1RrSUE?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Wed, 20 Nov 2024 08:00:00 GMT",
+    "publisher": "news.cnyes.com"
+  },
+  {
+    "news_id": 89,
+    "sasb_topic": "系統性風險管理",
+    "title": "起底閣揆官邸高電費！監院昔調查報告曝光綠委也曾批- 政治 - 中時新聞網",
+    "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE8zT2k5OGZRSDk3TXlfYVhCQ1o0TnFvQmtuM1JUeHhISEpmWFpBSnFkcDFRTHRoT0xvSy0wQ1JWUkItWTIwU0Q3TlRZdHhQUnpRaEhfeGk1d0lHR1VpSjJoNHNlYnpHcGZTUklHZnNB?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Wed, 25 Sep 2024 07:00:00 GMT",
+    "publisher": "中時新聞網"
+  },
+  {
+    "news_id": 90,
+    "sasb_topic": "系統性風險管理",
+    "title": "華銀網銀、App 22日大當機 金管會：接獲重大偶發事件通報 - news.cnyes.com",
+    "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFAxa2RsNXJuQzV4QjFPcDVTRDZQUWRmWG5QVEs2eXVrWlpZd0w5eXZvZF9laWF3U3VpNU5Xc2JRdmJiMVJHTFdCZUFqcjJDVzQ?oc=5&hl=en-US&gl=US&ceid=US:en",
+    "published_date": "Mon, 23 Sep 2024 07:00:00 GMT",
+    "publisher": "news.cnyes.com"
+  }
+]

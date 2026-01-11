@@ -6,9 +6,8 @@ from gnews import GNews
 from dateutil import parser as date_parser
 
 # --- 1. 設定檔案路徑 ---
-P1_JSON_PATH = './temp_data/prompt1_json/2024_1102_P1.json'
-SASB_KEYWORD_PATH = 'sasb_keyword.json'
-OUTPUT_DIR = 'news_output/'
+P1_JSON_PATH = './temp_data/prompt1_json/2024_1102_p1_keyword.json'
+OUTPUT_DIR = './news_output/'
 
 # --- 2. 股票代碼對照表 ---
 # 根據實際需求擴充
@@ -22,15 +21,10 @@ stock_map = {
 # --- 3. 讀取輸入檔案 ---
 print("正在讀取輸入檔案...")
 
-# 讀取 P1.json
+# 讀取 P1 keyword JSON
 with open(P1_JSON_PATH, 'r', encoding='utf-8') as f:
     p1_data_list = json.load(f)
-print(f"✓ 已載入 {len(p1_data_list)} 筆 P1 資料")
-
-# 讀取 SASB 關鍵字對照表
-with open(SASB_KEYWORD_PATH, 'r', encoding='utf-8') as f:
-    sasb_keywords_map = json.load(f)
-print(f"✓ 已載入 {len(sasb_keywords_map)} 個 SASB 議題關鍵字")
+print(f"✓ 已載入 {len(p1_data_list)} 筆 P1 關鍵字資料")
 
 # --- 4. 建立輸出目錄 ---
 if not os.path.exists(OUTPUT_DIR):
@@ -90,29 +84,16 @@ for idx, item in enumerate(p1_data_list, 1):
         print(f"  📅 搜索範圍: {date_range}")
     except ValueError:
         print(f"  ⚠️  日期格式錯誤，跳過此筆")
-        search_results["results"].append(result_item)
         continue
     
-    # 查找對應的關鍵字
-    keywords = None
+    # 取得關鍵字
+    key_word = item.get("key_word", "")
     
-    # 先嘗試完全匹配
-    if topic in sasb_keywords_map:
-        keywords = sasb_keywords_map[topic]
-    else:
-        # 嘗試模糊匹配（處理名稱差異）
-        for key in sasb_keywords_map.keys():
-            if topic in key or key in topic:
-                keywords = sasb_keywords_map[key]
-                print(f"  ℹ️  使用模糊匹配: '{topic}' -> '{key}'")
-                break
-    
-    if keywords:
-        # 組合搜尋字串
-        keyword_str = " OR ".join(keywords)
-        query = f'{company_name} ({keyword_str})'
+    if key_word:
+        # 組合搜尋字串：{company} {key_word}
+        query = f'{company_name} {key_word}'
         
-        print(f"  🔍 搜尋: {query[:60]}...")
+        print(f"  🔍 搜尋: {query}")
         
         try:
             # 執行搜尋
@@ -156,7 +137,7 @@ for idx, item in enumerate(p1_data_list, 1):
         time.sleep(2)
         
     else:
-        print(f"  ⚠️  警告: 議題 '{topic}' 未在關鍵字對照表中找到")
+        print(f"  ⚠️  警告: 此筆資料未包含 key_word 欄位")
     
     print("-" * 60)
 
