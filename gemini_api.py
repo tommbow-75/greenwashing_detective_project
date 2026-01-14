@@ -17,8 +17,13 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class ESGReportAnalyzer:
     # ====== 設定檔與路徑 ======
+<<<<<<< Updated upstream
     INPUT_DIR = os.path.join(SCRIPT_DIR, 'ESG_Reports')
     OUTPUT_DIR = "output_json"
+=======
+    INPUT_DIR = os.path.join(SCRIPT_DIR, 'temp_data', 'esgReport')
+    OUTPUT_DIR = os.path.join(SCRIPT_DIR, 'temp_data', 'prompt1_json')
+>>>>>>> Stashed changes
     
     # 修正 1: SASB_weightMap.json 的檔案路徑調整為 ./static/data/
     SASB_MAP_FILE = os.path.join(SCRIPT_DIR, 'static', 'data', 'SASB_weightMap.json')
@@ -43,9 +48,12 @@ class ESGReportAnalyzer:
         self.pdf_path, self.pdf_filename = self._find_target_pdf()
         self.sasb_map_content = self._load_sasb_map()
 
-        # 設定輸出檔名
-        base_name = os.path.splitext(self.pdf_filename)[0]
-        self.output_json_name = f"{base_name}_Analysis_Result.json"
+        # ====== 修正：檔名命名邏輯 ======
+        # 直接使用傳入的參數組合，確保格式統一為 "2024_2330_p1.json"
+        # 這樣就不會受到原始 PDF 檔案中「台積電_永續報告書」等中文字串的干擾
+        self.output_json_name = f"{self.target_year}_{self.target_company_id}_p1.json"
+        
+        print(f"[CONFIG] 輸出檔名已設定為: {self.output_json_name}")
 
     def _find_target_pdf(self) -> (str, str):
         """在 temp_data/esgReport 資料夾中搜尋符合 年份_代碼 的 PDF"""
@@ -105,7 +113,7 @@ class ESGReportAnalyzer:
         # 1. 上傳 PDF
         uploaded_pdf = self.upload_file_to_gemini()
 
-        # 2. 建構 Prompt (修正 2: greenwashing_factor 強制輸出英文)
+        # 2. 建構 Prompt (修正：greenwashing_factor 強制輸出中文)
         print(">>> 發送分析請求 (Gemini 2.0 Flash)...")
         
         prompt_text = f"""
@@ -117,14 +125,14 @@ class ESGReportAnalyzer:
 
 **分析核心任務：**
 1. **識別產業**：請閱讀報告書，從 SASB 權重表中識別該公司所屬的產業。
-2. **完整列出議題**：找出該產業在權重表中所有的 SASB 議題，每一項議題都必須輸出一筆資料。
-3. **評分邏輯 (Clarkson et al. 2008)**：
+2. **完整列出議題**：找出該產業在權重表中所有的 SASB 議題，每一項議題都必須輸出一筆資料，不可遺漏。
+3. **評分邏輯 (基於 Clarkson et al. 2008)**：
    - 0分：未揭露。
-   - 1分 (軟性)：願景、口號或模糊承諾。
-   - 2分 (定性)：具體管理措施，但缺乏數據。
+   - 1分 (軟性)：僅有願景、口號或模糊承諾。
+   - 2分 (定性)：有具體管理措施，但缺乏數據。
    - 3分 (硬性/定量)：具體量化數據、歷史趨勢。
-   - 4分 (確信/查驗)：數據經過第三方查驗/確信 (需嚴格檢查附錄)。
-4. **特殊規則**：若議題屬於高權重 (2.0) 且未提及，請填寫 "report_claim": "N/A", "risk_score": 1。
+   - 4分 (確信/查驗)：數據經過 ISAE 3000 或 AA1000 第三方查驗/確信 (須嚴格檢查附錄查證聲明)。
+4. **特殊規則**：若議題屬於高權重 (2.0) 且報告書完全未提及，請填寫 "report_claim": "N/A", "risk_score": 1。
 
 **輸出欄位要求 (嚴格執行)：**
 - **company_id**: "{self.target_company_id}"
@@ -132,16 +140,16 @@ class ESGReportAnalyzer:
 - **ESG_category**: E / S / G
 - **SASB_topic**: 議題名稱
 - **page_number**: 證據來源頁碼
-- **report_claim**: 完整摘錄報告書原文句子，不得改寫。
-- **greenwashing_factor**: (MUST BE IN ENGLISH) Analyze the data loopholes or risks based on Clarkson theory.
+- **report_claim**: 針對該議題，僅選取「最具數據代表性」的一段話。必須完整摘錄報告書原文，不得改寫。
+- **greenwashing_factor**: (必須使用中文輸出) 基於 Clarkson 理論分析該數據的漏洞、漂綠疑慮或揭露風險。
 - **risk_score**: 0~4 分
 - **Internal_consistency**: (Boolean)
 
 **輸出格式**：
-請直接輸出 JSON Array。
+請直接輸出 JSON Array，不要包含 Markdown 標記。
 """
 
-        # 3. 呼叫模型 (修正 3: 使用參數 temperature=0)
+        # 3. 呼叫模型 (修正：使用參數 temperature=0)
         try:
             response = self.client.models.generate_content(
                 model=self.MODEL_NAME,
@@ -151,7 +159,7 @@ class ESGReportAnalyzer:
                 ],
                 config=types.GenerateContentConfig(
                     response_mime_type="application/json",
-                    temperature=0  # 設定為 0 以獲得最穩定的輸出
+                    temperature=0  # 設定為 0 以確保分析結果的嚴謹與穩定
                 )
             )
 
@@ -159,12 +167,14 @@ class ESGReportAnalyzer:
             raw_json = response.text
             output_path = os.path.join(self.OUTPUT_DIR, self.output_json_name)
 
+            # 嘗試解析
             try:
                 parsed_data = json.loads(raw_json)
             except json.JSONDecodeError:
                 clean_text = re.sub(r"^```json|```$", "", raw_json.strip(), flags=re.MULTILINE).strip()
                 parsed_data = json.loads(clean_text)
             
+            # 存檔
             with open(output_path, "w", encoding="utf-8") as f:
                 json.dump(parsed_data, f, ensure_ascii=False, indent=2)
                 
@@ -174,11 +184,14 @@ class ESGReportAnalyzer:
         except Exception as e:
             print(f"\n[ERROR] 分析過程發生錯誤: {e}")
 
+<<<<<<< Updated upstream
 
 # =========================
 # 程式進入點
 # =========================
 
+=======
+>>>>>>> Stashed changes
 if __name__ == "__main__":
     print("=== ESG 報告書自動分析系統 (Gemini 2.0 Flash) ===")
     
@@ -190,3 +203,5 @@ if __name__ == "__main__":
         analyzer.run()
     except Exception as e:
         print(f"\n❌ 程式執行中斷: {e}")
+
+    #請他回傳我到底哪些SASBtopic有資料
