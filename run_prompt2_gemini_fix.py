@@ -118,32 +118,33 @@ def process_esg_news_verification(input_json_path, news_json_path, msci_json_pat
 
 【輸出格式】
 輸出欄位要求 (嚴格執行)，不要添加任何前言、後語或說明文字。：
-    "company": "股票代號",
-    "year": "年分",
-    "esg_category": "同原檔",
-    "sasb_topic": "同原檔",
-    "page_number": "同原檔",
-    "report_claim": "同原檔",
-    "greenwashing_factor": "同原檔",
-    "risk_score": 同原檔數值,
-    "key_word": "同原檔",
-    "external_evidence": "驗證資料標題或'無相關新聞證據'",
-    "external_evidence_url": "驗證資料新聞連結或空字串",
-    "consistency_status": "一致/部分一致/不一致",
-    "MSCI_flag": "Green/Yellow/Orange/Red",
-    "adjustment_score": 調整後分數（最低為0）
+**company**: {original_data[0]['company']},
+**year**: {original_data[0]['year']},
+**esg_category**: {original_data[0]['esg_category']},
+**sasb_topic**: {original_data[0]['sasb_topic']},
+**page_number**: {original_data[0]['page_number']},
+**report_claim**: {original_data[0]['report_claim']},
+**greenwashing_factor**: {original_data[0]['greenwashing_factor']},
+**risk_score**: {original_data[0]['risk_score']},
+**external_evidence**: 驗證資料標題或'無相關新聞證據',
+**external_evidence_url**: 驗證資料新聞連結或空字串,
+**consistency_status**: 一致/部分一致/部分一致/不一致(對應MSCI_flag),
+**MSCI_flag**: Green/Yellow/Orange/Red,
+**adjustment_score**: "調整後分數（最低為0）"
+
 
 絕對不要強行將無關的新聞連結到企業聲稱上。
+請直接輸出 JSON Array。
 """
 
     # 6. 將原檔和驗證資料轉為字串
     user_input = f"""
-【原檔數據】
-{json.dumps(original_data, ensure_ascii=False, indent=2)}
+    【原檔數據】
+    {json.dumps(original_data, ensure_ascii=False, indent=2)}
 
-【驗證資料】
-{news_df.to_json(orient='records', force_ascii=False, indent=2)}
-"""
+    【驗證資料】
+    {news_df.to_json(orient='records', force_ascii=False, indent=2)}
+    """
 
     # ===== Token count (input) =====
     input_token_est = estimate_tokens(prompt_template + user_input)
@@ -155,11 +156,13 @@ def process_esg_news_verification(input_json_path, news_json_path, msci_json_pat
 
     try:
         response = client.models.generate_content(
-            model="gemini-2.0-flash-exp",
+            model="gemini-2.5-pro",
             contents=user_input,
             config=types.GenerateContentConfig(
                 system_instruction=prompt_template,
-                tools=[types.Tool(google_search=types.GoogleSearch())],
+                temperature=0,
+                response_mime_type="application/json"
+                # tools=[types.Tool(google_search=types.GoogleSearch())],
             )
         )
     except Exception as e:
