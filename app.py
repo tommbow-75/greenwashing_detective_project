@@ -328,6 +328,22 @@ def query_company():
                     industry=report_info.get('sector', '')
                 )
                 
+                # 測試，透過Step 3得到目標json檔案之後，準備進行讀取以及insert動作
+                # 3.1 設定相對路徑 (假設你的 .py 檔在專案根目錄)
+                current_dir = os.path.dirname(os.path.abspath(__file__))
+                # 組合出固定存放 JSON 的資料夾路徑
+                json_folder = os.path.join(current_dir, "temp_data", "prompt3_json")
+
+                # 3.2 根據公司與年份定義檔名 (請根據你實際的命名規則修改)
+                json_file_name = f"result_{company_code}_{year}.json"
+                json_path = os.path.join(json_folder, json_file_name)
+
+                # 3.3 讀取檔案並取代原本的 Mock 函式
+                if os.path.exists(json_path):
+                    with open(json_path, 'r', encoding='utf-8') as f:
+                        # 這裡讀取出來的 analysis_result 就會是一個字典
+                        analysis_result = json.load(f)
+
                 # Step 4: 插入分析結果至資料庫
                 insert_success, insert_msg = insert_analysis_results(
                     esg_id=esg_id,
