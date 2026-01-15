@@ -157,7 +157,7 @@ def query_company():
         # 延遲導入以避免循環依賴或初始化錯誤，並確保能被 try-except 捕獲
         from db_service import query_company_data, insert_company_basic, update_analysis_status, insert_analysis_results
         from crawler_esgReport import validate_report_exists, download_esg_report
-        from gemini_api import analyze_esg_report_mock
+        from gemini_api import analyze_esg_report
         
         # 解析請求參數
         data = request.get_json()
@@ -301,7 +301,7 @@ def query_company():
                     """AI 分析執行緒"""
                     nonlocal analysis_result
                     try:
-                        analysis_result = analyze_esg_report_mock(
+                        analysis_result = analyze_esg_report(
                             pdf_path, 
                             year, 
                             company_code,

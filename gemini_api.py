@@ -276,14 +276,16 @@ class ESGReportAnalyzer:
 
 
 # =========================
-# 測試用模擬函數（供 app.py 使用）
+# 測試用模擬函數（已棄用）
 # =========================
 
 def analyze_esg_report_mock(pdf_path: str, year: int, company_code: str, company_name: str = '', industry: str = '') -> dict:
     """
+    ⚠️ 已棄用：請使用 analyze_esg_report() 進行真實 AI 分析
+    
     模擬 AI 分析結果（測試用）
     
-    此函數目前被 app.py 的自動抓取流程使用，產生模擬的 ESG 分析資料。
+    此函數已被 analyze_esg_report() 取代，僅保留供向後相容。
     
     Args:
         pdf_path: PDF 檔案路徑（目前未使用，保留供未來實作）
@@ -377,28 +379,72 @@ def analyze_esg_report_mock(pdf_path: str, year: int, company_code: str, company
 # 預留接口（尚未實作）
 # =========================
 
-def analyze_esg_report(pdf_path: str, year: int, company_code: str) -> dict:
+def analyze_esg_report(pdf_path: str, year: int, company_code: str, company_name: str = '', industry: str = '') -> dict:
     """
-    分析 ESG 永續報告書並產生結構化資料（尚未實作）
+    使用 Gemini AI 分析 ESG 永續報告書
     
-    此函數預計在未來實作，將調用 ESGReportAnalyzer 進行真實的 AI 分析。
+    調用 ESGReportAnalyzer 進行真實的 AI 分析，產生結構化的分析結果。
     
     Args:
-        pdf_path: PDF 檔案的絕對路徑
+        pdf_path: PDF 檔案的絕對路徑（目前為參考用，實際使用 ESGReportAnalyzer 搜尋機制）
         year: 報告年份
         company_code: 公司代碼
+        company_name: 公司名稱（選填）
+        industry: 產業類別（選填）
     
     Returns:
-        dict: 包含 company_report 表所需的所有欄位（格式同 analyze_esg_report_mock）
+        dict: 分析結果
+        {
+            'company_name': str,
+            'industry': str,
+            'url': str,
+            'analysis_items': [...],  # P1 JSON 格式
+            'output_path': str,       # 產生的 JSON 檔案路徑
+            'item_count': int         # 分析項目數
+        }
     
     Raises:
-        NotImplementedError: 此函數尚未實作
+        RuntimeError: 若 AI 分析過程發生錯誤
+        FileNotFoundError: 若找不到 PDF 或必要的設定檔
     """
-    # TODO: 實際 AI 分析邏輯
-    # 1. 使用 ESGReportAnalyzer 進行分析
-    # 2. 將結果轉換為與 analyze_esg_report_mock 相同的格式
-    # 3. 回傳結果
-    raise NotImplementedError("AI 分析模組尚未實作，請使用 analyze_esg_report_mock() 進行測試")
+    print(f"\n=== 啟動 AI 分析 (Gemini 2.0 Flash) ===")
+    print(f"    年份: {year}, 公司代碼: {company_code}")
+    
+    try:
+        # 1. 初始化分析器
+        analyzer = ESGReportAnalyzer(
+            target_year=int(year),
+            target_company_id=str(company_code)
+        )
+        
+        # 2. 執行 AI 分析（會產生 P1 JSON 檔案）
+        analyzer.run()
+        
+        # 3. 讀取產生的 P1 JSON
+        output_path = os.path.join(analyzer.OUTPUT_DIR, analyzer.output_json_name)
+        
+        if not os.path.exists(output_path):
+            raise RuntimeError(f"AI 分析完成但找不到輸出檔案: {output_path}")
+        
+        with open(output_path, 'r', encoding='utf-8') as f:
+            analysis_items = json.load(f)
+        
+        print(f"✅ AI 分析完成，讀取 {len(analysis_items)} 筆分析項目")
+        
+        # 4. 回傳結果（與 app.py 相容的格式）
+        return {
+            'company_name': company_name or f'公司{company_code}',
+            'industry': industry or '其他',
+            'url': f'https://mops.twse.com.tw/mops/web/t100sb07_{year}',
+            'analysis_items': analysis_items,
+            'output_path': output_path,
+            'item_count': len(analysis_items)
+        }
+        
+    except FileNotFoundError as e:
+        raise FileNotFoundError(f"找不到必要檔案: {e}")
+    except Exception as e:
+        raise RuntimeError(f"AI 分析失敗: {e}")
 
 
 # =========================

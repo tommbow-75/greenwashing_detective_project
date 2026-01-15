@@ -113,8 +113,8 @@ def verify_evidence_sources(year, company_code, force_regenerate=False):
         output_folder = "./temp_data/prompt3_json"
         os.makedirs(output_folder, exist_ok=True)
         
-        input_file = f"{input_folder}/{year}_{company_code}_P2.json"
-        output_file = f"{output_folder}/{year}_{company_code}_P3.json"
+        input_file = f"{input_folder}/{year}_{company_code}_p2.json"
+        output_file = f"{output_folder}/{year}_{company_code}_p3.json"
         
         # 2. 檢查輸入檔案是否存在
         if not os.path.exists(input_file):
@@ -309,7 +309,7 @@ if __name__ == "__main__":
 
             # 4. 精簡定義輸出路徑
             # 直接在呼叫函式時組合路徑與檔名
-            output_file = f"{OUTPUT_FOLDER}/{year}_{company}_P3.json"
+            output_file = f"{OUTPUT_FOLDER}/{year}_{company}_p3.json"
 
             # 5. 執行核心驗證邏輯
             process_json_file(latest_path, output_file)
