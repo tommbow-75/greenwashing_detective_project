@@ -411,14 +411,33 @@ def query_company():
                 except Exception as e:
                     print(f"⚠️ 來源驗證發生錯誤: {str(e)}（不影響主流程）")
                 
-                # Step 7: 插入分析結果至資料庫
+                # Step 7: 讀取 P3 JSON 並插入分析結果至資料庫
+                print("\n--- Step 7: 存入資料庫 ---")
+                import json
+                
+                # 讀取 P3 JSON（最終分析結果）
+                p3_path = f"temp_data/prompt3_json/{year}_{company_code}_p3.json"
+                
+                if os.path.exists(p3_path):
+                    with open(p3_path, 'r', encoding='utf-8') as f:
+                        final_analysis_items = json.load(f)
+                    print(f"📂 載入 P3 JSON: {len(final_analysis_items)} 筆分析項目")
+                else:
+                    # P3 不存在時使用 P1 資料（fallback 但會缺少驗證資訊）
+                    print(f"⚠️ P3 JSON 不存在，使用 P1 分析結果")
+                    final_analysis_items = analysis_result['analysis_items']
+                
+                # 提取基本資訊
+                company_name = report_info.get('company_name', '')
+                industry = report_info.get('sector', '')
+                report_url = analysis_result.get('url', f"https://mops.twse.com.tw/mops/web/t100sb07_{year}")
+                
                 insert_success, insert_msg = insert_analysis_results(
-
                     esg_id=esg_id,
-                    company_name=analysis_result['company_name'],
-                    industry=analysis_result['industry'],
-                    url=analysis_result['url'],
-                    analysis_items=analysis_result['analysis_items']
+                    company_name=company_name,
+                    industry=industry,
+                    url=report_url,
+                    analysis_items=final_analysis_items
                 )
                 
                 if not insert_success:

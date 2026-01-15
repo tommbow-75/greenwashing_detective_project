@@ -17,7 +17,7 @@ external_evidence TEXT(500),  -- 外部證據
 external_evidence_url VARCHAR(100),  -- 外部證據連結
 consistency_status VARCHAR(100),  -- 一致程度
 MSCI_flag VARCHAR(100),  -- MSCI 旗號
-adjustment_score DECIMAL(5,2)  -- 調整分數 (扣分項)
+adjustment_score DECIMAL(5,2),  -- 調整分數 (扣分項)
 is_verified BOOLEAN NOT NULL DEFAULT TRUE   -- 外部證據是否已驗證
 );
 
