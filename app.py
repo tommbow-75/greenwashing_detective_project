@@ -83,7 +83,7 @@ def index():
     companies_data = []
     
     try:
-        with conn.cursor() as cursor:
+        with conn.cursor(pymysql.cursors.DictCursor) as cursor:
             # --- [Update] 資料庫讀取段落 (取得所有公司) ---
             # 資料表名稱變更: companies -> company
             # 欄位對應: id -> ESG_id (或忽略), name -> company_name, stock_id -> company_code
