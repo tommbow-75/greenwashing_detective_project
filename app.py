@@ -333,9 +333,8 @@ def query_company():
                 current_dir = os.path.dirname(os.path.abspath(__file__))
                 # 組合出固定存放 JSON 的資料夾路徑
                 json_folder = os.path.join(current_dir, "temp_data", "prompt3_json")
-
                 # 3.2 根據公司與年份定義檔名 (請根據你實際的命名規則修改)
-                json_file_name = f"result_{company_code}_{year}.json"
+                json_file_name = f"{year}_{company_code}_p3.json"
                 json_path = os.path.join(json_folder, json_file_name)
 
                 # 3.3 讀取檔案並取代原本的 Mock 函式
