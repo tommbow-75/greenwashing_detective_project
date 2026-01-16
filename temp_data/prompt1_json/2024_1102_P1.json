@@ -1,0 +1,262 @@
+[
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "E",
+    "sasb_topic": "溫室氣體排放",
+    "page_number": "20",
+    "report_claim": "2024年水泥事業範疇1+2實際排放強度為0.797，排放強度達成SBTi目標值0.819(範疇1為0.753，範疇2為0.044)，相較基準年減少9%，已超越2025年減量8%目標，提前達標。",
+    "greenwashing_factor": "排放強度下降可能掩蓋總排放量的增長，且範疇二採用市場基準法可能透過購買憑證而非實際減排達成。",
+    "risk_score": 4
+  },
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "E",
+    "sasb_topic": "空氣品質",
+    "page_number": "46",
+    "report_claim": "2024年亞泥及子公司空氣污染排放情形：氮氧化物3,009公噸、硫氧化物286公噸、粒狀污染物838公噸。",
+    "greenwashing_factor": "數據為申報值，且未揭露非連續監測期間的排放波動風險。",
+    "risk_score": 4
+  },
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "E",
+    "sasb_topic": "能源管理",
+    "page_number": "28",
+    "report_claim": "2024年，總能源耗用為11,706 TJ（相當於3,251,441MWh），能耗強度較基準年累計減少5.9%，達成年度減量目標。",
+    "greenwashing_factor": "能源強度下降部分歸功於廢熱回收，但化石燃料（煤炭）仍佔總能源投入的84.53%。",
+    "risk_score": 4
+  },
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "E",
+    "sasb_topic": "水資源與廢水處理管理",
+    "page_number": "53",
+    "report_claim": "2024 年水回收率目標值為 85%，實際回收率 81%，未達標。",
+    "greenwashing_factor": "坦承未達標，但將原因歸咎於地震與法規加嚴導致灑水增加，可能避談製程效率問題。",
+    "risk_score": 4
+  },
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "E",
+    "sasb_topic": "廢棄物與有害物質管理",
+    "page_number": "49",
+    "report_claim": "1101 2024年廢棄物總重量為3,461噸，其中廠內水泥旋窯自行再利用共1,195噸，由公告回收管道進行委外回收處理量共2,195噸，其餘無法回收再利用進行最終處置焚化量為58噸、掩埋量為0噸，廢棄物回收再利用率為98%。",
+    "greenwashing_factor": "「再利用」定義包含協同處理，可能涉及將廢棄物轉化為燃料燃燒，其環境影響未完全量化。",
+    "risk_score": 4
+  },
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "E",
+    "sasb_topic": "生態影響",
+    "page_number": "59",
+    "report_claim": "2024年採礦量為375萬噸，而開採至最終壁面後立即植生綠化，綠化面積依開採進度而調整，2024年種植約2,744棵原生樹木，累計至2024年共綠化73.1公頃，綠化占比81.1%。",
+    "greenwashing_factor": "綠化面積占比雖高，但人工植被與原始生態系統的生物多樣性功能差異未充分說明。",
+    "risk_score": 4
+  },
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "S",
+    "sasb_topic": "人權與社區關係",
+    "page_number": "121",
+    "report_claim": "2024年，1101及所屬子公司投入社區發展資源總計支出新台幣12,433萬元，占本公司營業利益的1.56%。",
+    "greenwashing_factor": "支出金額包含「利益分享機制」，可能被視為營運成本而非純粹的社會貢獻。",
+    "risk_score": 4
+  },
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "S",
+    "sasb_topic": "顧客隱私",
+    "page_number": "91",
+    "report_claim": "2024年亞泥無發生侵犯客戶隱私資料情形。",
+    "greenwashing_factor": "僅揭露結果，缺乏對潛在資安威脅或未遂攻擊的量化統計。",
+    "risk_score": 4
+  },
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "S",
+    "sasb_topic": "資訊安全",
+    "page_number": "91",
+    "report_claim": "2024年1101共計執行19項檢查作業，計有外部單位與內部稽核單位各執行乙次「資訊安全查核」。",
+    "greenwashing_factor": "查核次數不代表系統安全性，且未揭露資安預算佔比。",
+    "risk_score": 4
+  },
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "S",
+    "sasb_topic": "通路與價格",
+    "page_number": "72",
+    "report_claim": "2013 年公平交易委員會認定嘉惠電力等 9 家民營電廠違反公平交易法，經嘉惠電力提起訴願及行政訴訟後，最高行政法院 2024 年 1 月 10 日判決將繼續就本案進行聯合行為合意之調查。",
+    "greenwashing_factor": "涉及聯合行為調查，顯示在市場競爭與價格透明度上存在法律風險。",
+    "risk_score": 3
+  },
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "S",
+    "sasb_topic": "產品品質與安全",
+    "page_number": "90",
+    "report_claim": "2024年進行客戶滿意度調查，總計調查樣本數及回收數皆為80份，回收率100%，調查結果客戶滿意度為96.8分。",
+    "greenwashing_factor": "樣本數僅80份，對於大型B2B企業而言代表性可能不足。",
+    "risk_score": 4
+  },
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "S",
+    "sasb_topic": "顧客權益",
+    "page_number": "90",
+    "report_claim": "2024年客訴處理件數2件，結案率100%。",
+    "greenwashing_factor": "客訴件數極低可能反映申訴管道不夠普及或定義過於嚴苛。",
+    "risk_score": 4
+  },
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "S",
+    "sasb_topic": "行銷策略與產品標示",
+    "page_number": "31",
+    "report_claim": "旗下所有水泥產品已全數取得ISO 14067碳足跡查證，且於2024年提出環境部產品碳標籤申請並於2025年4月取得碳標籤證書。",
+    "greenwashing_factor": "碳標籤僅標示足跡，不代表該產品為絕對低碳，消費者可能產生誤解。",
+    "risk_score": 4
+  },
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "S",
+    "sasb_topic": "勞工法規",
+    "page_number": "117",
+    "report_claim": "2024年亞泥花蓮廠因違反職業安全衛生設施規則，受裁罰金額共計20萬元。",
+    "greenwashing_factor": "雖然揭露了裁罰，但未詳細說明重複違規的預防機制效能。",
+    "risk_score": 4
+  },
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "S",
+    "sasb_topic": "員工健康與安全",
+    "page_number": "118",
+    "report_claim": "2024年1101職安衛指標：死亡人數(人) 員工0、承攬商0；每百萬工時失能傷害頻率(FR) 員工2.25、承攬商0。",
+    "greenwashing_factor": "員工FR值較2023年(1.09)大幅上升，顯示安全管理存在退步風險。",
+    "risk_score": 4
+  },
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "S",
+    "sasb_topic": "員工忠誠度、多元化和包容性",
+    "page_number": "97",
+    "report_claim": "女性主管比例目前已達22%。亞泥也鼓勵內部晉升與跨部門學習，每年內部晉升率皆達八成以上。",
+    "greenwashing_factor": "整體員工結構仍高度偏向男性(87%)，多元化進展受限於產業特性。",
+    "risk_score": 4
+  },
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "S",
+    "sasb_topic": "產品設計與生命週期管理",
+    "page_number": "31",
+    "report_claim": "2024年本牌低碳水泥銷售量達49,378噸，較2023年成長75%。",
+    "greenwashing_factor": "低碳產品銷售佔總產量比例仍極低，對整體減碳貢獻有限。",
+    "risk_score": 4
+  },
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "G",
+    "sasb_topic": "商業模式韌性",
+    "page_number": "75",
+    "report_claim": "亞泥以國際能源總署（International Energy Agency, IEA）優於2℃情境(Beyond 2℃ Scenario, B2DS)進行轉型風險評估。",
+    "greenwashing_factor": "情境分析主要基於外部模型，對公司內部財務衝擊的具體量化連結較弱。",
+    "risk_score": 4
+  },
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "G",
+    "sasb_topic": "供應鏈管理",
+    "page_number": "89",
+    "report_claim": "2024年重要供應商接受評估的百分比為100%，通過文件審查/現場訪視的重要供應商總數為72家。",
+    "greenwashing_factor": "評估標準多為自評問卷，缺乏二級供應商的穿透式管理。",
+    "risk_score": 4
+  },
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "G",
+    "sasb_topic": "材料採購與效率",
+    "page_number": "29",
+    "report_claim": "11012024年使用501,634 噸回收物料，占所有物料8.3%。",
+    "greenwashing_factor": "回收物料佔比雖提升，但主要為工業副產品，其採購過程的環境足跡未納入計算。",
+    "risk_score": 4
+  },
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "G",
+    "sasb_topic": "氣候變遷的實質影響",
+    "page_number": "77",
+    "report_claim": "針對劇烈自然因子（颱風及強降雨）評估，短期(2025~2026)潛在財務影響金額預估為13.2億元。",
+    "greenwashing_factor": "財務影響預估範圍廣泛，且應對措施（提高庫存）可能增加其他環境成本。",
+    "risk_score": 4
+  },
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "G",
+    "sasb_topic": "商業道德",
+    "page_number": "86",
+    "report_claim": "2024年共接獲舉報案件1件，因舉報者無法提供具體事證故不受理。",
+    "greenwashing_factor": "「不受理」可能抑制潛在舉報者的積極性，且未揭露舉報案件的具體類別。",
+    "risk_score": 4
+  },
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "G",
+    "sasb_topic": "競爭行為",
+    "page_number": "72",
+    "report_claim": "2019 年 4 月公平交易委員會認定亞東預拌等 5 家預拌混凝土業者違反公平交易法進行裁罰，一審判決無聯合行為撤銷該處分，公平會上訴最高行政法院，最高行政法院發回更審。",
+    "greenwashing_factor": "法律訴訟持續多年，顯示企業在合規文化上可能存在系統性挑戰。",
+    "risk_score": 4
+  },
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "G",
+    "sasb_topic": "法規遵循",
+    "page_number": "14",
+    "report_claim": "2024年亞泥及子公司均無發生重大違規事件。另違規受裁罰金額事件為亞泥2件、子公司15件。",
+    "greenwashing_factor": "「重大違規」定義為單件100萬元以上，此門檻可能過高，導致多數違規被視為非重大。",
+    "risk_score": 4
+  },
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "G",
+    "sasb_topic": "重大事件風險管理",
+    "page_number": "41",
+    "report_claim": "亞泥花蓮廠替代燃料堆置場於2024年3月14日發生火警，原因為連日下雨導致木屑潮濕內部產生生物分解發酵熱，引發自燃。",
+    "greenwashing_factor": "事件揭露完整，但反映出循環經濟轉型過程中的新型態營運風險管理不足。",
+    "risk_score": 4
+  },
+  {
+    "company": "1101",
+    "year": "2024",
+    "esg_category": "G",
+    "sasb_topic": "系統性風險管理",
+    "page_number": "85",
+    "report_claim": "2024年經董事會通過之44項稽核計畫均已執行完成。",
+    "greenwashing_factor": "稽核計畫執行率不代表風險控制的有效性，缺乏對稽核發現缺失的量化改善統計。",
+    "risk_score": 4
+  }
+]

@@ -97,6 +97,86 @@ class ESGReportAnalyzer:
         
         print(f"[CONFIG] 輸出檔名已設定為: {self.output_json_name}")
 
+    def _parse_json_with_recovery(self, raw_json: str) -> List[Dict[str, Any]]:
+        """
+        嘗試解析 JSON，並在失敗時使用多重修復策略
+        
+        修復策略順序：
+            1. 直接解析
+            2. 清除 Markdown 標記後解析
+            3. 修復被截斷的 JSON Array
+        
+        Args:
+            raw_json: Gemini API 回傳的原始 JSON 字串
+        
+        Returns:
+            List[Dict]: 解析後的 JSON 陣列
+        
+        Raises:
+            RuntimeError: 若所有修復策略都失敗
+        """
+        # 策略 1: 直接解析
+        try:
+            return json.loads(raw_json)
+        except json.JSONDecodeError as e:
+            print(f"[WARN] 直接解析失敗: {e}")
+        
+        # 策略 2: 清除 Markdown 標記後解析
+        clean_text = re.sub(r"^```json|```$", "", raw_json.strip(), flags=re.MULTILINE).strip()
+        try:
+            return json.loads(clean_text)
+        except json.JSONDecodeError as e:
+            print(f"[WARN] 清除 Markdown 後解析失敗: {e}")
+        
+        # 策略 3: 修復被截斷的 JSON Array
+        print("[INFO] 嘗試修復被截斷的 JSON...")
+        repaired_json = self._repair_truncated_json(clean_text)
+        
+        if repaired_json:
+            try:
+                parsed = json.loads(repaired_json)
+                print(f"[SUCCESS] JSON 修復成功！保留 {len(parsed)} 筆完整資料")
+                return parsed
+            except json.JSONDecodeError as e:
+                print(f"[ERROR] 修復後仍無法解析: {e}")
+        
+        # 所有策略都失敗
+        raise RuntimeError(f"無法解析 Gemini 回應的 JSON (原始長度: {len(raw_json)} 字元)")
+
+    def _repair_truncated_json(self, text: str) -> str:
+        """
+        修復被截斷的 JSON Array
+        
+        尋找最後一個完整的 JSON 物件，並重新封閉陣列。
+        
+        Args:
+            text: 可能被截斷的 JSON 字串
+        
+        Returns:
+            str: 修復後的 JSON 字串，若無法修復則回傳空字串
+        """
+        if not text.strip().startswith('['):
+            return ""
+        
+        # 找到所有 "}," 的位置，這些是完整物件的結尾
+        last_complete_obj = text.rfind('},')
+        
+        if last_complete_obj == -1:
+            # 嘗試找單一物件結尾 "}"
+            last_complete_obj = text.rfind('}')
+            if last_complete_obj == -1:
+                return ""
+            # 檢查這個 } 後面是否是 ]
+            remaining = text[last_complete_obj + 1:].strip()
+            if remaining == ']':
+                return text  # 原本就是完整的
+            # 否則嘗試直接封閉
+            return text[:last_complete_obj + 1] + ']'
+        
+        # 截取到最後一個完整物件
+        repaired = text[:last_complete_obj + 1] + ']'
+        return repaired
+
     def _find_target_pdf(self) -> Tuple[str, str]:
         """
         在輸入目錄中搜尋符合條件的 PDF 檔案
@@ -238,7 +318,7 @@ class ESGReportAnalyzer:
 - **greenwashing_factor**: (必須使用中文輸出) 基於 Clarkson 理論分析該數據的漏洞、漂綠疑慮或揭露風險。
 - **risk_score**: 0~4 分
 - **internal_consistency**: (Boolean)
-- **key_word**: 根據 report_claim 內容，產生 3-5 個適合 Google News 搜尋的繁體中文關鍵字，以空格分隔。格式為：「年度 + 公司名稱 + 核心指標/事件 + ESG相關詞」，例如「2024 台積電 淨零排放 RE100」或「2024 鴻海 碳排放強度 永續」。避免過長或抽象的詞彙。
+- **key_word**: 根據 report_claim 內容，產生 3-5 個適合 Google News 搜尋的繁體中文關鍵字，以空格分隔。格式為：「公司名稱 + 核心指標/事件 + ESG相關詞」，例如「2024 台積電 淨零排放 RE100」或「 鴻海 碳排放強度 永續」。避免過長或抽象的詞彙。
 
 **輸出格式**：
 請直接輸出 JSON Array，不要包含 Markdown 標記。
@@ -261,14 +341,12 @@ class ESGReportAnalyzer:
             # 4. 處理結果
             raw_json = response.text
             output_path = os.path.join(self.OUTPUT_DIR, self.output_json_name)
+            
+            # 記錄原始回應長度，用於偵錯
+            print(f"[DEBUG] 原始回應長度: {len(raw_json)} 字元")
 
-            # 嘗試解析 JSON
-            try:
-                parsed_data = json.loads(raw_json)
-            except json.JSONDecodeError:
-                # 若解析失敗，嘗試清除可能的 Markdown 標記
-                clean_text = re.sub(r"^```json|```$", "", raw_json.strip(), flags=re.MULTILINE).strip()
-                parsed_data = json.loads(clean_text)
+            # 嘗試解析 JSON，使用多重修復策略
+            parsed_data = self._parse_json_with_recovery(raw_json)
             
             # 存檔
             with open(output_path, "w", encoding="utf-8") as f:

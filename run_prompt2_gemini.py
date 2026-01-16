@@ -1,12 +1,10 @@
-import json, os, re, tiktoken, time
-from dotenv import load_dotenv # 新增：導入載入工具
+import json, os, re
+from dotenv import load_dotenv
 from google import genai
 from google.genai import types
-from datetime import datetime
-
 
 # 1. 載入 .env 檔案並初始化 Client
-load_dotenv() # 自動尋找並載入同目錄下的 .env
+load_dotenv()
 api_key = os.getenv("GEMINI_API_KEY")
 
 if not api_key:
@@ -14,182 +12,459 @@ if not api_key:
 
 client = genai.Client(api_key=api_key)
 
-# ===== Token estimation utilities =====
-enc = tiktoken.get_encoding("cl100k_base")
 
-def estimate_tokens(text: str) -> int:
-    if not text:
-        return 0
-    return len(enc.encode(text))
+def process_esg_news_verification(input_json_path, news_json_path, output_json_path):
+    """
+    處理 ESG 新聞驗證
+    
+    Args:
+        input_json_path: 原檔路徑 (2024_1102_p1.json)
+        news_json_path: 驗證資料路徑 (2024_1102_news.json)
+        msci_json_path: MSCI 判斷標準路徑 (msci_flag.json)
+        output_json_path: 輸出結果路徑
+    
+    Returns:
+        dict: {
+            'success': bool,
+            'processed_items': int,
+            'input_tokens': int,
+            'output_tokens': int,
+            'total_tokens': int,
+            'api_time': float,
+            'total_time': float
+        }
+    """
 
-
-def process_esg_news_verification(input_json_path, output_json_path):
-    total_start_time = time.perf_counter()
-    # 2. 讀取第一個 JSON 檔 (原檔)
+    # 2. 讀取原檔
     try:
         with open(input_json_path, 'r', encoding='utf-8') as f:
             original_data = json.load(f)
+        print(f"✅ 成功讀取原檔：{len(original_data)} 筆資料")
     except FileNotFoundError:
-        print(f"錯誤：找不到輸入檔案 {input_json_path}")
-        return
+        print(f"❌ 錯誤：找不到輸入檔案 {input_json_path}")
+        return {'success': False, 'error': 'FileNotFoundError'}
     except json.JSONDecodeError:
-        print(f"錯誤：輸入檔案 {input_json_path} 格式並非正確的 JSON")
-        return
+        print(f"❌ 錯誤：輸入檔案 {input_json_path} 格式並非正確的 JSON")
+        return {'success': False, 'error': 'JSONDecodeError'}
 
-    # 3. 準備 Prompt 2 (更新格式要求)
-    prompt_template = """
-    檔案為該公司永續報告書的聲明與風險分數，以下稱為"原檔"。
-    請針對原檔企業聲稱，進行「外部驗證與風險評分調整」。
+    # 3. 直接讀取驗證資料
+    try:
+        with open(news_json_path, 'r', encoding='utf-8') as f:
+            news_data = json.load(f)
+        print(f"✅ 成功讀取驗證資料：{len(news_data)} 筆新聞")
+    except Exception as e:
+        print(f"❌ 錯誤：讀取驗證資料失敗 - {e}")
+        return {'success': False, 'error': f'News data read error: {e}'}
 
-    【搜尋指引 - 解決查無新聞的策略】：
-    1. **精確關鍵字搜尋**：請使用「公司名稱 + 2024 + 關鍵字」進行搜尋。
-       - 環境(E)：裁罰、污染、超標、環境部裁罰紀錄、違規、大火。
-       - 社會(S)：勞檢、職災、工安、裁罰、抗議、罷工、勞動部違反勞動法令紀錄。
-       - 治理(G)：公平交易法、聯合行為、收賄、判決書、最高行政法院、金管會裁罰。
-    2. **政府公開資料優先**：若查無媒體報導，請優先查核環境部、勞動部、司法院判決書系統、證交所公開資訊觀測站(MOPS)的 2024 年紀錄。
-    3. **數據合理性判斷**：若外部查無負面資訊，但原檔數據顯示「指標退步」（如：受傷率 FR 增加、水回收率下降、裁罰筆數增加），即便無新聞，也應視為「管理失效」，不得給予 Green 旗。
+    # 4. 使用 pandas 讀取 MSCI 判斷標準
+    try:
+        with open(msci_json_path, 'r', encoding='utf-8') as f:
+            msci_flag = json.load(f)
+        print(f"✅ 成功讀取 MSCI 判斷標準")
+    except Exception as e:
+        print(f"❌ 錯誤：讀取 MSCI 標準失敗 - {e}")
+        return {'success': False, 'error': f'MSCI data read error: {e}'}
 
-    【旗號與扣分邏輯 (MSCI 爭議監測系統)】：
-    1. 使用鏈式思考：先判斷「受影響人數」、「是否涉及死亡」、「是否違反法規」，最後再輸出旗號。
-    2. 旗號定義：
-       - Red (紅旗): 系統性、長期、不可逆之重大違規。扣 4 分。
-       - Orange (橘旗): 大規模嚴重事件但已開始修復。扣 2 分。
-       - Yellow (黃旗): 涉及行政裁罰、法律訴訟、或數據顯示管理退步。扣 1 分。
-       - Green (綠旗): 查核後符合聲稱，且無外部負面證據或數據退步。扣 0 分。
-    3. **調整分數 (adjustment_score) 計算**：
-       計算公式 = [原檔 risk_score] - [上述扣分值]。最低分為 0。
+    # 5. 準備 Prompt（將變數嵌入）
+    prompt_template = f"""
+你將扮演ESG審查員，負責進行外部新聞比對與風險調整。
 
-    【格式要求】：
-    請嚴格依照以下 JSON 格式輸出，X 筆輸入必須對應 X 筆輸出：
-    [
-      {{
-        "company": "公司名稱",
-        "year": "2024",
-        "esg_category": "E/S/G (繼承自原檔)",
-        "disclosure_claim": "原檔原文 (繼承自原檔)",
-        "page_number": "頁碼 (繼承自原檔)",
-        "external_evidence": "具體描述搜尋了哪個政府資料庫/新聞，以及發現了什麼(或查核了什麼沒發現)",
-        "external_evidence_url": "具體來源網址，若無新聞則填寫相關政府機關首頁",
-        "consistency_status": "符合 / 部分符合 / 不符合",
-        "msci_flag": "Green / Yellow / Orange / Red",
-        "adjustment_score": 數字
-      }}
-    ]
+【原檔說明】
+原檔為該公司永續報告書的聲明與風險分數，包含以下欄位：
+- company: 公司名稱（例如："亞泥"）
+- company_id: 公司代碼（例如："1102"）
+- year: 年分
+- esg_category: ESG分類 (E/S/G)
+- sasb_topic: SASB主題
+- page_number: 頁碼
+- report_claim: 企業聲明
+- greenwashing_factor: 漂綠風險因子
+- risk_score: 風險分數
+- key_word: 關鍵字
 
-    【輸出規則】：僅輸出單一 JSON 陣列，嚴禁任何 Markdown 標籤（如 ```json）或額外解釋。
+【驗證資料說明】
+驗證資料包含 {len(news_data)} 筆新聞，欄位如下：
+- news_id: 新聞編號
+- stock_code: 股票代號
+- company_name: 公司名稱
+- sasb_topic: SASB主題
+- search_query: 搜尋關鍵字
+- title: 新聞標題
+- url: 新聞連結
+- published_date: 發布日期
+- publisher: 發布者
+
+【MSCI 風險旗號判斷標準】
+  **Environment**: 
+    "Red": "大規模生態浩劫",
+    "Orange": "重大違規但可控",
+    "Yellow": "反覆發生的合規問題",
+    "Green": "無重大裁罰、符合當地法規，僅有零星排放超標紀錄"
+  ,
+  **HumanCapital**: 
+    "Red": "系統性人權侵犯",
+    "Orange": "結構性歧視或嚴重職災",
+    "Yellow": "單一勞資糾紛",
+    "Green": "零星的勞資爭議、一般性的離職率波動，或已解決的單一罰單"
+  ,
+  **SocialCapital**: 
+    "Red": "災難性產品風險或隱私崩潰",
+    "Orange": "重大產品召回或集體訴訟",
+    "Yellow": "局部性投訴",
+    "Green": "一般性的客戶服務投訴、零星的退貨問題"
+  ,
+  **LeadershipAndGovernance**: 
+    "Red": "核心系統崩潰或大規模貪腐",
+    "Orange": "重大治理缺陷",
+    "Yellow": "行政處分或單一案件",
+    "Green": "正常的董事會改選、微小的行政疏失補正"
+
+【處理邏輯】
+1. 風險調整邏輯依照上述 MSCI 標準
+2. 使用鏈式思考，先判斷「受影響人數」、「是否涉及死亡」、「是否違反法規」，最後再輸出旗號
+3. 扣分機制：red = -4, orange = -2, yellow = -1, green = 0
+4. 特別注意「橘旗」與「紅旗」的邊界：
+   - Red 通常涉及「系統性、長期、不可逆」
+   - Orange 則多為「大規模、嚴重、但已開始修復」
+5. 先比對 sasb_topic 一致，再依據原檔 report_claim 從驗證資料選出一筆最具代表性的新聞
+6. 若原檔輸入 X 筆聲稱，就要輸出 X 筆結果
+
+【相關性檢查】
+比對前，請先執行相關性檢查：
+- 檢查驗證資料是否明確提及 'company' 或 'company_code'
+- 如果是在講其他公司，請判定為無效
+- 檢查新聞內容是否與 report_claim 的主題有實質關聯？
+- 如果發現新聞與公司無關、主題完全不符、無新聞，請直接輸出：
+  * consistency_status: "一致"
+  * external_evidence: "無相關新聞證據"
+  * external_evidence_url: ""
+  * msci_flag: "Green"
+  * adjustment_score: (維持原 risk_score)
+
+【輸出格式】
+輸出欄位要求 (嚴格執行)，不要添加任何前言、後語或說明文字。
+
+重要：請保持原檔欄位名稱不變，特別是：
+- **company** 必須維持原檔的公司名稱格式（例如 "亞泥"），不要轉換為代碼
+- **company_id** 必須維持原檔的公司代碼（例如 "1102"）
+- **report_claim** 欄位名稱維持不變，不要改為 disclosure_claim
+
+輸出範例：
+**company**: {original_data[0]['company']},  # 必須是名稱，例如 "亞泥"
+**company_id**: {original_data[0]['company_id']},  # 必須是代號，例如 "1102"
+**year**: {original_data[0]['year']},
+**esg_category**: {original_data[0]['esg_category']},
+**sasb_topic**: {original_data[0]['sasb_topic']},
+**page_number**: {original_data[0]['page_number']},
+**report_claim**: {original_data[0]['report_claim']},  # 維持此欄位名稱
+**greenwashing_factor**: {original_data[0]['greenwashing_factor']},
+**risk_score**: {original_data[0]['risk_score']},
+**external_evidence**: 驗證資料標題或'無相關新聞證據',
+**external_evidence_url**: 驗證資料新聞連結或空字串,
+**consistency_status**: 一致/部分符合/不一致,
+**msci_flag**: Green/Yellow/Orange/Red,
+**adjustment_score**: 調整後分數（最低為0）
+
+
+絕對不要強行將無關的新聞連結到企業聲稱上。
+請直接輸出 JSON Array。
+"""
+
+    # 6. 將原檔和驗證資料轉為字串
+    user_input = f"""
+    【原檔數據】
+    {json.dumps(original_data, ensure_ascii=False, indent=2)}
+
+    【驗證資料】
+    {json.dumps(news_data, ensure_ascii=False, indent=2)}
     """
 
-    # 將 JSON1 的內容轉為字串放進 Prompt
-    user_input = f"以下為原檔數據：\n{json.dumps(original_data, ensure_ascii=False)}"
-
-    # ===== Token count (input) =====
-    input_token_est = estimate_tokens(prompt_template + user_input)
-
-    # 4. 呼叫 Gemini API
-    print("正在呼叫 Gemini API 並檢索外部資訊，請稍候...")
-
-    api_start_time = time.perf_counter()
+    # 7. 呼叫 Gemini API
+    print("\n🔄 正在呼叫 Gemini API，請稍候...")
 
     try:
         response = client.models.generate_content(
-            model="gemini-2.5-pro", 
+            model="gemini-2.5-pro",
             contents=user_input,
             config=types.GenerateContentConfig(
                 system_instruction=prompt_template,
-                tools=[types.Tool(google_search=types.GoogleSearch())],
+                temperature=0,
+                response_mime_type="application/json"
             )
         )
     except Exception as e:
-        print(f"API 呼叫失敗: {e}")
-        return
+        print(f"❌ API 呼叫失敗: {e}")
+        return {'success': False, 'error': f'API call failed: {e}'}
 
-    api_end_time = time.perf_counter()
-    api_elapsed = api_end_time - api_start_time
+    print(f"✅ Gemini API 呼叫完成")
 
-    print(f"✅ Gemini API 呼叫完成，耗時 {api_elapsed:.2f} 秒")
-
-    # 5. 處理與儲存結果 (沿用強效解析版)
+    # 8. 處理與儲存結果
     raw_text = response.text.strip()
 
-    # ===== Token count (output) =====
-    output_token_est = estimate_tokens(raw_text)
-    total_token_est = input_token_est + output_token_est
-
+    # 8. 處理與儲存結果 - 直接查找 JSON 陣列
+    print("\n🔍 正在解析 JSON 回應...")
+    
     try:
+        final_json = None
         all_arrays = re.findall(r'(\[.*\])', raw_text, re.DOTALL)
         if all_arrays:
             clean_json_str = all_arrays[0]
+            # 處理可能的多個陣列
             if "][" in clean_json_str:
                 clean_json_str = clean_json_str.split("][")[0] + "]"
             elif "] [" in clean_json_str:
                 clean_json_str = clean_json_str.split("] [")[0] + "]"
-
-            final_json = json.loads(clean_json_str)
-
-            # ===== MERGE 原檔 + 外部驗證結果 =====
-            if not isinstance(original_data, list) or not isinstance(final_json, list):
-                raise ValueError("原檔或 Gemini 輸出不是 list，無法進行 merge")
-
-            if len(original_data) != len(final_json):
-                raise ValueError(
-                    f"筆數不一致：原檔 {len(original_data)} 筆，Gemini 輸出 {len(final_json)} 筆"
-                )
-
-            merged_results = []
-            for orig, ext in zip(original_data, final_json):
-                merged_results.append({
-                    **orig,   # 原檔所有欄位
-                    **ext     # 外部驗證欄位（會覆蓋同名 key）
-                })
             
+            try:
+                final_json = json.loads(clean_json_str)
+                print("✅ JSON 解析成功")
+            except json.JSONDecodeError as e:
+                print(f"⚠️  JSON 解析失敗: {e}")
+        
+        # 儲存結果
+        if final_json:
             os.makedirs(os.path.dirname(output_json_path), exist_ok=True)
             with open(output_json_path, 'w', encoding='utf-8') as f:
-                json.dump(merged_results, f, ensure_ascii=False, indent=2)
-            print(f"成功！結果已儲存至 {output_json_path}")
+                json.dump(final_json, f, ensure_ascii=False, indent=2)
+            print(f"✅ 成功！結果已儲存至 {output_json_path}，共 {len(final_json)} 筆")
         else:
-            raise ValueError("模型回傳內容中找不到任何 JSON 陣列結構")
+            raise ValueError("無法從回應中提取 JSON 結構")
 
-    except json.JSONDecodeError:
-        print("正在嘗試修復模式...")
+    except json.JSONDecodeError as e:
+        print(f"⚠️  JSON 解析錯誤: {e}")
+        print("⚠️  正在嘗試修復模式...")
         try:
+            # 使用括號計數法提取完整 JSON
             start = raw_text.find('[')
+            if start == -1:
+                raise ValueError("找不到 JSON 陣列起始標記 '['")
+            
             count = 0
+            end_pos = -1
             for i in range(start, len(raw_text)):
                 if raw_text[i] == '[':
                     count += 1
                 elif raw_text[i] == ']':
                     count -= 1
                 if count == 0:
-                    extreme_clean = raw_text[start:i+1]
-                    final_json = json.loads(extreme_clean)
-                    with open(output_json_path, 'w', encoding='utf-8') as f:
-                        json.dump(final_json, f, ensure_ascii=False, indent=2)
-                    print(f"修復成功！結果儲存至 {output_json_path}")
+                    end_pos = i + 1
                     break
-        except Exception as e:
-            print(f"解析失敗：{e}")
+            
+            if end_pos > start:
+                extreme_clean = raw_text[start:end_pos]
+                final_json = json.loads(extreme_clean)
+                os.makedirs(os.path.dirname(output_json_path), exist_ok=True)
+                with open(output_json_path, 'w', encoding='utf-8') as f:
+                    json.dump(final_json, f, ensure_ascii=False, indent=2)
+                print(f"✅ 修復成功！結果儲存至 {output_json_path}，共 {len(final_json)} 筆")
+            else:
+                raise ValueError("無法找到完整的 JSON 陣列")
+        except Exception as repair_error:
+            print(f"❌ 修復失敗：{repair_error}")
+            # 將原始回應儲存到文件以便調試
+            debug_path = output_json_path.replace('.json', '_debug_response.txt')
+            with open(debug_path, 'w', encoding='utf-8') as f:
+                f.write(raw_text)
+            print(f"💾 已將完整原始回應儲存至：{debug_path}")
     except Exception as e:
-        print(f"發生非預期錯誤: {e}")
+        print(f"❌ 發生非預期錯誤: {e}")
+        # 將原始回應儲存到文件以便調試
+        debug_path = output_json_path.replace('.json', '_debug_response.txt')
+        with open(debug_path, 'w', encoding='utf-8') as f:
+            f.write(raw_text)
+        print(f"💾 已將完整原始回應儲存至：{debug_path}")
 
     # ===== TOKEN USAGE & TIME COST =====
-    print("\n===== Token usage & Time cost=====")
-    print(f"Input tokens : {input_token_est}")
-    print(f"Output tokens: {output_token_est}")
-    print(f"Total tokens : {total_token_est}")
-
     total_end_time = time.perf_counter()
     total_elapsed = total_end_time - total_start_time
 
-    minutes = int(total_elapsed // 60)
-    seconds = total_elapsed % 60
+    print("\n" + "="*50)
+    print("📊 Token 使用統計")
+    print("="*50)
+    print(f"輸入 Token 數 : {input_token_est:,}")
+    print(f"輸出 Token 數 : {output_token_est:,}")
+    print(f"總計 Token 數 : {total_token_est:,}")
+    print("\n" + "="*50)
+    print("⏱️  執行時間統計")
+    print("="*50)
+    print(f"API 呼叫時間  : {api_elapsed:.2f} 秒")
+    print(f"總執行時間    : {total_elapsed:.2f} 秒")
+    print("="*50)
+    
+    # 返回統計資訊供模組化接口使用
+    return {
+        'success': True,
+        'processed_items': len(final_json) if final_json else 0,
+        'input_tokens': input_token_est,
+        'output_tokens': output_token_est,
+        'total_tokens': total_token_est,
+        'api_time': api_elapsed,
+        'total_time': total_elapsed
+    }
 
-    print(f"Total execution time: {total_elapsed:.2f} 秒")
 
+def verify_esg_with_news(year, company_code, force_regenerate=False):
+    """
+    模組化接口：執行 ESG 新聞驗證與評分調整
+    
+    Args:
+        year: 報告年份
+        company_code: 公司代碼
+        force_regenerate: 是否強制重新生成（預設 False）
+    
+    Returns:
+        dict: {
+            'success': bool,
+            'message': str,
+            'output_path': str,  # P2.json 路徑
+            'skipped': bool,     # 是否跳過生成
+            'statistics': {      # 執行統計
+                'processed_items': int,
+                'input_tokens': int,
+                'output_tokens': int,
+                'total_tokens': int,
+                'api_time': float,
+                'total_time': float
+            },
+            'error': str  # 錯誤訊息（若失敗）
+        }
+    """
+    import time
+    start_time = time.perf_counter()
+    
+    try:
+        # 1. 自動構建檔案路徑
+        base_filename = f"{year}_{company_code}"
+        
+        input_path = f'./temp_data/prompt1_json/{base_filename}_p1.json'
+        news_path = f'./news_search/news_output/{base_filename}_news.json'
+        msci_path = './static/data/msci_flag.json'
+        output_path = f'./temp_data/prompt2_json/{base_filename}_p2.json'
+        
+        # 2. 檔案存在性檢查（跳過重複執行）
+        if os.path.exists(output_path) and not force_regenerate:
+            # 讀取已存在的檔案以獲取統計資訊
+            try:
+                with open(output_path, 'r', encoding='utf-8') as f:
+                    existing_data = json.load(f)
+                
+                return {
+                    'success': True,
+                    'message': 'AI 驗證結果已存在，跳過生成',
+                    'output_path': output_path,
+                    'skipped': True,
+                    'statistics': {
+                        'processed_items': len(existing_data),
+                        'input_tokens': 0,
+                        'output_tokens': 0,
+                        'total_tokens': 0,
+                        'api_time': 0,
+                        'total_time': time.perf_counter() - start_time
+                    }
+                }
+            except Exception as e:
+                # 檔案存在但無法讀取，刪除並重新生成
+                print(f"⚠️ 現有檔案無法讀取，將重新生成: {e}")
+                os.remove(output_path)
+        
+        # 3. 檢查必要輸入檔案
+        missing_files = []
+        if not os.path.exists(input_path):
+            missing_files.append(f"P1 檔案: {input_path}")
+        if not os.path.exists(news_path):
+            missing_files.append(f"新聞檔案: {news_path}")
+        if not os.path.exists(msci_path):
+            missing_files.append(f"MSCI 標準: {msci_path}")
+        
+        if missing_files:
+            return {
+                'success': False,
+                'message': '缺少必要輸入檔案',
+                'error': ', '.join(missing_files),
+                'output_path': None,
+                'skipped': False
+            }
+        
+        # 4. 執行 AI 驗證（獲取統計資訊）
+        print(f"\n{'='*60}")
+        print(f"開始 AI 驗證與評分調整: {year} 年 {company_code}")
+        print(f"{'='*60}")
+        
+        # 呼叫原有函數並獲取統計資訊
+        stats = process_esg_news_verification(input_path, news_path, msci_path, output_path)
+        
+        # 檢查執行結果
+        if not stats or not stats.get('success'):
+            error_msg = stats.get('error', 'Unknown error') if stats else 'Function returned None'
+            return {
+                'success': False,
+                'message': 'AI 驗證執行失敗',
+                'error': error_msg,
+                'output_path': output_path,
+                'skipped': False
+            }
+        
+        total_time = time.perf_counter() - start_time
+        
+        # 5. 驗證輸出檔案
+        if not os.path.exists(output_path):
+            return {
+                'success': False,
+                'message': 'AI 驗證執行完成但未產生輸出檔案',
+                'error': '輸出檔案不存在',
+                'output_path': output_path,
+                'skipped': False
+            }
+        
+        # 6. 返回結果（使用從 process_esg_news_verification 獲得的統計資訊）
+        return {
+            'success': True,
+            'message': 'AI 驗證完成',
+            'output_path': output_path,
+            'skipped': False,
+            'statistics': {
+                'processed_items': stats.get('processed_items', 0),
+                'input_tokens': stats.get('input_tokens', 0),
+                'output_tokens': stats.get('output_tokens', 0),
+                'total_tokens': stats.get('total_tokens', 0),
+                'api_time': stats.get('api_time', 0),
+                'total_time': total_time
+            }
+        }
+    
+    except FileNotFoundError as e:
+        return {
+            'success': False,
+            'message': '檔案不存在',
+            'error': str(e),
+            'output_path': None,
+            'skipped': False
+        }
+    except json.JSONDecodeError as e:
+        return {
+            'success': False,
+            'message': 'JSON 解析失敗',
+            'error': str(e),
+            'output_path': None,
+            'skipped': False
+        }
+    except Exception as e:
+        return {
+            'success': False,
+            'message': 'AI 驗證執行失敗',
+            'error': str(e),
+            'output_path': None,
+            'skipped': False
+        }
 
 
 if __name__ == "__main__":
+    year = "2024"
+    company = "1102"
     # 設定檔案路徑
     input_path = './temp_data/prompt1_json/2024_1102_p1.json'
+    news_path = './news_search/news_output/2024_1102_news.json'  # 修正：移除 _results
+    msci_path = './static/data/msci_flag.json'
     output_path = './temp_data/prompt2_json/2024_1102_p2.json'
     
-    process_esg_news_verification(input_path, output_path) 
+    process_esg_news_verification(input_path, news_path, output_path)

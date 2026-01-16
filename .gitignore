@@ -1,6 +1,7 @@
 .env
 __pycache__/
 *.pyc
+.vscode
 
 # 虛擬環境
 venv/
