@@ -59,8 +59,8 @@ class ESGReportAnalyzer:
     OUTPUT_DIR = os.path.join(SCRIPT_DIR, 'temp_data', 'prompt1_json')
     SASB_MAP_FILE = os.path.join(SCRIPT_DIR, 'static', 'data', 'SASB_weightMap.json')
     
-    # ✅ 使用 Gemini 2.0 Flash
-    MODEL_NAME = "models/gemini-2.0-flash" 
+    # ✅ 使用 Gemini 2.5 Flash Lite
+    MODEL_NAME = "models/gemini-2.5-flash-lite" 
 
     def __init__(self, target_year: int, target_company_id: str, company_name: str = ''):
         """

@@ -115,7 +115,7 @@ def _find_p1_json(year: int, company_code: str, p1_dir: str = DEFAULT_P1_DIR) ->
         P1 JSON 檔案路徑，若找不到則返回 None
     """
     # 嘗試標準檔名格式
-    standard_name = f"{year}_{company_code}_P1.json"
+    standard_name = f"{year}_{company_code}_p1.json"
     standard_path = os.path.join(p1_dir, standard_name)
     
     if os.path.exists(standard_path):
@@ -221,7 +221,7 @@ def search_news_for_report(
     if p1_json_path is None or not os.path.exists(p1_json_path):
         return {
             'success': False,
-            'error': f'找不到 P1 JSON 檔案: {year}_{company_code}_P1.json'
+            'error': f'找不到 P1 JSON 檔案: {year}_{company_code}_p1.json'
         }
     
     # === 4. 載入資源 ===
