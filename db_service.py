@@ -60,7 +60,7 @@ def query_company_data(year, company_code):
     default_esg_id = f"{year}{company_code}"
     
     with get_db_connection() as conn:
-        with conn.cursor(DictCursor) as cursor:
+        with conn.cursor() as cursor:
             # 修正：改用 company_code 和 Report_year 查詢，因為舊資料的 ESG_id 格式可能不同 (如 C001)
             sql_company = """
                 SELECT * FROM company 
@@ -90,7 +90,7 @@ def query_company_data(year, company_code):
                     SELECT ESG_category, SASB_topic, risk_score, adjustment_score,
                            report_claim, page_number, greenwashing_factor,
                            external_evidence, external_evidence_url,
-                           consistency_status, MSCI_flag
+                           consistency_status, MSCI_flag, is_verified
                     FROM company_report
                     WHERE company_id = %s AND year = %s
                 """
@@ -126,7 +126,7 @@ def insert_company_basic(year, company_code, company_name='', industry='', url='
     
     try:
         with get_db_connection() as conn:
-            with conn.cursor(DictCursor) as cursor:
+            with conn.cursor() as cursor:
                 # 檢查是否已存在 (同樣使用嚴格條件)
                 cursor.execute("SELECT ESG_id FROM company WHERE company_code = %s AND Report_year = %s", (company_code, year))
                 existing = cursor.fetchone()
@@ -155,7 +155,7 @@ def update_analysis_status(esg_id, status, error_msg=None):
     """
     try:
         with get_db_connection() as conn:
-            with conn.cursor(DictCursor) as cursor:
+            with conn.cursor() as cursor:
                 sql = "UPDATE company SET analysis_status = %s WHERE ESG_id = %s"
                 cursor.execute(sql, (status, esg_id))
                 
@@ -176,7 +176,7 @@ def insert_analysis_results(esg_id, company_name, industry, url, analysis_items)
     """
     try:
         with get_db_connection() as conn:
-            with conn.cursor(DictCursor) as cursor:
+            with conn.cursor() as cursor:
                 # 1. 更新 company 表的基本資料
                 update_sql = """
                     UPDATE company 
@@ -213,7 +213,7 @@ def insert_analysis_results(esg_id, company_name, industry, url, analysis_items)
                             is_verified = is_verified_raw.lower() not in ('false', 'failed', '0', '')
                         else:
                             is_verified = bool(is_verified_raw)
-
+                        
                         cursor.execute(insert_sql, (
                             esg_id,  # 儲存 company 的 ESG_id（如 20242330）
                             company_code,
