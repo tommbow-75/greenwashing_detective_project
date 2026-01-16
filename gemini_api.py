@@ -197,7 +197,8 @@ class ESGReportAnalyzer:
                     "report_claim": "報告書原文摘錄",
                     "greenwashing_factor": "中文漂綠風險分析",
                     "risk_score": "0-4",
-                    "internal_consistency": true|false
+                    "internal_consistency": true|false,
+                    "key_word": "適合新聞搜尋的關鍵字"
                 },
                 ...
             ]
@@ -237,6 +238,7 @@ class ESGReportAnalyzer:
 - **greenwashing_factor**: (必須使用中文輸出) 基於 Clarkson 理論分析該數據的漏洞、漂綠疑慮或揭露風險。
 - **risk_score**: 0~4 分
 - **internal_consistency**: (Boolean)
+- **key_word**: 根據 report_claim 內容，產生 3-5 個適合 Google News 搜尋的繁體中文關鍵字，以空格分隔。格式為：「年度 + 公司名稱 + 核心指標/事件 + ESG相關詞」，例如「2024 台積電 淨零排放 RE100」或「2024 鴻海 碳排放強度 永續」。避免過長或抽象的詞彙。
 
 **輸出格式**：
 請直接輸出 JSON Array，不要包含 Markdown 標記。
