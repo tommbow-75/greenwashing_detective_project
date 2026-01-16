@@ -203,16 +203,23 @@ def insert_analysis_results(esg_id, company_name, industry, url, analysis_items)
                         (ESG_id, company_id, year, ESG_category, SASB_topic, page_number, 
                          report_claim, greenwashing_factor, risk_score, external_evidence, 
                          external_evidence_url, consistency_status, MSCI_flag, adjustment_score, is_verified)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 1)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     """
                     
                     for item in analysis_items:
+                        # 處理 is_verified 欄位：轉換為布林值
+                        is_verified_raw = item.get('is_verified', True)
+                        if isinstance(is_verified_raw, str):
+                            is_verified = is_verified_raw.lower() not in ('false', 'failed', '0', '')
+                        else:
+                            is_verified = bool(is_verified_raw)
+
                         cursor.execute(insert_sql, (
                             esg_id,  # 儲存 company 的 ESG_id（如 20242330）
                             company_code,
                             year,
-                            item.get('ESG_category', ''),
-                            item.get('SASB_topic', ''),
+                            item.get('esg_category', ''),
+                            item.get('sasb_topic', ''),
                             item.get('page_number', ''),
                             item.get('report_claim', ''),
                             item.get('greenwashing_factor', ''),
@@ -220,8 +227,9 @@ def insert_analysis_results(esg_id, company_name, industry, url, analysis_items)
                             item.get('external_evidence', ''),
                             item.get('external_evidence_url', ''),
                             item.get('consistency_status', ''),
-                            item.get('MSCI_flag', ''),
-                            item.get('adjustment_score', 0.0)
+                            item.get('msci_flag', ''),
+                            item.get('adjustment_score', 0.0),
+                            is_verified
                         ))
                 
                 return (True, f"已插入 {len(analysis_items)} 筆分析資料")
