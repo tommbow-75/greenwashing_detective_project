@@ -17,6 +17,7 @@ Word Cloud 文字雲生成模組
 
 import jieba
 import os
+import sys
 from collections import Counter
 import pdfplumber
 import time
@@ -24,11 +25,14 @@ import json
 import glob
 from typing import Dict, List, Optional
 
-# 模組常數
-WORD_CLOUD_DIR = os.path.dirname(os.path.abspath(__file__))
-DICT_DIR = WORD_CLOUD_DIR
-OUTPUT_DIR = os.path.join(WORD_CLOUD_DIR, "wc_output")
-PDF_DIR = os.path.abspath(os.path.join(WORD_CLOUD_DIR, "..", "temp_data", "esgReport"))
+# 導入集中配置
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from config import PATHS, DATA_FILES
+
+# 模組常數 - 使用 config.py 的路徑定義
+DICT_DIR = PATHS['STATIC_DICT']  # 字典檔目錄
+OUTPUT_DIR = PATHS['WORD_CLOUD_OUTPUT']  # 文字雲輸出目錄
+PDF_DIR = PATHS['ESG_REPORTS']  # PDF 報告書目錄
 
 
 def _extract_text_from_pdf(pdf_path: str) -> str:

@@ -1,15 +1,18 @@
 import requests
 import urllib3
 import os
+import sys
 import time
 
 # 隱藏安全連線警告
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-# 取得程式檔案所在的目錄
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+# 導入集中配置
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from config import PATHS
+
 # 設定預設的 ESG 報告儲存目錄
-DEFAULT_SAVE_DIR = os.path.join(SCRIPT_DIR, 'temp_data', 'esgReport')
+DEFAULT_SAVE_DIR = PATHS['ESG_REPORTS']
 
 
 # ==================== 可程式化呼叫的函式 ====================

@@ -1,12 +1,17 @@
 import json
 import requests
 import os
+import sys
 from dotenv import load_dotenv
 from perplexity import Perplexity
 import glob
 import time
 
 load_dotenv()
+
+# 導入集中配置
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from config import PATHS
 
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
@@ -109,12 +114,12 @@ def verify_evidence_sources(year, company_code, force_regenerate=False):
     
     try:
         # 1. 構建檔案路徑
-        input_folder = "./temp_data/prompt2_json"
-        output_folder = "./temp_data/prompt3_json"
+        input_folder = PATHS['P2_JSON']
+        output_folder = PATHS['P3_JSON']
         os.makedirs(output_folder, exist_ok=True)
         
-        input_file = f"{input_folder}/{year}_{company_code}_p2.json"
-        output_file = f"{output_folder}/{year}_{company_code}_p3.json"
+        input_file = os.path.join(input_folder, f'{year}_{company_code}_p2.json')
+        output_file = os.path.join(output_folder, f'{year}_{company_code}_p3.json')
         
         # 2. 檢查輸入檔案是否存在
         if not os.path.exists(input_file):
@@ -289,8 +294,8 @@ if __name__ == "__main__":
     script_start_time = time.perf_counter()
 
     # 1. 路徑設定
-    INPUT_FOLDER = "./temp_data/prompt2_json"
-    OUTPUT_FOLDER = "./temp_data/prompt3_json"
+    INPUT_FOLDER = PATHS['P2_JSON']
+    OUTPUT_FOLDER = PATHS['P3_JSON']
     os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
     # 2. 抓取最新檔案

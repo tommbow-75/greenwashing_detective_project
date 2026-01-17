@@ -1,7 +1,11 @@
-import json, os, re
+import json, os, re, sys
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
+
+# 導入集中配置
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from config import PATHS, DATA_FILES
 
 # 1. 載入 .env 檔案並初始化 Client
 load_dotenv()
@@ -336,10 +340,10 @@ def verify_esg_with_news(year, company_code, force_regenerate=False):
         # 1. 自動構建檔案路徑
         base_filename = f"{year}_{company_code}"
         
-        input_path = f'./temp_data/prompt1_json/{base_filename}_p1.json'
-        news_path = f'./news_search/news_output/{base_filename}_news.json'
-        msci_path = './static/data/msci_flag.json'
-        output_path = f'./temp_data/prompt2_json/{base_filename}_p2.json'
+        input_path = os.path.join(PATHS['P1_JSON'], f'{base_filename}_p1.json')
+        news_path = os.path.join(PATHS['NEWS_SEARCH_OUTPUT'], f'{base_filename}_news.json')
+        msci_path = DATA_FILES['MSCI_FLAG']
+        output_path = os.path.join(PATHS['P2_JSON'], f'{base_filename}_p2.json')
         
         # 2. 檔案存在性檢查（跳過重複執行）
         if os.path.exists(output_path) and not force_regenerate:
@@ -462,9 +466,9 @@ if __name__ == "__main__":
     year = "2024"
     company = "1102"
     # 設定檔案路徑
-    input_path = './temp_data/prompt1_json/2024_1102_p1.json'
-    news_path = './news_search/news_output/2024_1102_news.json'  # 修正：移除 _results
-    msci_path = './static/data/msci_flag.json'
-    output_path = './temp_data/prompt2_json/2024_1102_p2.json'
+    input_path = os.path.join(PATHS['P1_JSON'], f'{year}_{company}_p1.json')
+    news_path = os.path.join(PATHS['NEWS_SEARCH_OUTPUT'], f'{year}_{company}_news.json')
+    msci_path = DATA_FILES['MSCI_FLAG']
+    output_path = os.path.join(PATHS['P2_JSON'], f'{year}_{company}_p2.json')
     
     process_esg_news_verification(input_path, news_path, output_path)

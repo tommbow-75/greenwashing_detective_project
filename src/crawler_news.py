@@ -17,17 +17,22 @@
 import json
 import time
 import os
+import sys
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 from gnews import GNews
 from dateutil import parser as date_parser
 
-# === 模組常數 ===
+# 導入集中配置
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from config import PATHS, DATA_FILES
+
+# === 模組常數 - 使用 config.py 的路徑定義 ===
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-DEFAULT_P1_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, "..", "temp_data", "prompt1_json"))
-DEFAULT_OUTPUT_DIR = os.path.join(SCRIPT_DIR, "news_output")
-COMPANY_MAP_PATH = os.path.abspath(os.path.join(SCRIPT_DIR, "..", "static", "data", "tw_listed_companies.json"))
-SASB_KEYWORD_PATH = os.path.join(SCRIPT_DIR, "sasb_keyword.json")
+DEFAULT_P1_DIR = PATHS['P1_JSON']  # P1 JSON 目錄
+DEFAULT_OUTPUT_DIR = PATHS['NEWS_SEARCH_OUTPUT']  # 新聞輸出目錄 (app/news_output)
+COMPANY_MAP_PATH = DATA_FILES['TW_LISTED_COMPANIES']  # 台灣上市公司資料
+SASB_KEYWORD_PATH = DATA_FILES['SASB_KEYWORD']  # SASB 關鍵字
 
 # API 設定
 MAX_RETRIES = 3

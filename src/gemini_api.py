@@ -18,6 +18,7 @@ import os
 import json
 import time
 import re
+import sys
 from typing import Dict, List, Any, Tuple
 
 # ✅ 使用 Google 官方 GenAI SDK
@@ -28,8 +29,9 @@ from dotenv import load_dotenv
 # 載入環境變數
 load_dotenv()
 
-# 取得程式檔案所在的目錄
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+# 導入集中配置
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from config import PATHS, DATA_FILES
 
 
 # =========================
@@ -55,9 +57,9 @@ class ESGReportAnalyzer:
     """
     
     # ====== 設定檔與路徑 ======
-    INPUT_DIR = os.path.join(SCRIPT_DIR, 'temp_data', 'esgReport')
-    OUTPUT_DIR = os.path.join(SCRIPT_DIR, 'temp_data', 'prompt1_json')
-    SASB_MAP_FILE = os.path.join(SCRIPT_DIR, 'static', 'data', 'SASB_weightMap.json')
+    INPUT_DIR = PATHS['ESG_REPORTS']
+    OUTPUT_DIR = PATHS['P1_JSON']
+    SASB_MAP_FILE = DATA_FILES['SASB_WEIGHT_MAP']
     
     # ✅ 使用 Gemini 2.5 Flash Lite
     MODEL_NAME = "models/gemini-2.5-flash-lite" 
@@ -298,7 +300,7 @@ class ESGReportAnalyzer:
 
 **分析核心任務：**
 1. **識別產業**：請閱讀報告書，從 SASB 權重表中識別該公司所屬的產業。
-2. **完整列出議題**：找出該產業在權重表中所有的 SASB 議題，每一項議題都必須輸出一筆資料，不可遺漏。
+2. **完整列出議題**：找出該產業在權重表中所有的 SASB 議題，26巷議題對26個輸出；執行時，若發現後文有數據&依據更強的claim，請直接取代原本的claim。
 3. **評分邏輯 (基於 Clarkson et al. 2008)**：
    - 0分：未揭露。
    - 1分 (軟性)：僅有願景、口號或模糊承諾。
