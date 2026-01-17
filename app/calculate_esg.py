@@ -2,6 +2,7 @@ import os
 import json
 
 # 載入 SASB 權重設定
+# 新結構: 以「產業」為主鍵，每個產業物件包含所有議題的權重值
 def load_sasb_weights():
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     json_path = os.path.join(base_dir, 'static', 'data', 'SASB_weightMap.json')
@@ -10,9 +11,9 @@ def load_sasb_weights():
     
     weights = {}
     for item in data:
-        topic = item.get('議題')
-        if topic:
-            weights[topic] = item
+        industry = item.get('產業')
+        if industry:
+            weights[industry] = item  # 儲存整個產業物件（包含所有議題權重）
     return weights
 
 SASB_WEIGHTS = load_sasb_weights()
@@ -37,21 +38,16 @@ def calculate_esg_scores(company_industry, esg_records):
         category = row['ESG_category'] # 舊: category
         topic = row['SASB_topic']      # 舊: sasb_topic
         
-        # 1. 取得權重
-        topic_info = SASB_WEIGHTS.get(topic, {})
-        weight = topic_info.get(company_industry, 1) 
+        # 1. 取得權重 (新結構: 先查產業，再查議題)
+        industry_info = SASB_WEIGHTS.get(company_industry, {})
+        weight = industry_info.get(topic, 1)  # 預設權重為 1
         
-        # 2. 計算淨分數 S_net (Risk - Adjustment)
-        # [Important] 資料庫中 risk_score 定義為 VARCHAR(3)，需轉型
-        try:
-            raw_risk = float(row['risk_score']) if row['risk_score'] else 0
-        except ValueError:
-            raw_risk = 0 # 若資料庫存了非數字字元，預設為 0
-            
-        # adjustment_score 定義為 DECIMAL，Python通常會自動轉為 Decimal 或 float
+        # 2. 第五層分數：直接使用外部新聞驗證的調整分數 (adjustment_score)
+        # [Important] adjustment_score 定義為 DECIMAL，Python通常會自動轉為 Decimal 或 float
         adjustment = float(row['adjustment_score']) if row['adjustment_score'] else 0
         
-        net_score = max(0, raw_risk - adjustment)
+        # 使用 adjustment_score 作為最終分數（不考慮 risk_score）
+        net_score = max(0, adjustment)
         
         # 3. 累加
         weighted_score = net_score * weight

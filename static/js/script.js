@@ -378,10 +378,8 @@ function renderLayer5(company) {
     }
 
     dataWithEvidence.forEach((row, index) => {
-        // 計算 Net Score
-        const initialRisk = parseFloat(row.risk_score) || 0;
-        const deduction = parseFloat(row.adjustment_score) || 0;
-        const netScore = Math.max(0, initialRisk - deduction).toFixed(1);
+        // 直接使用 adjustment_score 作為最終分數（已經過 AI 計算）
+        const netScore = parseFloat(row.adjustment_score) || 0;
 
         const evidenceText = row.external_evidence || '-';
         const evidenceUrl = row.external_evidence_url;
@@ -460,11 +458,19 @@ function renderLayer6(company) {
 
     const indName = company.industry;
 
-    // 從 sasbRawData 找出該產業權重為 2 的所有議題
-    // JSON 結構範例: { "面向": "環境", "議題": "溫室氣體排放", "半導體業": 2, ... }
-    const heavyWeightTopics = sasbRawData
-        .filter(row => row[indName] === 2)
-        .map(row => row["議題"]);
+    // 新結構: 以「產業」為主鍵
+    // JSON 結構範例: { "產業": "半導體業", "溫室氣體排放": 2, "空氣品質": 1, ... }
+    const industryData = sasbRawData.find(row => row["產業"] === indName);
+
+    // 從該產業物件中找出權重為 2 的所有議題
+    const heavyWeightTopics = [];
+    if (industryData) {
+        for (const [key, value] of Object.entries(industryData)) {
+            if (key !== "產業" && value === 2) {
+                heavyWeightTopics.push(key);
+            }
+        }
+    }
 
     const infoDiv = document.getElementById('sasbInfo');
     if (infoDiv) {
@@ -483,9 +489,8 @@ function renderLayer6(company) {
         if (isHeavy) {
             item.title = '權重: 2 (高度相關 - 依據 SASB 準則)';
         } else {
-            // 檢查 JSON 中是否有該產業欄位，若無則顯示未定義
-            const hasIndustryColumn = sasbRawData[0] && sasbRawData[0].hasOwnProperty(indName);
-            item.title = hasIndustryColumn ? '權重: 1 (一般相關)' : '權重: 未定義 (JSON中無此產業)';
+            // 檢查是否找到該產業
+            item.title = industryData ? '權重: 1 (一般相關)' : '權重: 未定義 (JSON中無此產業)';
         }
 
         container.appendChild(item);
@@ -736,10 +741,11 @@ async function loadSasbData() {
 
         sasbRawData = await response.json();
 
-        // 解析資料，生成議題列表
+        // 新結構: 以「產業」為主鍵，從第一筆資料的 keys 中提取議題列表
         if (sasbRawData.length > 0) {
-            SASB_TOPICS = sasbRawData.map(item => item["議題"]);
-            console.log("SASB 資料載入成功:", sasbRawData.length, "筆資料");
+            // 取得所有欄位名稱，排除「產業」欄位後即為議題列表
+            SASB_TOPICS = Object.keys(sasbRawData[0]).filter(key => key !== "產業");
+            console.log("SASB 資料載入成功:", sasbRawData.length, "筆產業資料,", SASB_TOPICS.length, "個議題");
         }
 
     } catch (error) {

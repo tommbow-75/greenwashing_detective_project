@@ -1,0 +1,402 @@
+[
+  {
+    "name": "面向",
+    "value": 368
+  },
+  {
+    "name": "永續",
+    "value": 315
+  },
+  {
+    "name": "旺宏",
+    "value": 313
+  },
+  {
+    "name": "環境",
+    "value": 243
+  },
+  {
+    "name": "發展",
+    "value": 236
+  },
+  {
+    "name": "社會",
+    "value": 190
+  },
+  {
+    "name": "經濟",
+    "value": 150
+  },
+  {
+    "name": "旺宏電子",
+    "value": 149
+  },
+  {
+    "name": "績效",
+    "value": 144
+  },
+  {
+    "name": "董事",
+    "value": 125
+  },
+  {
+    "name": "榮耀",
+    "value": 122
+  },
+  {
+    "name": "亮點",
+    "value": 121
+  },
+  {
+    "name": "經營者",
+    "value": 120
+  },
+  {
+    "name": "健康",
+    "value": 110
+  },
+  {
+    "name": "產品",
+    "value": 110
+  },
+  {
+    "name": "安全",
+    "value": 94
+  },
+  {
+    "name": "每年",
+    "value": 77
+  },
+  {
+    "name": "榮獲",
+    "value": 71
+  },
+  {
+    "name": "政策",
+    "value": 71
+  },
+  {
+    "name": "服務",
+    "value": 64
+  },
+  {
+    "name": "教育",
+    "value": 62
+  },
+  {
+    "name": "品質",
+    "value": 62
+  },
+  {
+    "name": "使用",
+    "value": 60
+  },
+  {
+    "name": "0.00",
+    "value": 60
+  },
+  {
+    "name": "定期",
+    "value": 59
+  },
+  {
+    "name": "風險管理",
+    "value": 56
+  },
+  {
+    "name": "要求",
+    "value": 56
+  },
+  {
+    "name": "資訊安全",
+    "value": 55
+  },
+  {
+    "name": "環保",
+    "value": 55
+  },
+  {
+    "name": "重大",
+    "value": 55
+  },
+  {
+    "name": "主管",
+    "value": 54
+  },
+  {
+    "name": "衝擊",
+    "value": 54
+  },
+  {
+    "name": "符合",
+    "value": 52
+  },
+  {
+    "name": "稽核",
+    "value": 52
+  },
+  {
+    "name": "訓練",
+    "value": 51
+  },
+  {
+    "name": "物料",
+    "value": 51
+  },
+  {
+    "name": "供應",
+    "value": 51
+  },
+  {
+    "name": "中心",
+    "value": 49
+  },
+  {
+    "name": "記憶體",
+    "value": 49
+  },
+  {
+    "name": "創新",
+    "value": 48
+  },
+  {
+    "name": "台灣",
+    "value": 48
+  },
+  {
+    "name": "學習",
+    "value": 48
+  },
+  {
+    "name": "溫室氣體",
+    "value": 47
+  },
+  {
+    "name": "保護",
+    "value": 47
+  },
+  {
+    "name": "人數",
+    "value": 47
+  },
+  {
+    "name": "廢棄物",
+    "value": 46
+  },
+  {
+    "name": "衛生",
+    "value": 46
+  },
+  {
+    "name": "調查",
+    "value": 46
+  },
+  {
+    "name": "綠色",
+    "value": 44
+  },
+  {
+    "name": "需求",
+    "value": 44
+  },
+  {
+    "name": "社會責任",
+    "value": 44
+  },
+  {
+    "name": "全球",
+    "value": 43
+  },
+  {
+    "name": "基金",
+    "value": 43
+  },
+  {
+    "name": "分析",
+    "value": 42
+  },
+  {
+    "name": "管理系",
+    "value": 41
+  },
+  {
+    "name": "課程",
+    "value": 41
+  },
+  {
+    "name": "排放",
+    "value": 41
+  },
+  {
+    "name": "建立",
+    "value": 41
+  },
+  {
+    "name": "各項",
+    "value": 41
+  },
+  {
+    "name": "設備",
+    "value": 40
+  },
+  {
+    "name": "應用",
+    "value": 40
+  },
+  {
+    "name": "技術",
+    "value": 39
+  },
+  {
+    "name": "資安",
+    "value": 39
+  },
+  {
+    "name": "生活",
+    "value": 38
+  },
+  {
+    "name": "內部",
+    "value": 38
+  },
+  {
+    "name": "能源",
+    "value": 37
+  },
+  {
+    "name": "電子",
+    "value": 37
+  },
+  {
+    "name": "事件",
+    "value": 36
+  },
+  {
+    "name": "外部",
+    "value": 36
+  },
+  {
+    "name": "依據",
+    "value": 36
+  },
+  {
+    "name": "Flash",
+    "value": 35
+  },
+  {
+    "name": "規劃",
+    "value": 35
+  },
+  {
+    "name": "委員會",
+    "value": 35
+  },
+  {
+    "name": "NOR",
+    "value": 34
+  },
+  {
+    "name": "氣候",
+    "value": 34
+  },
+  {
+    "name": "排放量",
+    "value": 34
+  },
+  {
+    "name": "財務",
+    "value": 34
+  },
+  {
+    "name": "新竹",
+    "value": 34
+  },
+  {
+    "name": "溝通",
+    "value": 34
+  },
+  {
+    "name": "能力",
+    "value": 33
+  },
+  {
+    "name": "成本",
+    "value": 33
+  },
+  {
+    "name": "100",
+    "value": 32
+  },
+  {
+    "name": "回收",
+    "value": 32
+  },
+  {
+    "name": "專業",
+    "value": 32
+  },
+  {
+    "name": "研發",
+    "value": 31
+  },
+  {
+    "name": "以上",
+    "value": 31
+  },
+  {
+    "name": "職業安全衛生",
+    "value": 31
+  },
+  {
+    "name": "小組",
+    "value": 31
+  },
+  {
+    "name": "人員",
+    "value": 31
+  },
+  {
+    "name": "10",
+    "value": 31
+  },
+  {
+    "name": "範疇",
+    "value": 31
+  },
+  {
+    "name": "國際",
+    "value": 30
+  },
+  {
+    "name": "科學",
+    "value": 30
+  },
+  {
+    "name": "合作",
+    "value": 30
+  },
+  {
+    "name": "價值",
+    "value": 30
+  },
+  {
+    "name": "11",
+    "value": 29
+  },
+  {
+    "name": "公益",
+    "value": 29
+  },
+  {
+    "name": "電腦",
+    "value": 29
+  },
+  {
+    "name": "減量",
+    "value": 29
+  },
+  {
+    "name": "社團",
+    "value": 28
+  }
+]

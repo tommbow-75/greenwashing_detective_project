@@ -1,0 +1,402 @@
+[
+  {
+    "name": "環境",
+    "value": 240
+  },
+  {
+    "name": "應商",
+    "value": 230
+  },
+  {
+    "name": "安全",
+    "value": 190
+  },
+  {
+    "name": "發展",
+    "value": 165
+  },
+  {
+    "name": "使用",
+    "value": 160
+  },
+  {
+    "name": "供應",
+    "value": 156
+  },
+  {
+    "name": "政策",
+    "value": 154
+  },
+  {
+    "name": "董事",
+    "value": 154
+  },
+  {
+    "name": "鴻海",
+    "value": 149
+  },
+  {
+    "name": "永續",
+    "value": 148
+  },
+  {
+    "name": "供應商",
+    "value": 146
+  },
+  {
+    "name": "產品",
+    "value": 144
+  },
+  {
+    "name": "稽核",
+    "value": 144
+  },
+  {
+    "name": "全球",
+    "value": 143
+  },
+  {
+    "name": "健康",
+    "value": 133
+  },
+  {
+    "name": "要求",
+    "value": 127
+  },
+  {
+    "name": "培訓",
+    "value": 126
+  },
+  {
+    "name": "建立",
+    "value": 121
+  },
+  {
+    "name": "重大",
+    "value": 115
+  },
+  {
+    "name": "教育",
+    "value": 109
+  },
+  {
+    "name": "綠色",
+    "value": 107
+  },
+  {
+    "name": "技術",
+    "value": 104
+  },
+  {
+    "name": "社會",
+    "value": 102
+  },
+  {
+    "name": "環保",
+    "value": 101
+  },
+  {
+    "name": "制定",
+    "value": 99
+  },
+  {
+    "name": "完成",
+    "value": 96
+  },
+  {
+    "name": "定期",
+    "value": 94
+  },
+  {
+    "name": "績效",
+    "value": 93
+  },
+  {
+    "name": "合作",
+    "value": 89
+  },
+  {
+    "name": "資源",
+    "value": 89
+  },
+  {
+    "name": "廠區",
+    "value": 88
+  },
+  {
+    "name": "排放",
+    "value": 84
+  },
+  {
+    "name": "內部",
+    "value": 84
+  },
+  {
+    "name": "科技",
+    "value": 83
+  },
+  {
+    "name": "承諾",
+    "value": 80
+  },
+  {
+    "name": "100%",
+    "value": 80
+  },
+  {
+    "name": "調查",
+    "value": 79
+  },
+  {
+    "name": "所有",
+    "value": 78
+  },
+  {
+    "name": "廢棄物",
+    "value": 76
+  },
+  {
+    "name": "創新",
+    "value": 73
+  },
+  {
+    "name": "地區",
+    "value": 71
+  },
+  {
+    "name": "本集團",
+    "value": 70
+  },
+  {
+    "name": "課程",
+    "value": 69
+  },
+  {
+    "name": "台灣",
+    "value": 68
+  },
+  {
+    "name": "生產",
+    "value": 68
+  },
+  {
+    "name": "學生",
+    "value": 68
+  },
+  {
+    "name": "分析",
+    "value": 67
+  },
+  {
+    "name": "採購",
+    "value": 67
+  },
+  {
+    "name": "節能",
+    "value": 67
+  },
+  {
+    "name": "能力",
+    "value": 67
+  },
+  {
+    "name": "氣候",
+    "value": 66
+  },
+  {
+    "name": "主管",
+    "value": 65
+  },
+  {
+    "name": "符合",
+    "value": 65
+  },
+  {
+    "name": "溝通",
+    "value": 64
+  },
+  {
+    "name": "人才",
+    "value": 64
+  },
+  {
+    "name": "外部",
+    "value": 63
+  },
+  {
+    "name": "能源",
+    "value": 63
+  },
+  {
+    "name": "學習",
+    "value": 63
+  },
+  {
+    "name": "服務",
+    "value": 63
+  },
+  {
+    "name": "其他",
+    "value": 62
+  },
+  {
+    "name": "每年",
+    "value": 61
+  },
+  {
+    "name": "同時",
+    "value": 61
+  },
+  {
+    "name": "事件",
+    "value": 61
+  },
+  {
+    "name": "政府",
+    "value": 60
+  },
+  {
+    "name": "行為",
+    "value": 60
+  },
+  {
+    "name": "委員會",
+    "value": 59
+  },
+  {
+    "name": "實現",
+    "value": 59
+  },
+  {
+    "name": "確保",
+    "value": 58
+  },
+  {
+    "name": "控制",
+    "value": 57
+  },
+  {
+    "name": "回收",
+    "value": 57
+  },
+  {
+    "name": "智慧",
+    "value": 56
+  },
+  {
+    "name": "溫室氣體",
+    "value": 56
+  },
+  {
+    "name": "專業",
+    "value": 55
+  },
+  {
+    "name": "行動",
+    "value": 54
+  },
+  {
+    "name": "此外",
+    "value": 54
+  },
+  {
+    "name": "職業",
+    "value": 54
+  },
+  {
+    "name": "人員",
+    "value": 54
+  },
+  {
+    "name": "資訊安全",
+    "value": 53
+  },
+  {
+    "name": "設計",
+    "value": 53
+  },
+  {
+    "name": "人權",
+    "value": 52
+  },
+  {
+    "name": "應鏈",
+    "value": 51
+  },
+  {
+    "name": "保護",
+    "value": 51
+  },
+  {
+    "name": "孩子",
+    "value": 51
+  },
+  {
+    "name": "研發",
+    "value": 50
+  },
+  {
+    "name": "利害關係人",
+    "value": 50
+  },
+  {
+    "name": "積極",
+    "value": 50
+  },
+  {
+    "name": "責任",
+    "value": 49
+  },
+  {
+    "name": "RBA",
+    "value": 49
+  },
+  {
+    "name": "風險管理",
+    "value": 48
+  },
+  {
+    "name": "遵守",
+    "value": 48
+  },
+  {
+    "name": "12",
+    "value": 47
+  },
+  {
+    "name": "設備",
+    "value": 47
+  },
+  {
+    "name": "產業",
+    "value": 46
+  },
+  {
+    "name": "多元",
+    "value": 45
+  },
+  {
+    "name": "作為",
+    "value": 45
+  },
+  {
+    "name": "投入",
+    "value": 45
+  },
+  {
+    "name": "勞工",
+    "value": 45
+  },
+  {
+    "name": "共同",
+    "value": 44
+  },
+  {
+    "name": "領域",
+    "value": 44
+  },
+  {
+    "name": "當地",
+    "value": 44
+  }
+]

@@ -62,7 +62,7 @@ class ESGReportAnalyzer:
     # ✅ 使用 Gemini 2.5 Flash Lite
     MODEL_NAME = "models/gemini-2.5-flash-lite" 
 
-    def __init__(self, target_year: int, target_company_id: str, company_name: str = ''):
+    def __init__(self, target_year: int, target_company_id: str, company_name: str = '', industry: str = ''):
         """
         初始化 ESG 報告書分析器
         
@@ -70,6 +70,7 @@ class ESGReportAnalyzer:
             target_year: 報告年份（例如：2024）
             target_company_id: 公司代碼（例如："2330"）
             company_name: 公司名稱（例如："台積電"）
+            industry: 產業類別（例如："半導體產業"）
         
         Raises:
             RuntimeError: 若找不到 GEMINI_API_KEY 環境變數
@@ -84,6 +85,7 @@ class ESGReportAnalyzer:
         self.target_year = target_year
         self.target_company_id = str(target_company_id).strip()
         self.company_name = company_name or f'公司{target_company_id}'
+        self.industry = industry or '其他'
 
         # 準備輸出目錄
         os.makedirs(self.OUTPUT_DIR, exist_ok=True)
@@ -96,6 +98,7 @@ class ESGReportAnalyzer:
         self.output_json_name = f"{self.target_year}_{self.target_company_id}_p1.json"
         
         print(f"[CONFIG] 輸出檔名已設定為: {self.output_json_name}")
+        print(f"[CONFIG] 產業類別: {self.industry}")
 
     def _parse_json_with_recovery(self, raw_json: str) -> List[Dict[str, Any]]:
         """
@@ -297,25 +300,28 @@ class ESGReportAnalyzer:
 {self.sasb_map_content}
 
 **分析核心任務：**
-1. **識別產業**：請閱讀報告書，從 SASB 權重表中識別該公司所屬的產業。
-2. **完整列出議題**：找出該產業在權重表中所有的 SASB 議題，每一項議題都必須輸出一筆資料，不可遺漏。
-3. **評分邏輯 (基於 Clarkson et al. 2008)**：
+1. **目標**：請依據SASB 產業權重表，識別{self.industry}產業的SASB議題，從報告中找出每一項議題對應的宣稱report_claim，並依以下評分邏輯進行評分。
+2. **評分邏輯 (基於 Clarkson et al. 2008)**：
    - 0分：未揭露。
    - 1分 (軟性)：僅有願景、口號或模糊承諾。
    - 2分 (定性)：有具體管理措施，但缺乏數據。
    - 3分 (硬性/定量)：具體量化數據、歷史趨勢。
    - 4分 (確信/查驗)：數據經過 ISAE 3000 或 AA1000 第三方查驗/確信 (須嚴格檢查附錄查證聲明)。
-4. **特殊規則**：若議題屬於高權重 (2.0) 且報告書完全未提及，請填寫 "report_claim": "N/A", "risk_score": 1。
+3. **重大議題檢核**：若該議題的數值為 2 (高重大性)，但報告書完全未提及，屬於重大資訊缺失。請務必填寫 "report_claim": "N/A", "risk_score": 1。
+4. **邏輯一致性檢查**：請檢查報告前後文。若同一議題的數據或宣稱出現矛盾 (例如不同章節數字不符)，請將 "Internal_consistency": false，並在 "greenwashing_factor" 具體指出矛盾點，同時將最終 risk_score 扣減 1 分 (最低為 0)；若一致則 "Internal_consistency": true。
+5. **漂綠因子分析(greenwashing_factor)**：(必須使用中文輸出) 格式為：[疑慮類型] 具體分析說明。
+    - 若 internal_consistency 為 false，此處必須包含矛盾點對比。
+    - 若 risk_score 低於 3 分，必須點出該議題在「透明度」或「量化程度」上的具體缺失。
 
 **輸出欄位要求 (嚴格執行)：**
 - **company**: "{self.company_name}"
 - **company_id**: "{self.target_company_id}"
 - **year**: "{self.target_year}"
-- **esg_category**: E / S / G
-- **sasb_topic**: 議題名稱
+- **esg_category**: 必須且僅能從 ["E", "S", "G"] 中選擇一個代碼。E 代表環境、S 代表社會、G 代表治理。
+- **sasb_topic**: 議題名稱（必須與 SASB 權重表中的議題名稱完全一致）
 - **page_number**: 證據來源頁碼
 - **report_claim**: 針對該議題，僅選取「最具數據代表性」的一段話。必須完整摘錄報告書原文，不得改寫。
-- **greenwashing_factor**: (必須使用中文輸出) 基於 Clarkson 理論分析該數據的漏洞、漂綠疑慮或揭露風險。
+- **greenwashing_factor**: 根據漂綠因子分析，填寫具體分析說明。
 - **risk_score**: 0~4 分
 - **internal_consistency**: (Boolean)
 - **key_word**: 根據 report_claim 內容，產生 3-5 個適合 Google News 搜尋的繁體中文關鍵字，以空格分隔。格式為：「公司名稱 + 核心指標/事件 + ESG相關詞」，例如「2024 台積電 淨零排放 RE100」或「 鴻海 碳排放強度 永續」。避免過長或抽象的詞彙。
@@ -399,7 +405,8 @@ def analyze_esg_report(pdf_path: str, year: int, company_code: str, company_name
         analyzer = ESGReportAnalyzer(
             target_year=int(year),
             target_company_id=str(company_code),
-            company_name=company_name
+            company_name=company_name,
+            industry=industry
         )
         
         # 2. 執行 AI 分析（會產生 P1 JSON 檔案）
