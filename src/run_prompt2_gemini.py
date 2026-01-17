@@ -471,4 +471,4 @@ if __name__ == "__main__":
     msci_path = DATA_FILES['MSCI_FLAG']
     output_path = os.path.join(PATHS['P2_JSON'], f'{year}_{company}_p2.json')
     
-    process_esg_news_verification(input_path, news_path, output_path)
+    process_esg_news_verification(input_path, news_path, msci_path, output_path)

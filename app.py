@@ -342,7 +342,7 @@ def query_company():
                     news_result = search_news_for_report(
                         year=year,
                         company_code=company_code,
-                        force_regenerate=False
+                        force_regenerate=True
                     )
                     
                     if news_result['success']:
@@ -424,9 +424,14 @@ def query_company():
                         final_analysis_items = json.load(f)
                     print(f"📂 載入 P3 JSON: {len(final_analysis_items)} 筆分析項目")
                 else:
-                    # P3 不存在時使用 P1 資料（fallback 但會缺少驗證資訊）
-                    print(f"⚠️ P3 JSON 不存在，使用 P1 分析結果")
-                    final_analysis_items = analysis_result['analysis_items']
+                    # P3 不存在，更新狀態為 failed
+                    print(f"❌ P3 JSON 不存在: {p3_path}")
+                    update_analysis_status(esg_id, 'failed')
+                    return jsonify({
+                        'status': 'failed',
+                        'message': f'分析流程未完成：找不到 P3 JSON 檔案 ({p3_path})。請確認 Step 5 (AI 驗證與評分調整) 和 Step 6 (來源可靠度驗證) 已成功執行。',
+                        'esg_id': esg_id
+                    }), 500
                 
                 # 提取基本資訊
                 company_name = report_info.get('company_name', '')
