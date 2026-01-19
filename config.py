@@ -54,7 +54,7 @@ PATHS = {
 DATA_FILES = {
     # SASB 相關
     'SASB_WEIGHT_MAP': os.path.join(PATHS['STATIC_DATA'], 'SASB_weightMap.json'),
-    'SASB_KEYWORD': os.path.join(PATHS['SRC_DIR'], 'sasb_keyword.json'),
+    'SASB_KEYWORD': os.path.join(PATHS['STATIC_DATA'], 'sasb_keyword.json'),
     
     # MSCI 標準
     'MSCI_FLAG': os.path.join(PATHS['STATIC_DATA'], 'msci_flag.json'),
