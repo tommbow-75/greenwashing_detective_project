@@ -162,6 +162,39 @@ let filteredData = []; // 搜尋過後的資料會存在這
 document.addEventListener('DOMContentLoaded', async () => {
     console.log("App initialized.");
 
+    // ========================================================
+    // 🆕 新增: 載入公司清單至下拉選單 (Datalist)
+    // ========================================================
+    try {
+        const response = await fetch('/static/data/companies.json');
+        const data = await response.json();
+        
+        // 格式化資料給 Tom Select 使用
+        const options = data.map(c => ({
+            value: c.id,
+            text: `${c.id} ${c.name}`
+        }));
+
+        // 初始化搜尋框
+        new TomSelect("#searchInput", {
+            options: options,
+            maxItems: 1,
+            maxOptions: 50, // 搜尋時最多顯示 50 筆，避免撐開版面
+            placeholder: "輸入公司代碼或名稱...",
+            create: false,
+            // 搜尋邏輯優化
+            score: function(search) {
+                var score = this.getScoreFunction(search);
+                return function(item) {
+                    return score(item);
+                };
+            }
+        });
+    } catch (err) {
+        console.error("載入失敗", err);
+    }
+    // ========================================================
+
     // 檢查資料是否成功從後端傳入
     if (typeof companiesData === 'undefined' || !companiesData) {
         console.error("錯誤：無法讀取 companiesData。請確認 HTML 是否正確注入資料。");

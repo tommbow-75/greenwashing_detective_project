@@ -785,3 +785,51 @@
             text-shadow: 0px 1px 2px rgba(0,0,0,0.2);
             z-index: 10;
         }
+        /* 1. 調整 Tom Select 的外層容器寬度，確保與原欄位一致 */
+            .ts-wrapper {
+                width: 100% !important;
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            /* 2. 核心：調整控制框的高度與內距 */
+            .ts-control {
+                min-height: 44px !important; /* 對齊計算後的總高度 */
+                padding: 12px !important;    /* 套用您圖中的 Padding 12 */
+                border: 0.667px solid #d0d0d0 !important; /* 套用您圖中的 Border 寬度 */
+                display: flex !important;
+                align-items: center !important;
+                box-sizing: border-box !important;
+            }
+
+            /* 3. 調整內部輸入文字的高度 */
+            .ts-control input {
+                height: 18.667px !important; /* 套用您圖中的內容高度 */
+                line-height: 18.667px !important;
+                font-size: 16px !important; /* 視需求微調字體大小 */
+                margin: 0 !important;
+            }
+
+            /* 4. 針對單選模式下的顯示文字位置微調 */
+            .ts-wrapper.single .ts-control .item {
+                line-height: 18.667px !important;
+            }
+
+            /* 放大控制框內的字體 */
+            .ts-control {
+                min-height: 44px !important;
+                padding: 12px !important;
+                font-size: 16px !important; /* 加大字體，通常 16px-18px 在手機上較易閱讀 */
+            }
+
+            /* 確保選中的項目垂直置中且字體正確 */
+            .ts-wrapper.single .ts-control .item {
+                font-size: 16px !important;
+                line-height: 20px !important; /* 配合字體大小稍微增加行高 */
+            }
+
+            /* 下拉選單內的選項字體也同步加大 */
+            .ts-dropdown .option {
+                font-size: 16px !important;
+                padding: 12px !important;
+            }
