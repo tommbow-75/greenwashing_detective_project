@@ -140,6 +140,33 @@ def index():
 
     return render_template('index.html', companies=companies_data)
 
+
+# ==================================================
+# 新增: 進度查詢 API
+# ==================================================
+@app.route('/api/check_progress/<esg_id>', methods=['GET'])
+def check_progress(esg_id):
+    from src.db_service import get_db_connection # 確保使用帶有 commit/close 的版本
+    try:
+        with get_db_connection() as conn:
+            with conn.cursor() as cursor:
+                sql = "SELECT analysis_status FROM company WHERE ESG_id = %s"
+                cursor.execute(sql, (esg_id,))
+                result = cursor.fetchone()
+
+                if not result:
+                    return jsonify({"stage": "unknown", "status": "not_found"}), 404
+
+                # 不預設為 stage1，直接回傳資料庫真實狀態
+                current_status = result["analysis_status"] or "processing"
+                
+                return jsonify({
+                    "stage": current_status,  # 這會對應前端的 data.stage
+                    "status": "completed" if current_status == "completed" else "processing"
+                })
+    except Exception as e:
+        return jsonify({"error": str(e), "status": "error"}), 500
+
 # 新增：查詢公司 ESG 資料的 API
 @app.route('/api/query_company', methods=['POST'])
 def query_company():
@@ -275,6 +302,7 @@ def query_company():
             
             try:
                 # Step 2: 下載 PDF
+                update_analysis_status(esg_id, 'stage1')
                 download_success, pdf_path_or_error = download_esg_report(year, company_code)
                 
                 if not download_success:
@@ -324,6 +352,7 @@ def query_company():
                 ai_thread = threading.Thread(target=run_ai_analysis, name="AIAnalysisThread")
                 
                 print("🚀 啟動平行處理：Word Cloud 與 AI 分析")
+                update_analysis_status(esg_id, 'stage2')
                 wordcloud_thread.start()
                 ai_thread.start()
                 
@@ -343,6 +372,7 @@ def query_company():
                 
                 # Step 4: 新聞爬蟲驗證 ✨ NEW
                 print("\n--- Step 4: 新聞爬蟲驗證 ---")
+                update_analysis_status(esg_id, 'stage3')
                 try:
                     from src.crawler_news import search_news_for_report
                     
@@ -366,6 +396,7 @@ def query_company():
                 
                 # Step 5: AI 驗證與評分調整 ✨ NEW
                 print("\n--- Step 5: AI 驗證與評分調整 ---")
+                update_analysis_status(esg_id, 'stage4')
                 try:
                     from src.run_prompt2_gemini import verify_esg_with_news
                     
@@ -392,6 +423,7 @@ def query_company():
                 
                 # Step 6: 來源可靠度驗證 ✨ NEW
                 print("\n--- Step 6: 來源可靠度驗證 ---")
+                update_analysis_status(esg_id, 'stage5')
                 try:
                     from src.pplx_api import verify_evidence_sources
                     
@@ -421,6 +453,7 @@ def query_company():
                 
                 # Step 7: 讀取 P3 JSON 並插入分析結果至資料庫
                 print("\n--- Step 7: 存入資料庫 ---")
+                update_analysis_status(esg_id, 'stage6')
                 import json
                 
                 # 讀取 P3 JSON（最終分析結果）

@@ -1,3 +1,149 @@
+// ============================================
+// 🆕 新增:進度追蹤控制器
+// ============================================
+class RealProgressController {
+    constructor() {
+        this.container = document.getElementById('progressContainer');
+        this.status = document.getElementById('progressStatus');
+        this.progressBarFill = document.getElementById('progressBarFill');
+        this.progressPercent = document.getElementById('progressPercent');
+        this.esgId = null;
+        this.pollInterval = null;
+        this.pollCount = 0;
+        this.maxPollAttempts = 300; 
+    }
+
+    show() {
+        if (this.container) {
+            this.container.style.display = 'block';
+            this.reset();
+        }
+    }
+
+    hide() {
+        if (this.container) {
+            this.container.style.display = 'none';
+            this.stopPolling();
+        }
+    }
+
+    reset() {
+        this.pollCount = 0;
+        if (this.progressBarFill) this.progressBarFill.style.width = '0%';
+        if (this.progressPercent) this.progressPercent.textContent = '0%';
+        if (this.status) this.status.textContent = '正在啟動分析流程...';
+    }
+
+    startPolling(esgId) {
+        this.esgId = esgId;
+        this.show();
+        
+        // 每 2 秒查詢一次
+        this.pollInterval = setInterval(() => {
+            this.checkProgress();
+        }, 2000);
+        
+        this.checkProgress();
+    }
+
+    stopPolling() {
+        if (this.pollInterval) {
+            clearInterval(this.pollInterval);
+            this.pollInterval = null;
+        }
+    }
+
+    async checkProgress() {
+        this.pollCount++;
+        
+        if (this.pollCount > this.maxPollAttempts) {
+            this.stopPolling();
+            alert('處理時間過長，請稍後重新搜尋公司代碼查看結果');
+            this.hide();
+            return;
+        }
+
+        try {
+        const response = await fetch(`/api/check_progress/${this.esgId}`);
+        const data = await response.json();
+        
+        console.log("收到進度更新:", data); // 偵錯用
+
+        // 如果後端給的是 analysis_status，這裡就要改寫
+        const currentStage = data.stage || data.analysis_status; 
+        const currentStatus = data.status || (currentStage === 'completed' ? 'completed' : 'processing');
+
+        // 更新 UI
+        this.updateSteps(currentStage, currentStatus);
+        
+        if (currentStatus === 'completed') {
+            this.stopPolling();
+            // ...
+        }
+    } catch (error) {
+        console.error('進度查詢錯誤:', error);
+    }
+}
+
+    // 🆕 UI 邏輯
+    updateSteps(currentStage, status) {
+        // 定義階段對應的百分比
+        const stageProgressMap = {
+            'stage1': 15,  // 下載PDF
+            'stage2': 30,  // 平行執行 Word Cloud 和 AI 分析
+            'stage3': 45,  // 新聞爬蟲驗證
+            'stage4': 60,  // AI 驗證與評分調整
+            'stage5': 75,  // 來源可靠度驗證
+            'stage6': 90,  // 讀取 P3 JSON 並插入分析結果至資料庫
+            'completed': 100
+        };
+
+        let targetPercent = stageProgressMap[currentStage] || 5;
+        
+        // 如果 status 已經是 completed，強迫到 100
+        if (status === 'completed') targetPercent = 100;
+
+        // 更新進度條寬度與文字
+        if (this.progressBarFill) {
+            this.progressBarFill.style.width = targetPercent + '%';
+        }
+        if (this.progressPercent) {
+            this.progressPercent.textContent = targetPercent + '%';
+        }
+
+        // 根據不同階段更新狀態文字，會顯示在前端
+        const stageMessageMap = {
+            'stage1': ' 正在檢索並下載永續報告書',
+            'stage2': ' AI 正在分析報告',
+            'stage3': ' 正在比對企業的外部新聞',
+            'stage4': ' 根據新聞調整漂綠風險評分中',
+            'stage5': ' 再次驗證新聞',
+            'stage6': ' 即將分析完成...',
+            'completed': ' 分析完成！即將顯示結果'
+        };
+        
+        if (this.status && stageMessageMap[currentStage]) {
+            this.status.textContent = stageMessageMap[currentStage];
+        }
+    }
+
+    markAllCompleted() {
+        if (this.progressBarFill) this.progressBarFill.style.width = '100%';
+        if (this.progressPercent) this.progressPercent.textContent = '100%';
+        if (this.status) this.status.textContent = '分析完成！';
+    }
+
+    async fetchCompletedData(esgId) {
+        const year = esgId.substring(0, 4);
+        const companyCode = esgId.substring(4);
+        // 呼叫原本的查詢函式，這會觸發 renderCompanies 顯示結果
+        await queryCompanyData(parseInt(year), companyCode);
+    }
+}
+
+// 🆕 初始化進度控制器
+const progressController = new RealProgressController();
+
 // --- 全域變數宣告 ---
 // 注意：companiesData 已經由 HTML 透過 Jinja2 傳入，這裡不需要再次宣告，否則會報錯。
 let sasbRawData = [];
@@ -848,6 +994,12 @@ async function queryCompanyData(year, companyCode) {
         // 先顯示載入中狀態/或重置狀態，避免舊錯誤訊息殘留
         showAnalysisStatus('processing', '查詢資料中...');
 
+        // 隱藏舊的狀態顯示
+        const oldStatusDisplay = document.getElementById('statusDisplay');
+        if (oldStatusDisplay) {
+            oldStatusDisplay.style.display = 'none';
+        }   
+
         const response = await fetch('/api/query_company', {
             method: 'POST',
             headers: {
@@ -996,7 +1148,15 @@ async function confirmAutoFetch(year, companyCode) {
     try {
         // 顯示處理中狀態
         showAnalysisStatus('processing', '正在啟動自動抓取與分析...');
-
+        const esgId = `${year}${companyCode}`;
+        
+        // 1. 隱藏其他狀態框
+        document.getElementById('statusDisplay').style.display = 'none';
+        
+        // 2. 啟動進度控制器
+        progressController.startPolling(esgId);
+        
+        // 3. 呼叫後端 API 啟動非同步處理
         const response = await fetch('/api/query_company', {
             method: 'POST',
             headers: {

@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from perplexity import Perplexity
 import glob
 import time
+from urllib.parse import urlparse
 
 load_dotenv()
 
@@ -18,9 +19,26 @@ HEADERS = {
 }
 TIMEOUT = 20
 
+def is_official_site(url, company_name):
+    """
+    簡單判斷網址是否為公司官網
+    """
+    parsed_url = urlparse(url)
+    domain = parsed_url.netloc.lower()
+    # 移除公司名稱中的常見後綴以便比對
+    clean_name = company_name.lower().replace("股份有限公司", "").replace("corp", "").replace("inc", "").strip()
+    
+    # 判斷網域是否包含公司名稱關鍵字
+    if clean_name in domain:
+        return True
+    return False
+
 def verify_single_url(url):
     """驗證單一 URL 的有效性並提取標題"""
     try:
+        if not url or not url.startswith('http'):
+            return {"url": url, "is_valid": False, "page_title": None}
+            
         url = url.strip().strip('"').strip("'")
         response = requests.get(url, headers=HEADERS, timeout=TIMEOUT, allow_redirects=True)
         
@@ -41,18 +59,21 @@ def verify_single_url(url):
     return {"url": url, "is_valid": False, "page_title": None}
 
 
-def search_with_perplexity(query):
-    """使用 Perplexity 搜尋"""
+def search_with_perplexity(query, company_name):
+    """使用 Perplexity 搜尋，並排除官網"""
     try:
         perplexity_client = Perplexity(api_key=os.environ.get("PERPLEXITY_API_KEY"))
-        prompt = f"提供關於「{query}」的1個可靠資訊來源網址。僅輸出JSON格式：{{\"urls\": [\"url1\"]}}"
+        # 強化 Prompt：明確要求排除官方網站，尋找第三方新聞或報告
+        prompt = (
+            f"提供關於「{query}」的1個可靠第三方資訊來源網址，請務必排除「{company_name}」的官方網站或官方域名的網址，僅輸出JSON格式：{{\"urls\": [\"url1\"]}}"
+        )
         
         response = perplexity_client.chat.completions.create(
             model="sonar",
             messages=[{"role": "user", "content": prompt}]
         )
         
-        usage = response.usage  # Access prompt_tokens, completion_tokens, total_tokens
+        usage = response.usage
         print(f"Perplexity API: Input={usage.prompt_tokens}, Output={usage.completion_tokens}, Total={usage.total_tokens}")
 
         content = response.choices[0].message.content
@@ -64,23 +85,23 @@ def search_with_perplexity(query):
         return []
 
 def find_alternative_url(company, year, evidence_summary, original_url):
-    """尋找替代的有效 URL"""
-    # 構建搜尋關鍵字
+    """尋找替代的有效第三方 URL"""
     search_query = f"{company} {year} ESG {evidence_summary[:50]}"
-    
-    print(f"  🔍 搜尋替代 URL: {search_query}")
+    print(f"  🔍 搜尋替代 URL (排除官網): {search_query}")
 
-
-    # 備援：Perplexity搜尋新聞
-    pplx_urls = search_with_perplexity(search_query)
+    pplx_urls = search_with_perplexity(search_query, company)
     for url in pplx_urls:
+        # 檢查是否為官方網站
+        if is_official_site(url, company):
+            print(f"  ⚠️ 偵測到為官網，跳過: {url}")
+            continue
+            
         verification = verify_single_url(url)
         if verification["is_valid"]:
-            print(f"  ✅ Perplexity 找到有效 URL: {url}")
+            print(f"  ✅ Perplexity 找到有效第三方 URL: {url}")
             return url
     
-    print(f"  ⚠️ 無法找到替代 URL，保留原網址")
-    return original_url
+    return None # 若找不到則回傳 None
 
 def verify_evidence_sources(year, company_code, force_regenerate=False):
     """
@@ -123,169 +144,111 @@ def verify_evidence_sources(year, company_code, force_regenerate=False):
         
         # 2. 檢查輸入檔案是否存在
         if not os.path.exists(input_file):
-            return {
-                'success': False,
-                'message': f'輸入檔案不存在: {input_file}',
-                'error': 'Input file not found'
-            }
+            return {'success': False, 'message': f'輸入檔案不存在: {input_file}', 'error': 'Input file not found'}
         
         # 3. 檢查輸出檔案是否已存在
         if os.path.exists(output_file) and not force_regenerate:
-            execution_time = time.perf_counter() - start_time
-            return {
-                'success': True,
-                'message': '來源驗證結果已存在',
-                'output_path': output_file,
-                'skipped': True,
-                'statistics': {
-                    'execution_time': execution_time
-                }
-            }
+            return {'success': True, 'message': '來源驗證結果已存在', 'output_path': output_file, 'skipped': True, 'statistics': {'execution_time': time.perf_counter() - start_time}}
         
         # 4. 讀取 P2 JSON
         print(f"📖 讀取檔案: {input_file}")
         with open(input_file, 'r', encoding='utf-8') as f:
             data = json.load(f)
         
-        total = len(data)
+        processed_data = [] # 用於存儲有效的結果
         verified_count = 0
         updated_count = 0
         failed_count = 0
         perplexity_calls = 0
         
-        print(f"\n開始驗證 {total} 筆資料...\n")
+        print(f"\n開始驗證資料...\n")
         
         # 5. 逐筆驗證 URL
         for idx, item in enumerate(data, 1):
-            url = item.get("external_evidence_url", "")
+            url = item.get("external_evidence_url", "").strip()
             company = item.get("company", "")
             year_str = item.get("year", "")
             evidence = item.get("external_evidence", "")
             
-            print(f"[{idx}/{total}] 處理: {company} {year_str} - {item.get('esg_category')}")
-            print(f"  原始 URL: {url}")
+            # --- 需求 1: 沒網址直接跳過 ---
+            if not url:
+                print(f"[{idx}] ⏭️ 項目無網址，直接跳過")
+                continue
+
+            print(f"[{idx}] 處理: {company} {year_str} - {item.get('esg_category')}")
             
             # 驗證原始 URL
             verification = verify_single_url(url)
             
             if verification["is_valid"]:
-                print(f"  ✅ URL 有效 (狀態碼: {verification['status_code']})")
+                print(f"  ✅ URL 有效")
                 verified_count += 1
                 item["is_verified"] = "True"
+                processed_data.append(item)
             else:
-                print(f"  ❌ URL 失效，開始尋找替代...")
+                print(f"  ❌ URL 失效，尋找替代第三方來源...")
                 perplexity_calls += 1
                 new_url = find_alternative_url(company, year_str, evidence, url)
                 
-                if new_url != url:
+                if new_url:
                     item["external_evidence_url"] = new_url
                     item["is_verified"] = "True"
                     updated_count += 1
-                    print(f"  🔄 已更新為新 URL")
+                    processed_data.append(item)
+                    print(f"  🔄 已更新為第三方 URL")
                 else:
-                    item["is_verified"] = "Failed"
                     failed_count += 1
+                    print(f"  ⚠️ 無法找到替代來源，此項不產出")
             
-            print()
-        
-        # 6. 寫入 P3 JSON
+        # 6. 寫入 P3 JSON (僅包含 processed_data)
         with open(output_file, 'w', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
-        
-        execution_time = time.perf_counter() - start_time
-        
-        # 7. 返回結果
-        print(f"✅ 處理完成！")
-        print(f"📊 統計結果:")
-        print(f"  - 總共處理: {total} 筆")
-        print(f"  - 有效 URL: {verified_count} 筆")
-        print(f"  - 已更新 URL: {updated_count} 筆")
-        print(f"  - 失敗: {failed_count} 筆")
-        print(f"📁 輸出檔案: {output_file}")
+            json.dump(processed_data, f, ensure_ascii=False, indent=2)
         
         return {
             'success': True,
             'message': '來源驗證完成',
             'output_path': output_file,
-            'skipped': False,
             'statistics': {
-                'processed_items': total,
+                'processed_items': len(processed_data),
                 'verified_count': verified_count,
                 'updated_count': updated_count,
                 'failed_count': failed_count,
-                'perplexity_calls': perplexity_calls,
-                'execution_time': execution_time
+                'execution_time': time.perf_counter() - start_time
             }
         }
-    
     except Exception as e:
-        execution_time = time.perf_counter() - start_time
-        error_msg = str(e)
-        print(f"❌ 驗證過程發生錯誤: {error_msg}")
-        
-        return {
-            'success': False,
-            'message': f'驗證失敗: {error_msg}',
-            'error': error_msg,
-            'statistics': {
-                'execution_time': execution_time
-            }
-        }
+        return {'success': False, 'message': f'驗證失敗: {str(e)}', 'error': str(e)}
 
 def process_json_file(input_file, output_file):
-    """處理 JSON 檔案中的所有 URL"""
-    print(f"📖 讀取檔案: {input_file}")
-    
+    """處理 JSON 檔案中的所有 URL (CLI 直接執行版本)"""
     with open(input_file, 'r', encoding='utf-8') as f:
         data = json.load(f)
     
-    total = len(data)
-    verified_count = 0
-    updated_count = 0
-    
-    print(f"\n開始驗證 {total} 筆資料...\n")
-    
-    for idx, item in enumerate(data, 1):
-        url = item.get("external_evidence_url", "")
+    processed_data = []
+    for item in data:
+        url = item.get("external_evidence_url", "").strip()
         company = item.get("company", "")
         year = item.get("year", "")
         evidence = item.get("external_evidence", "")
         
-        print(f"[{idx}/{total}] 處理: {company} {year} - {item.get('esg_category')}")
-        print(f"  原始 URL: {url}")
-        
-        # 驗證原始 URL
-        verification = verify_single_url(url)
-        
-        if verification["is_valid"]:
-            print(f"  ✅ URL 有效 (狀態碼: {verification['status_code']})")
-            verified_count += 1
-            item["is_verified"] = "True"
-        else:
-            print(f"  ❌ URL 失效，開始尋找替代...")
-            new_url = find_alternative_url(company, year, evidence, url)
+        if not url:
+            continue
             
-            if new_url != url:
+        verification = verify_single_url(url)
+        if verification["is_valid"]:
+            item["is_verified"] = "True"
+            processed_data.append(item)
+        else:
+            new_url = find_alternative_url(company, year, evidence, url)
+            if new_url:
                 item["external_evidence_url"] = new_url
                 item["is_verified"] = "True"
-                updated_count += 1
-                print(f" 🔄 已更新為新 URL")
-            else:
-                item["is_verified"] = "Failed"
-            
-        print()
+                processed_data.append(item)
     
-    
-    print(f"✅ 處理完成！")
-    print(f"📊 統計結果:")
-    print(f"  - 總共處理: {total} 筆")
-    print(f"  - 有效 URL: {verified_count} 筆")
-    print(f"  - 已更新 URL: {updated_count} 筆")
-    print(f"  - 失敗: {total - verified_count - updated_count} 筆")
-    print(f"📁 輸出檔案: {output_file}")
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(processed_data, f, ensure_ascii=False, indent=2)
 
 def get_latest_file(folder_path, extension=".json"):
-    """自動偵測資料夾中最新的 JSON 檔案"""
     files = glob.glob(os.path.join(folder_path, f"*{extension}"))
     return max(files, key=os.path.getmtime) if files else None
 
@@ -300,28 +263,22 @@ if __name__ == "__main__":
 
     # 2. 抓取最新檔案
     latest_path = get_latest_file(INPUT_FOLDER)
-
     if latest_path:
         # 3. 讀取內容以獲取動態命名資訊
         try:
             with open(latest_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
-            
             # 取得公司與年份 (移除空格以防檔名出錯)
-            first_item = data[0] if isinstance(data, list) else data
+            first_item = data[0] if isinstance(data, list) and data else {}
             company = str(first_item.get("company", "Unknown")).replace(" ", "")
             year = str(first_item.get("year", "Unknown")).replace(" ", "")
 
             # 4. 精簡定義輸出路徑
             # 直接在呼叫函式時組合路徑與檔名
             output_file = f"{OUTPUT_FOLDER}/{year}_{company}_p3.json"
-
+            
             # 5. 執行核心驗證邏輯
             process_json_file(latest_path, output_file)
-
+            print(f"⏱️ 執行總耗時: {time.perf_counter() - script_start_time:.2f} 秒")
         except Exception as e:
-            print(f"❌ 解析檔案內容時發生錯誤: {e}")
-
-        # (time-2) 計算總耗時
-        total_duration = time.perf_counter() - script_start_time
-        print(f"⏱️ 執行總耗時: {total_duration:.2f} 秒")    
+            print(f"❌ 錯誤: {e}")

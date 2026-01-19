@@ -84,6 +84,27 @@
             </div>
         </div>
 
+                <!-- 🆕新增進度條區域 -->
+        <div id="progressContainer" style="display: none; text-align: center; padding: 40px 20px;">
+            <!-- 上方顯示當前狀態文字 -->
+            <div id="progressStatus" style="margin-bottom: 15px; font-weight: bold; color: var(--primary); font-size: 1.1rem;">
+                正在準備分析...
+            </div>
+
+            <!-- 進度條外框 -->
+            <div class="progress-bar-wrapper">
+                <!-- 進度條填充部分 -->
+                <div id="progressBarFill" class="progress-bar-fill">
+                    <!-- 百分比文字顯示在條狀物中心 -->
+                    <span id="progressPercent">0%</span>
+                </div>
+            </div>
+            
+            <p style="margin-top: 15px; color: var(--text-secondary); font-size: 0.9rem;">
+                AI 正在深度解析永續報告書，這可能需要 1-3 分鐘，請勿關閉視窗
+            </p>
+        </div>
+
         <!-- 狀態顯示區域 -->
         <div id="statusDisplay" class="status-display" style="margin-top: 2rem; display: none;">
             <div id="statusContent" class="status-content"></div>
