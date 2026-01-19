@@ -6,7 +6,7 @@ from pymysql.cursors import DictCursor
 import os
 import json
 from dotenv import load_dotenv
-from app.calculate_esg import calculate_esg_scores
+from src.calculate_esg import calculate_esg_scores
 from google.cloud.sql.connector import Connector, IPTypes
 import pymysql.cursors
 # 新增開始
@@ -16,6 +16,9 @@ HEADERS = {
 }
 TIMEOUT = 20
 # 新增結束
+from src.calculate_esg import calculate_esg_scores
+from config import PATHS
+
 load_dotenv()
 
 # ==============Flask 部分========================
@@ -160,9 +163,9 @@ def query_company():
     """
     try:
         # 延遲導入以避免循環依賴或初始化錯誤，並確保能被 try-except 捕獲
-        from db_service import query_company_data, insert_company_basic, update_analysis_status, insert_analysis_results
-        from crawler_esgReport import validate_report_exists, download_esg_report
-        from gemini_api import analyze_esg_report
+        from src.db_service import query_company_data, insert_company_basic, update_analysis_status, insert_analysis_results
+        from src.crawler_esgReport import validate_report_exists, download_esg_report
+        from src.gemini_api import analyze_esg_report
         
         # 解析請求參數
         data = request.get_json()
@@ -188,7 +191,7 @@ def query_company():
         # 情況 A: completed - 直接回傳資料
         if result['status'] == 'completed':
             # 計算 ESG 分數（使用現有邏輯）
-            from app.calculate_esg import calculate_esg_scores
+            from src.calculate_esg import calculate_esg_scores
             
             company_data = result['data']
             details = result['details']
@@ -296,7 +299,7 @@ def query_company():
                     """Word Cloud 生成執行緒"""
                     nonlocal wordcloud_result
                     try:
-                        from word_cloud.word_cloud import generate_wordcloud
+                        from src.word_cloud import generate_wordcloud
                         wordcloud_result = generate_wordcloud(year, company_code, pdf_path, force_regenerate=False)
                     except Exception as e:
                         wordcloud_result = {'success': False, 'error': str(e)}
@@ -341,12 +344,12 @@ def query_company():
                 # Step 4: 新聞爬蟲驗證 ✨ NEW
                 print("\n--- Step 4: 新聞爬蟲驗證 ---")
                 try:
-                    from news_search.crawler_news import search_news_for_report
+                    from src.crawler_news import search_news_for_report
                     
                     news_result = search_news_for_report(
                         year=year,
                         company_code=company_code,
-                        force_regenerate=False
+                        force_regenerate=True
                     )
                     
                     if news_result['success']:
@@ -364,7 +367,7 @@ def query_company():
                 # Step 5: AI 驗證與評分調整 ✨ NEW
                 print("\n--- Step 5: AI 驗證與評分調整 ---")
                 try:
-                    from run_prompt2_gemini import verify_esg_with_news
+                    from src.run_prompt2_gemini import verify_esg_with_news
                     
                     verify_result = verify_esg_with_news(
                         year=year,
@@ -390,7 +393,7 @@ def query_company():
                 # Step 6: 來源可靠度驗證 ✨ NEW
                 print("\n--- Step 6: 來源可靠度驗證 ---")
                 try:
-                    from pplx_api import verify_evidence_sources
+                    from src.pplx_api import verify_evidence_sources
                     
                     pplx_result = verify_evidence_sources(
                         year=year,
@@ -421,16 +424,21 @@ def query_company():
                 import json
                 
                 # 讀取 P3 JSON（最終分析結果）
-                p3_path = f"temp_data/prompt3_json/{year}_{company_code}_p3.json"
+                p3_path = os.path.join(PATHS['P3_JSON'], f'{year}_{company_code}_p3.json')
                 
                 if os.path.exists(p3_path):
                     with open(p3_path, 'r', encoding='utf-8') as f:
                         final_analysis_items = json.load(f)
                     print(f"📂 載入 P3 JSON: {len(final_analysis_items)} 筆分析項目")
                 else:
-                    # P3 不存在時使用 P1 資料（fallback 但會缺少驗證資訊）
-                    print(f"⚠️ P3 JSON 不存在，使用 P1 分析結果")
-                    final_analysis_items = analysis_result['analysis_items']
+                    # P3 不存在，更新狀態為 failed
+                    print(f"❌ P3 JSON 不存在: {p3_path}")
+                    update_analysis_status(esg_id, 'failed')
+                    return jsonify({
+                        'status': 'failed',
+                        'message': f'分析流程未完成：找不到 P3 JSON 檔案 ({p3_path})。請確認 Step 5 (AI 驗證與評分調整) 和 Step 6 (來源可靠度驗證) 已成功執行。',
+                        'esg_id': esg_id
+                    }), 500
                 
                 # 提取基本資訊
                 company_name = report_info.get('company_name', '')
@@ -460,7 +468,7 @@ def query_company():
                 final_result = query_company_data(year, company_code)
                 
                 if final_result['status'] == 'completed':
-                    from app.calculate_esg import calculate_esg_scores
+                    from src.calculate_esg import calculate_esg_scores
                     
                     company_data = final_result['data']
                     details = final_result['details']
@@ -511,7 +519,7 @@ def query_company():
 # Serve word cloud JSON files
 @app.route('/word_cloud/wc_output/<filename>')
 def serve_wordcloud(filename):
-    return send_from_directory('word_cloud/wc_output', filename)
+    return send_from_directory(PATHS['WORD_CLOUD_OUTPUT'], filename)
 
 # 如果需要 API 格式 (Optional)
 @app.route('/api/companies')
