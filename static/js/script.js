@@ -11,6 +11,7 @@ class RealProgressController {
         this.pollInterval = null;
         this.pollCount = 0;
         this.maxPollAttempts = 450; // 延長至 15 分鐘 (2s * 450)
+        this.isCompleted = false;   // 新增：確保完成後不再執行任何計時邏輯
     }
 
     show() {
@@ -29,12 +30,14 @@ class RealProgressController {
 
     reset() {
         this.pollCount = 0;
+        this.isCompleted = false; // 重置狀態
         if (this.progressBarFill) this.progressBarFill.style.width = '0%';
         if (this.progressPercent) this.progressPercent.textContent = '0%';
         if (this.status) this.status.textContent = '正在啟動分析流程...';
     }
 
     startPolling(esgId) {
+        this.stopPolling(); // 啟動前先確保舊的已清除
         this.esgId = esgId;
         this.show();
         
@@ -54,6 +57,7 @@ class RealProgressController {
     }
 
     async checkProgress() {
+        if (this.isCompleted) return;
         this.pollCount++;
         
         if (this.pollCount > this.maxPollAttempts) {
@@ -78,6 +82,7 @@ class RealProgressController {
 
         // 2. 如果狀態是完成
             if (currentStatus === 'completed') {
+                this.isCompleted = true;
                 this.stopPolling();
                 
                 // 強制將進度條設為 100% (確保 UI 顯示一致)
