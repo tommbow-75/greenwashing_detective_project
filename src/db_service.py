@@ -133,11 +133,11 @@ def insert_company_basic(year, company_code, company_name='', industry='', url='
                 # 插入基本資料
                 sql = """
                     INSERT INTO company 
-                    (ESG_id, company_name, industry, company_code, Report_year, URL, analysis_status)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s)
+                    (ESG_id, company_name, industry, company_code, Report_year, total_score, URL, analysis_status)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 """
-                cursor.execute(sql, (esg_id, company_name, industry, company_code, year, url, status))
-                
+                cursor.execute(sql, (esg_id, company_name, industry, company_code, year, 0, url, status))
+                conn.commit()
                 return (True, esg_id, "基本資料已插入")
     
     except Exception as e:
@@ -191,16 +191,22 @@ def insert_analysis_results(esg_id, company_name, industry, url, analysis_items)
     """
     插入完整的分析結果至 company_report 表，並更新 company 表的基本資料
     """
+    from src.calculate_esg import calculate_esg_scores
+    esg_records = [{"ESG_category": i.get("esg_category", ""), 
+                    "SASB_topic": i.get("sasb_topic", ""), 
+                    "adjustment_score": float(i.get("adjustment_score", 0))} for i in analysis_items]
+    total_score = calculate_esg_scores(industry, esg_records).get("Total", 0)
+
     try:
         with get_db_connection() as conn:
             with conn.cursor() as cursor:
                 # 1. 更新 company 表的基本資料
                 update_sql = """
                     UPDATE company 
-                    SET company_name = %s, industry = %s, URL = %s
+                    SET company_name = %s, industry = %s, total_score = %s, URL = %s
                     WHERE ESG_id = %s
                 """
-                cursor.execute(update_sql, (company_name, industry, url, esg_id))
+                cursor.execute(update_sql, (company_name, industry, total_score, url, esg_id))
                 
                 # 2. 插入分析結果至 company_report 表
                 if analysis_items:

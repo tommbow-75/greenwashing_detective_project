@@ -219,8 +219,8 @@ def generate_wordcloud(
     # === 8. 生成 JSON ===
     word_cloud_json = [
         {"name": word, "value": count}
-        for word, count in word_counts.most_common(100)
-    ]
+        for word, count in word_counts.most_common(82)
+    ][2:]
     
     # === 9. 儲存檔案 ===
     try:

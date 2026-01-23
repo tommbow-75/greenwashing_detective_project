@@ -55,3 +55,4 @@ SBTi
 DEI
 GRI準則
 SASB準則
+供應商

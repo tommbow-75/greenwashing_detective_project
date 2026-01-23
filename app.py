@@ -19,6 +19,35 @@ app = Flask(__name__)
 import time
 ACTIVE_PROCESSING = {}  # {esg_id: start_timestamp}
 
+def cleanup_temp_files(year, company_code, company_name):
+    """當整個流程完全成功後，清理所有暫存 JSON 與 PDF"""
+    file_targets = [
+        # 1. ESG 報告 PDF
+        os.path.join(PATHS['ESG_REPORTS'], f"{year}_{company_code}_{company_name}_永續報告書.pdf"),
+        
+        # 2. Stage 2 產出的 P1 JSON
+        os.path.join(PATHS['P1_JSON'], f"{year}_{company_code}_p1.json"),
+        
+        # 3. Stage 3 產出的 News JSON
+        os.path.join(PATHS['NEWS_OUTPUT'], f"{year}_{company_code}_news.json"),
+        
+        # 4. Stage 4 產出的 P2 JSON
+        os.path.join(PATHS['P2_JSON'], f"{year}_{company_code}_p2.json"),
+        
+        # 5. Stage 5 產出的 P3 JSON
+        os.path.join(PATHS['P3_JSON'], f"{year}_{company_code}_p3.json"),
+    ]
+    
+    print(f"🧹 開始執行最終清理流程 ({year}_{company_code})...")
+    for file_path in file_targets:
+        try:
+            if os.path.exists(file_path):
+                os.remove(file_path)
+                print(f"  ✅ 已刪除: {os.path.basename(file_path)}")
+        except Exception as e:
+            # 使用 print 或 logging 記錄錯誤，但不中斷主程式
+            print(f"  ⚠️ 無法刪除 {file_path}: {e}")
+
 def mark_processing_start(esg_id):
     """標記開始處理某公司"""
     ACTIVE_PROCESSING[esg_id] = time.time()
@@ -546,11 +575,11 @@ def query_company():
                                 stats = pplx_result['statistics']
                                 print(f"✅ 來源驗證完成")
                                 print(f"   輸出檔案: {pplx_result['output_path']}")
-                                print(f"   處理項目: {stats['processed_items']}")
+                                print(f"   輸入項目: {stats['total_input']}")
+                                print(f"   輸出項目: {stats['total_output']}")
                                 print(f"   有效 URL: {stats['verified_count']}")
                                 print(f"   更新 URL: {stats['updated_count']}")
                                 print(f"   失敗項目: {stats['failed_count']}")
-                                print(f"   Perplexity 調用: {stats['perplexity_calls']} 次")
                                 print(f"   執行時間: {stats['execution_time']:.2f} 秒")
                         else:
                             print(f"⚠️ 來源驗證失敗：{pplx_result.get('error')}（不影響主流程）")
@@ -629,6 +658,8 @@ def query_company():
                         'layer4Data': details
                     }
                     
+                    # 🆕 在這裡執行統一清理
+                    cleanup_temp_files(year, company_code, company_name)
                     # 🆕 標記處理結束
                     mark_processing_end(esg_id)
                     return jsonify({

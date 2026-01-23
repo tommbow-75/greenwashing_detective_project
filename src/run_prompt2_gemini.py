@@ -173,8 +173,8 @@ def process_esg_news_verification(input_json_path, news_json_path, msci_json_pat
 **risk_score**: {original_data[0]['risk_score']},
 **external_evidence**: 驗證資料標題或'無相關新聞證據',
 **external_evidence_url**: 驗證資料新聞連結或空字串,
-**consistency_status**: 一致/部分符合/不一致,
-**msci_flag**: Green/Yellow/Orange/Red,
+**consistency_status**: 一致/部分符合/部分符合/不一致(分別對應Green/Yellow/Orange/Red),
+**msci_flag**: Green/Yellow/Orange/Red(分別對應一致/部分符合/部分符合/不一致),
 **adjustment_score**: 調整後分數（最低為0）
 
 
