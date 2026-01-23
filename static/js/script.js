@@ -9,9 +9,12 @@ class RealProgressController {
         this.progressPercent = document.getElementById('progressPercent');
         this.esgId = null;
         this.pollInterval = null;
+        this.smoothInterval = null; // 🆕 新增：用於控制平滑動畫的計時器
         this.pollCount = 0;
-        this.maxPollAttempts = 450; // 延長至 15 分鐘 (2s * 450)
+        this.maxPollAttempts = 500; // 延長至 25 分鐘 (3s * 500)
         this.isCompleted = false;   // 新增：確保完成後不再執行任何計時邏輯
+        this.targetPercent = 0;      // 🆕 實際後端回傳的階段百分比
+        this.displayPercent = 0;     // 🆕 目前畫面上顯示的百分比
     }
 
     show() {
@@ -25,12 +28,15 @@ class RealProgressController {
         if (this.container) {
             this.container.style.display = 'none';
             this.stopPolling();
+            this.stopSmoothing(); // 🆕 隱藏時停止動畫
         }
     }
 
     reset() {
         this.pollCount = 0;
         this.isCompleted = false; // 重置狀態
+        this.targetPercent = 0;
+        this.displayPercent = 0;
         if (this.progressBarFill) this.progressBarFill.style.width = '0%';
         if (this.progressPercent) this.progressPercent.textContent = '0%';
         if (this.status) this.status.textContent = '正在啟動分析流程...';
@@ -38,14 +44,22 @@ class RealProgressController {
 
     startPolling(esgId) {
         this.stopPolling(); // 啟動前先確保舊的已清除
+        this.stopSmoothing(); 
         this.esgId = esgId;
         this.show();
 
-        // 每 2 秒查詢一次
+        // 初始化目標為 7% (stage1)
+        this.targetPercent = 7;
+        this.displayPercent = 0;
+        this.isCompleted = false;
+        this.pollCount = 0;
+
+        // 每 3 秒查詢一次
         this.pollInterval = setInterval(() => {
             this.checkProgress();
-        }, 2000);
+        }, 3000);
 
+        this.startSmoothing();
         this.checkProgress();
     }
 
@@ -53,15 +67,73 @@ class RealProgressController {
         if (this.pollInterval) {
             clearInterval(this.pollInterval);
             this.pollInterval = null;
+            console.log('⏹️  進度查詢計時器已停止');
         }
     }
 
+    // 🆕 停止平滑動畫
+    stopSmoothing() {
+        if (this.smoothInterval) {
+            clearInterval(this.smoothInterval);
+            this.smoothInterval = null;
+            console.log('⏹️  進度條動畫計時器已停止');
+        }
+    }
+
+    // 🆕 平滑動畫引擎核心邏輯
+    startSmoothing() {
+        this.smoothInterval = setInterval(() => {
+            if (this.isCompleted) {
+                // 如果已完成，平滑地衝向 100
+                if (this.displayPercent < 100) {
+                    // 使用漸進式加速（距離100越近越慢）
+                    const remainingPercent = 100 - this.displayPercent;
+                    if (remainingPercent > 5) {
+                        this.displayPercent += 0.5; // 中期：每步 0.5%
+                    } else {
+                        this.displayPercent += 0.1; // 最後階段：每步 0.1%
+                    }
+                    this.displayPercent = Math.min(this.displayPercent, 100);
+                } else {
+                    this.displayPercent = 100;
+                    this.stopSmoothing();
+                    console.log('✅ 進度條動畫已完成');
+                }
+            } else {
+                // 尚未完成時的邏輯 - 不斷漸進式接近目標值
+                if (this.displayPercent < this.targetPercent) {
+                    // 計算距離目標的差距
+                    const gap = this.targetPercent - this.displayPercent;
+                    
+                    if (gap > 10) {
+                        // 差距大：較快步進
+                        this.displayPercent += Math.min(0.5, gap * 0.1);
+                    } else {
+                        // 差距小：緩慢接近
+                        this.displayPercent += Math.min(0.2, gap * 0.05);
+                    }
+                } else if (this.displayPercent < 98) {
+                    // 已追上目標但還沒完成，則非常慢速爬行（0.01%/次）
+                    // 這樣進度條會不斷向前推進，但絕不會超過 98%
+                    this.displayPercent += 0.01;
+                }
+            }
+
+            // 更新實際 DOM
+            this.updateUI(this.displayPercent);
+        }, 100); // 100ms 更新一次，視覺上非常流暢
+    }
+
+
     async checkProgress() {
+        // 如果已完成，直接返回，不再執行任何檢查
         if (this.isCompleted) return;
+        
         this.pollCount++;
 
         if (this.pollCount > this.maxPollAttempts) {
             this.stopPolling();
+            this.stopSmoothing();
             alert('處理時間過長，請稍後重新搜尋公司代碼查看結果');
             this.hide();
             return;
@@ -77,20 +149,26 @@ class RealProgressController {
             const currentStage = data.stage || data.analysis_status;
             const currentStatus = data.status || (currentStage === 'completed' ? 'completed' : 'processing');
 
-            // 1. 先更新 UI 到對應進度
-            this.updateSteps(currentStage, currentStatus);
+            // 更新進度資訊（包含狀態文字和目標百分比）
+            this.updateStageInfo(currentStage, currentStatus);
 
-            // 2. 如果狀態是完成
+            // 如果狀態是完成
             if (currentStatus === 'completed') {
                 this.isCompleted = true;
-                this.stopPolling();
+                this.targetPercent = 100;
+                
+                // 立即停止所有計時器，避免用戶被踢出
+                this.stopPolling();      // 停止進度查詢
+                this.stopSmoothing();    // 停止動畫引擎
 
                 // 強制將進度條設為 100% (確保 UI 顯示一致)
                 this.markAllCompleted();
 
+                console.log('✅ 分析完成，所有計時器已停止');
+
                 // 停留1.5秒 再隱藏並顯示結果
                 setTimeout(async () => {
-                    this.hide(); // 這也會呼叫 stopPolling，但前面已經停了所以沒關係
+                    this.hide(); // 這也會呼叫 stopPolling 和 stopSmoothing，但已經停了所以沒關係
 
                     // 執行完成後的資料抓取
                     if (this.esgId) {
@@ -103,31 +181,24 @@ class RealProgressController {
         }
     }
 
-    // 🆕 UI 邏輯
-    updateSteps(currentStage, status) {
-        // 定義階段對應的百分比
+    // 🆕 UI 邏輯 - 根據階段更新進度資訊和目標百分比
+    updateStageInfo(currentStage, status) {
+        // 定義階段對應的百分比（目標值，進度條會漸進式地向此值接近）
         const stageProgressMap = {
-            'stage1': 15,  // 下載PDF
-            'stage2': 30,  // 平行執行 Word Cloud 和 AI 分析
-            'stage3': 45,  // 新聞爬蟲驗證
-            'stage4': 60,  // AI 驗證與評分調整
-            'stage5': 75,  // 來源可靠度驗證
-            'stage6': 90,  // 讀取 P3 JSON 並插入分析結果至資料庫
+            'stage1': 8,  // 下載PDF
+            'stage2': 45,  // 平行執行 Word Cloud 和 AI 分析
+            'stage3': 58,  // 新聞爬蟲驗證
+            'stage4': 85,  // AI 驗證與評分調整
+            'stage5': 92,  // 來源可靠度驗證
+            'stage6': 97,  // 讀取 P3 JSON 並插入分析結果至資料庫
             'completed': 100
         };
 
-        let targetPercent = stageProgressMap[currentStage] || 5;
+        // 設定目標進度（進度條會漸進式地向此值接近，而不是跳躍）
+        this.targetPercent = stageProgressMap[currentStage] || 5;
 
         // 如果 status 已經是 completed，強迫到 100
-        if (status === 'completed') targetPercent = 100;
-
-        // 更新進度條寬度與文字
-        if (this.progressBarFill) {
-            this.progressBarFill.style.width = targetPercent + '%';
-        }
-        if (this.progressPercent) {
-            this.progressPercent.textContent = targetPercent + '%';
-        }
+        if (status === 'completed') this.targetPercent = 100;
 
         // 根據不同階段更新狀態文字，會顯示在前端
         const stageMessageMap = {
@@ -142,6 +213,22 @@ class RealProgressController {
 
         if (this.status && stageMessageMap[currentStage]) {
             this.status.textContent = stageMessageMap[currentStage];
+        }
+    }
+
+    // 🆕 更新 UI - 根據當前顯示百分比更新進度條
+    updateUI(percent) {
+        // 確保百分比在 0-100 之間
+        const clampedPercent = Math.min(Math.max(percent, 0), 100);
+        
+        // 更新進度條寬度
+        if (this.progressBarFill) {
+            this.progressBarFill.style.width = clampedPercent + '%';
+        }
+        
+        // 更新百分比文字（四捨五入到整數）
+        if (this.progressPercent) {
+            this.progressPercent.textContent = Math.round(clampedPercent) + '%';
         }
     }
 
