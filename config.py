@@ -41,8 +41,8 @@ PATHS = {
     # 新聞搜尋相關（統一存放於 temp_data/news_output）
     'NEWS_SEARCH_OUTPUT': os.path.join(PROJECT_ROOT, 'temp_data', 'news_output'),
     
-    # Word Cloud 輸出（統一存放於 temp_data/wc_output）
-    'WORD_CLOUD_OUTPUT': os.path.join(PROJECT_ROOT, 'temp_data', 'wc_output'),
+    # Word Cloud 輸出（統一存放於 static/data/wc_output）
+    'WORD_CLOUD_OUTPUT': os.path.join(PROJECT_ROOT, 'static','data', 'wc_output'),
     
     # Src 目錄（核心程式碼模組）
     'SRC_DIR': os.path.join(PROJECT_ROOT, 'src'),

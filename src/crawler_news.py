@@ -22,6 +22,8 @@ from datetime import datetime
 from typing import Dict, List, Any, Optional
 from gnews import GNews
 from dateutil import parser as date_parser
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import threading
 
 # 導入集中配置
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -37,15 +39,15 @@ SASB_KEYWORD_PATH = DATA_FILES['SASB_KEYWORD']  # SASB 關鍵字
 # API 設定
 MAX_RETRIES = 3
 RETRY_DELAY = 5  # 秒
-SEARCH_DELAY = 2  # 每次搜尋後延遲
-MAX_RESULTS_PER_TOPIC = 10
+SEARCH_DELAY = 0.8  # 每次搜尋後延遲
+MAX_RESULTS_PER_TOPIC = 5
 
-# 多地區搜索配置
-SEARCH_REGIONS = [
-    {'language': 'zh-TW', 'country': 'TW', 'name': '台灣'},
-    {'language': 'en', 'country': 'US', 'name': '美國'},
-    {'language': 'en', 'country': 'GB', 'name': '英國'},
-]
+# 搜索配置（僅台灣）
+SEARCH_LANGUAGE = 'zh-TW'
+SEARCH_COUNTRY = 'TW'
+
+# 多線程配置
+MAX_WORKERS = 5  # 同時執行的線程數
 
 
 # === 輔助函數 ===
@@ -259,132 +261,145 @@ def search_news_for_report(
     print(f"\n開始執行新聞搜尋，共 {len(p1_data_list)} 筆資料...")
     print("=" * 60)
     
-    for idx, item in enumerate(p1_data_list, 1):
+    # 用於線程安全的鎖
+    lock = threading.Lock()
+    
+    def process_item(idx_item_tuple):
+        """處理單筆資料的函數（用於多線程）"""
+        idx, item = idx_item_tuple
+        local_news = []
+        local_failed = 0
+        local_failure_detail = None
         # 取得基本資訊
         company_name = item.get("company", "")  # 現在直接是公司名稱
         stock_code = item.get("company_id", company_code)  # 從 company_id 取得代碼
         topic = item.get("sasb_topic", "")
         year_str = item.get("year", str(year))
         
-        print(f"[{idx}/{len(p1_data_list)}] 查核: {company_name} ({stock_code}) - {topic}")
+        with lock:
+            print(f"[{idx}/{len(p1_data_list)}] 查核: {company_name} ({stock_code}) - {topic}")
         
-        processed_items += 1
-        
-        # === 關鍵字三層級 Fallback ===
+        # === 關鍵字兩層級 Fallback（移除策略2）===
         # 層級 1: 優先使用 P1 提供的 key_word
         key_word = item.get("key_word", "")
         
-        # 層級 2: 從 SASB 關鍵字表生成
-        if not key_word and topic:
-            key_word = _get_keywords_from_sasb(topic, company_name, sasb_keywords)
-            print(f"  🔧 使用 SASB 關鍵字生成: {key_word}")
-        
-        # 層級 3: 基本組合
+        # 層級 3: 基本組合（取消層級2）
         if not key_word:
             key_word = f"{company_name} {topic}"
-            print(f"  🔧 使用基本組合: {key_word}")
+            with lock:
+                print(f"  🔧 使用基本組合: {key_word}")
         
         # 設定搜尋年份
         try:
             target_year = int(year_str)
-            print(f"  📅 搜索範圍: {target_year}/01/01 ~ {target_year}/12/31")
+            with lock:
+                print(f"  📅 搜索範圍: {target_year}/01/01 ~ {target_year}/12/31")
         except ValueError:
-            print(f"  ⚠️ 日期格式錯誤，跳過此筆")
-            failed_items += 1
-            failure_details.append({'topic': topic, 'reason': '日期格式錯誤'})
-            continue
+            with lock:
+                print(f"  ⚠️ 日期格式錯誤，跳過此筆")
+            local_failed = 1
+            local_failure_detail = {'topic': topic, 'reason': '日期格式錯誤'}
+            return local_news, 0, local_failed, local_failure_detail
         
-        # === 搜尋策略（擴大至多地區） ===
+        # === 搜尋策略（僅台灣，策略1和3） ===
         news_results = None
         final_query = key_word
         found_count = 0
+        local_news_id_start = idx * 1000  # 為每個線程預留ID空間
         
         try:
-            # 對多個地區進行搜尋並合併結果
-            for region in SEARCH_REGIONS:
-                # 設定 GNews
-                google_news = GNews(
-                    language=region['language'], 
-                    country=region['country'], 
-                    max_results=MAX_RESULTS_PER_TOPIC
-                )
-                google_news.start_date = (target_year, 1, 1)
-                google_news.end_date = (target_year, 12, 31)
-                
-                region_results = None
-                
-                # 策略 1: 使用完整關鍵字
-                for attempt in range(MAX_RETRIES):
-                    try:
-                        region_results = google_news.get_news(key_word)
-                        break
-                    except Exception as e:
-                        if attempt < MAX_RETRIES - 1:
-                            time.sleep(RETRY_DELAY)
-                        else:
-                            # 靜默處理錯誤，繼續下一個地區
-                            pass
-                
-                # 策略 2: 簡化關鍵字（取前3個詞）
-                if not region_results or len(region_results) < 3:
-                    key_words_list = key_word.split()
-                    if len(key_words_list) >= 3:
-                        query2 = ' '.join(key_words_list[:3])
-                        try:
-                            results2 = google_news.get_news(query2)
-                            if results2 and len(results2) > len(region_results or []):
-                                region_results = results2
-                                final_query = query2
-                        except:
-                            pass
-                
-                # 策略 3: 公司名稱 + 主題
-                if not region_results or len(region_results) < 2:
-                    query3 = f"{company_name} {topic}"
-                    try:
-                        results3 = google_news.get_news(query3)
-                        if results3 and len(results3) > len(region_results or []):
-                            region_results = results3
-                            final_query = query3
-                    except:
+            # 設定 GNews（僅台灣）
+            google_news = GNews(
+                language=SEARCH_LANGUAGE, 
+                country=SEARCH_COUNTRY, 
+                max_results=MAX_RESULTS_PER_TOPIC
+            )
+            google_news.start_date = (target_year, 1, 1)
+            google_news.end_date = (target_year, 12, 31)
+            
+            # 策略 1: 使用完整關鍵字
+            for attempt in range(MAX_RETRIES):
+                try:
+                    news_results = google_news.get_news(key_word)
+                    break
+                except Exception as e:
+                    if attempt < MAX_RETRIES - 1:
+                        time.sleep(RETRY_DELAY)
+                    else:
+                        # 靜默處理錯誤
                         pass
-                
-                # 收集此地區的結果
-                if region_results:
-                    for news in region_results:
-                        published_date = news.get('published date', '')
-                        if _is_date_in_year(published_date, target_year):
-                            all_news_articles.append({
-                                "news_id": news_id_counter,
-                                "stock_code": stock_code,
-                                "company_name": company_name,
-                                "sasb_topic": topic,
-                                "search_query": final_query,
-                                "title": news.get('title', ''),
-                                "url": news.get('url', ''),
-                                "published_date": published_date,
-                                "publisher": news.get('publisher', {}).get('title', '') if isinstance(news.get('publisher'), dict) else ''
-                            })
-                            news_id_counter += 1
-                            found_count += 1
-                
-                # 避免請求太快
-                time.sleep(SEARCH_DELAY)
+            
+            # 策略 3: 公司名稱 + 主題（取消策略2）
+            if not news_results or len(news_results) < 2:
+                query3 = f"{company_name} {topic}"
+                try:
+                    results3 = google_news.get_news(query3)
+                    if results3 and len(results3) > len(news_results or []):
+                        news_results = results3
+                        final_query = query3
+                except:
+                    pass
+            
+            # 收集結果
+            if news_results:
+                for i, news in enumerate(news_results):
+                    published_date = news.get('published date', '')
+                    if _is_date_in_year(published_date, target_year):
+                        local_news.append({
+                            "news_id": local_news_id_start + i + 1,
+                            "stock_code": stock_code,
+                            "company_name": company_name,
+                            "sasb_topic": topic,
+                            "search_query": final_query,
+                            "title": news.get('title', ''),
+                            "url": news.get('url', ''),
+                            "published_date": published_date,
+                            "publisher": news.get('publisher', {}).get('title', '') if isinstance(news.get('publisher'), dict) else ''
+                        })
+                        found_count += 1
+            
+            # 避免請求太快
+            time.sleep(SEARCH_DELAY)
             
             # 統一輸出結果
-            if found_count > 0:
-                print(f"  ✓ 找到 {found_count} 則 {target_year} 年相關新聞")
-            else:
-                print(f"  ⚠️ 無相關新聞")
+            with lock:
+                if found_count > 0:
+                    print(f"  ✓ 找到 {found_count} 則 {target_year} 年相關新聞")
+                else:
+                    print(f"  ⚠️ 無相關新聞")
+                print("-" * 60)
                 
         except Exception as e:
-            print(f"  ❌ 搜尋失敗: {str(e)}")
-            failed_items += 1
-            failure_details.append({'topic': topic, 'reason': str(e)})
+            with lock:
+                print(f"  ❌ 搜尋失敗: {str(e)}")
+                print("-" * 60)
+            local_failed = 1
+            local_failure_detail = {'topic': topic, 'reason': str(e)}
         
-        # 避免請求太快
-        time.sleep(SEARCH_DELAY)
-        print("-" * 60)
+        return local_news, 1, local_failed, local_failure_detail
+    
+    # 使用多線程處理所有項目
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+        # 提交所有任務
+        futures = {executor.submit(process_item, (idx, item)): idx 
+                   for idx, item in enumerate(p1_data_list, 1)}
+        
+        # 收集結果
+        for future in as_completed(futures):
+            try:
+                news_list, processed, failed, failure_detail = future.result()
+                all_news_articles.extend(news_list)
+                processed_items += processed
+                failed_items += failed
+                if failure_detail:
+                    failure_details.append(failure_detail)
+            except Exception as e:
+                print(f"線程執行錯誤: {str(e)}")
+                failed_items += 1
+    
+    # 重新分配 news_id
+    for i, news in enumerate(all_news_articles, 1):
+        news['news_id'] = i
     
     # === 6. 儲存結果 ===
     try:

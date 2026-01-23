@@ -14,6 +14,27 @@ load_dotenv()
 # ==============Flask 部分========================
 app = Flask(__name__)
 
+# === 🆕 記憶體標記：追蹤正在活躍處理中的公司 ===
+# 服務重啟時會清空，用於區分「活躍處理中」和「中斷需恢復」
+import time
+ACTIVE_PROCESSING = {}  # {esg_id: start_timestamp}
+
+def mark_processing_start(esg_id):
+    """標記開始處理某公司"""
+    ACTIVE_PROCESSING[esg_id] = time.time()
+    print(f"🟢 標記開始處理: {esg_id}")
+
+def mark_processing_end(esg_id):
+    """標記處理結束（完成或失敗）"""
+    if esg_id in ACTIVE_PROCESSING:
+        del ACTIVE_PROCESSING[esg_id]
+        print(f"🔴 標記處理結束: {esg_id}")
+
+def is_actively_processing(esg_id):
+    """檢查是否正在活躍處理中"""
+    return esg_id in ACTIVE_PROCESSING
+
+
 # --- 資料庫連線設定 ---
 def get_db_connection():
     return pymysql.connect(
@@ -85,7 +106,8 @@ def index():
             # --- [Update] 資料庫讀取段落 (取得所有公司) ---
             # 資料表名稱變更: companies -> company
             # 欄位對應: id -> ESG_id (或忽略), name -> company_name, stock_id -> company_code
-            sql_companies = "SELECT * FROM company"
+            # 🆕 只取 analysis_status = 'completed' 的資料，排除正在分析中的記錄
+            sql_companies = "SELECT * FROM company WHERE analysis_status = 'completed'"
             cursor.execute(sql_companies)
             companies_basic = cursor.fetchall()
             
@@ -229,6 +251,9 @@ def query_company():
         if result['exists'] and result['data'] and 'ESG_id' in result['data']:
             esg_id = result['data']['ESG_id']
         
+        PROCESSING_STATES = ['processing', 'stage1', 'stage2', 'stage3', 'stage4', 'stage5', 'stage6']
+        should_execute = False  # 🆕 標記是否進入執行流程
+
         # 情況 A: completed - 直接回傳資料
         if result['status'] == 'completed':
             # 計算 ESG 分數（使用現有邏輯）
@@ -260,13 +285,35 @@ def query_company():
                 'esg_id': esg_id
             })
         
-        # 情況 B: processing - 回傳進行中訊息
-        elif result['status'] == 'processing':
-            return jsonify({
-                'status': 'processing',
-                'message': '分析進行中，請稍候',
-                'esg_id': esg_id
-            })
+        # 情況 B: processing/stageN - 需要判斷是「正在執行中」還是「中斷需要恢復」
+        elif result['status'] in PROCESSING_STATES:
+            # 🆕 使用記憶體標記判斷是否正在活躍處理
+            if is_actively_processing(esg_id):
+                # 後端正在活躍處理中，回傳 processing 讓前端顯示進度條
+                return jsonify({
+                    'status': 'processing',
+                    'message': '分析進行中，請稍候',
+                    'esg_id': esg_id
+                })
+            else:
+                # 後端已中斷（記憶體標記不存在），需要用戶選擇
+                if not auto_fetch:
+                    return jsonify({
+                        'status': 'resume_needed',
+                        'message': f'偵測到上次分析中斷於 {result["status"]}，是否要從斷點繼續？',
+                        'current_stage': result['status'],
+                        'esg_id': esg_id
+                    })
+                # 用戶已同意 auto_fetch，取得 report_info 並繼續
+                exists, report_info = validate_report_exists(year, company_code)
+                if not exists:
+                    return jsonify({
+                        'status': 'not_found',
+                        'message': f'查無 {year} 年度的永續報告（公司代碼: {company_code}）',
+                        'esg_id': esg_id
+                    }), 404
+                # 🆕 設置標記，進入下方執行流程
+                should_execute = True
         
         # 情況 C & D: failed 或 not_found - 需要驗證報告是否存在
         else:
@@ -289,181 +336,228 @@ def query_company():
                     'esg_id': esg_id
                 })
             
-            # === 用戶同意自動抓取，開始執行流程 ===
+            # 🆕 設置標記，進入下方執行流程
+            should_execute = True
+        
+        # === 用戶同意自動抓取，開始執行流程 ===
+        # 🆕 只有當 should_execute = True 時才會繼續
+        if not should_execute:
+            return jsonify({
+                'status': 'error',
+                'message': '程式流程異常，請重新操作'
+            }), 500
+        
+        # 🆕 導入斷點續傳工具
+        from src.recovery_utils import determine_resume_point, print_recovery_status
+        
+        # 檢查是否為重新啟動（資料已存在且狀態為 failed 或 stageN）
+        PROCESSING_STATES_FOR_RESUME = ['failed', 'stage1', 'stage2', 'stage3', 'stage4', 'stage5', 'stage6']
+        is_resume = (result['status'] in PROCESSING_STATES_FOR_RESUME)
+        
+        if is_resume:
+            # 🆕 斷點續傳：判斷應從哪個階段繼續
+            recovery_info = print_recovery_status(year, company_code, result['status'])
+            resume_from = recovery_info['resume_from']
+            print(f"📌 斷點續傳模式：從 {resume_from} 繼續")
+            run_analysis = True  # 🆕 標記需要執行分析
+        else:
+            # 首次執行：插入基本資料
+            success, _, msg = insert_company_basic(
+                year=year,
+                company_code=company_code,
+                company_name=report_info.get('company_name', ''),
+                industry=report_info.get('sector', ''),  # 添加產業類別
+                status='processing'
+            )
             
-            # 檢查是否為重新啟動（資料已存在且狀態為 failed）
-            is_retry = (result['status'] == 'failed')
+            if not success and '已存在' not in msg:
+                # 如果錯誤不是「資料已存在」，則回傳錯誤
+                return jsonify({
+                    'status': 'error',
+                    'message': f'插入基本資料失敗: {msg}'
+                }), 500
             
-            if is_retry:
-                # 重新啟動：直接更新狀態為 processing
-                update_analysis_status(esg_id, 'processing')
-            else:
-                # 首次執行：插入基本資料
-                success, _, msg = insert_company_basic(
-                    year=year,
-                    company_code=company_code,
-                    company_name=report_info.get('company_name', ''),
-                    industry=report_info.get('sector', ''),  # 添加產業類別
-                    status='processing'
-                )
-                
-                if not success and '已存在' not in msg:
-                    # 如果錯誤不是「資料已存在」，則回傳錯誤
-                    return jsonify({
-                        'status': 'error',
-                        'message': f'插入基本資料失敗: {msg}'
-                    }), 500
-            
+            resume_from = 'stage1'  # 首次執行從 stage1 開始
+            run_analysis = True  # 🆕 標記需要執行分析
+        
+        # === 開始執行分析流程 ===
+        if run_analysis:
+            print(f"🔍 DEBUG: 進入 run_analysis 區塊，resume_from={resume_from}")
+            # 🆕 標記開始處理（用於區分活躍處理和中斷恢復）
+            mark_processing_start(esg_id)
             try:
-                # Step 2: 下載 PDF
-                update_analysis_status(esg_id, 'stage1')
-                download_success, pdf_path_or_error = download_esg_report(year, company_code)
-                
-                if not download_success:
-                    # 下載失敗，更新狀態為 failed
-                    update_analysis_status(esg_id, 'failed')
-                    return jsonify({
-                        'status': 'failed',
-                        'message': f'下載失敗: {pdf_path_or_error}',
-                        'esg_id': esg_id
-                    }), 500
-                
-                pdf_path = pdf_path_or_error
-                
-               # Step 3a & 3b: 平行執行 Word Cloud 和 AI 分析
-                import threading
-                
-                # 儲存結果的變數
-                wordcloud_result = None
-                analysis_result = None
-                
-                def run_wordcloud():
-                    """Word Cloud 生成執行緒"""
-                    nonlocal wordcloud_result
-                    try:
-                        from src.word_cloud import generate_wordcloud
-                        wordcloud_result = generate_wordcloud(year, company_code, pdf_path, force_regenerate=False)
-                    except Exception as e:
-                        wordcloud_result = {'success': False, 'error': str(e)}
-                        print(f"⚠️ Word Cloud 生成錯誤: {e}")
-                
-                def run_ai_analysis():
-                    """AI 分析執行緒"""
-                    nonlocal analysis_result
-                    try:
-                        analysis_result = analyze_esg_report(
-                            pdf_path, 
-                            year, 
-                            company_code,
-                            company_name=report_info.get('company_name', ''),
-                            industry=report_info.get('sector', '')
-                        )
-                    except Exception as e:
-                        raise  # AI 分析失敗則整個流程失敗
-                
-                # 建立並啟動執行緒
-                wordcloud_thread = threading.Thread(target=run_wordcloud, name="WordCloudThread")
-                ai_thread = threading.Thread(target=run_ai_analysis, name="AIAnalysisThread")
-                
-                print("🚀 啟動平行處理：Word Cloud 與 AI 分析")
-                update_analysis_status(esg_id, 'stage2')
-                wordcloud_thread.start()
-                ai_thread.start()
-                
-                # 等待完成
-                wordcloud_thread.join(timeout=120)  # Word Cloud 最多等 2 分鐘
-                ai_thread.join()  # AI 分析必須完成
-                
-                # 處理 Word Cloud 結果（非必要，失敗不影响主流程）
-                if wordcloud_result and wordcloud_result.get('success'):
-                    if wordcloud_result.get('skipped'):
-                        print(f"ℹ️ Word Cloud 已存在，跳過生成")
-                    else:
-                        print(f"✅ Word Cloud 生成成功: {wordcloud_result.get('word_count', 0)} 個關鍵字")
+                # === Stage 1: 下載 PDF ===
+                if resume_from in ['stage1']:
+                    update_analysis_status(esg_id, 'stage1')
+                    print("\n--- Step 1: 下載 PDF ---")
+                    download_success, pdf_path_or_error = download_esg_report(year, company_code)
+                    
+                    if not download_success:
+                        # 下載失敗，更新狀態為 failed
+                        update_analysis_status(esg_id, 'failed')
+                        mark_processing_end(esg_id)  # 🆕 標記處理結束
+                        return jsonify({
+                            'status': 'failed',
+                            'message': f'下載失敗: {pdf_path_or_error}',
+                            'esg_id': esg_id
+                        }), 500
+                    
+                    pdf_path = pdf_path_or_error
                 else:
-                    error_msg = wordcloud_result.get('error') if wordcloud_result else 'timeout'
-                    print(f"⚠️ Word Cloud 生成失敗: {error_msg}（不影響主流程）")
+                    # 🆕 跳過已完成的階段，取得已存在的 PDF 路徑
+                    from src.recovery_utils import check_pdf_exists
+                    _, pdf_path = check_pdf_exists(year, company_code)
+                    print(f"⏭️ Stage 1 已完成，跳過（PDF: {pdf_path}）")
                 
-                # Step 4: 新聞爬蟲驗證 ✨ NEW
-                print("\n--- Step 4: 新聞爬蟲驗證 ---")
-                update_analysis_status(esg_id, 'stage3')
-                try:
-                    from src.crawler_news import search_news_for_report
+                # === Stage 2: 平行執行 Word Cloud 和 AI 分析 ===
+                if resume_from in ['stage1', 'stage2']:
+                    import threading
                     
-                    news_result = search_news_for_report(
-                        year=year,
-                        company_code=company_code,
-                        force_regenerate=True
-                    )
+                    # 儲存結果的變數
+                    wordcloud_result = None
+                    analysis_result = None
                     
-                    if news_result['success']:
-                        if news_result.get('skipped'):
-                            print(f"ℹ️ 新聞資料已存在，跳過生成")
+                    def run_wordcloud():
+                        """Word Cloud 生成執行緒"""
+                        nonlocal wordcloud_result
+                        try:
+                            from src.word_cloud import generate_wordcloud
+                            wordcloud_result = generate_wordcloud(year, company_code, pdf_path, force_regenerate=False)
+                        except Exception as e:
+                            wordcloud_result = {'success': False, 'error': str(e)}
+                            print(f"⚠️ Word Cloud 生成錯誤: {e}")
+                    
+                    def run_ai_analysis():
+                        """AI 分析執行緒"""
+                        nonlocal analysis_result
+                        try:
+                            analysis_result = analyze_esg_report(
+                                pdf_path, 
+                                year, 
+                                company_code,
+                                company_name=report_info.get('company_name', ''),
+                                industry=report_info.get('sector', '')
+                            )
+                        except Exception as e:
+                            raise  # AI 分析失敗則整個流程失敗
+                    
+                    # 建立並啟動執行緒
+                    wordcloud_thread = threading.Thread(target=run_wordcloud, name="WordCloudThread")
+                    ai_thread = threading.Thread(target=run_ai_analysis, name="AIAnalysisThread")
+                    
+                    print("\n--- Step 2: AI 分析 ---")
+                    print("🚀 啟動平行處理：Word Cloud 與 AI 分析")
+                    update_analysis_status(esg_id, 'stage2')
+                    wordcloud_thread.start()
+                    ai_thread.start()
+                    
+                    # 等待完成
+                    wordcloud_thread.join(timeout=120)  # Word Cloud 最多等 2 分鐘
+                    ai_thread.join()  # AI 分析必須完成
+                    
+                    # 處理 Word Cloud 結果（非必要，失敗不影响主流程）
+                    if wordcloud_result and wordcloud_result.get('success'):
+                        if wordcloud_result.get('skipped'):
+                            print(f"ℹ️ Word Cloud 已存在，跳過生成")
                         else:
-                            print(f"✅ 新聞爬蟲完成：{news_result['news_count']} 則新聞")
-                            print(f"   處理項目: {news_result['processed_items']}")
-                            print(f"   失敗項目: {news_result['failed_items']}")
+                            print(f"✅ Word Cloud 生成成功: {wordcloud_result.get('word_count', 0)} 個關鍵字")
                     else:
-                        print(f"⚠️ 新聞爬蟲失敗：{news_result.get('error')}（不影響主流程）")
-                except Exception as e:
-                    print(f"⚠️ 新聞爬蟲發生錯誤: {str(e)}（不影響主流程）")
+                        error_msg = wordcloud_result.get('error') if wordcloud_result else 'timeout'
+                        print(f"⚠️ Word Cloud 生成失敗: {error_msg}（不影響主流程）")
+                else:
+                    # 🆕 跳過 Stage 2
+                    analysis_result = {'url': ''}  # 佔位，後續會從 report_info 取得 URL
+                    print(f"⏭️ Stage 2 已完成，跳過 AI 分析")
                 
-                # Step 5: AI 驗證與評分調整 ✨ NEW
-                print("\n--- Step 5: AI 驗證與評分調整 ---")
-                update_analysis_status(esg_id, 'stage4')
-                try:
-                    from src.run_prompt2_gemini import verify_esg_with_news
-                    
-                    verify_result = verify_esg_with_news(
-                        year=year,
-                        company_code=company_code,
-                        force_regenerate=True
-                    )
-                    
-                    if verify_result['success']:
-                        if verify_result.get('skipped'):
-                            print(f"ℹ️ AI 驗證結果已存在，跳過生成")
+                # === Stage 3: 新聞爬蟲驗證 ===
+                if resume_from in ['stage1', 'stage2', 'stage3']:
+                    print("\n--- Step 3: 新聞爬蟲驗證 ---")
+                    update_analysis_status(esg_id, 'stage3')
+                    try:
+                        from src.crawler_news import search_news_for_report
+                        
+                        news_result = search_news_for_report(
+                            year=year,
+                            company_code=company_code,
+                            force_regenerate=True
+                        )
+                        
+                        if news_result['success']:
+                            if news_result.get('skipped'):
+                                print(f"ℹ️ 新聞資料已存在，跳過生成")
+                            else:
+                                print(f"✅ 新聞爬蟲完成：{news_result['news_count']} 則新聞")
+                                print(f"   處理項目: {news_result['processed_items']}")
+                                print(f"   失敗項目: {news_result['failed_items']}")
                         else:
-                            stats = verify_result['statistics']
-                            print(f"✅ AI 驗證完成")
-                            print(f"   輸出檔案: {verify_result['output_path']}")
-                            print(f"   處理項目: {stats['processed_items']}")
-                            print(f"   Token 使用: {stats['total_tokens']:,} (輸入: {stats['input_tokens']:,}, 輸出: {stats['output_tokens']:,})")
-                            print(f"   執行時間: {stats['api_time']:.2f} 秒")
-                    else:
-                        print(f"⚠️ AI 驗證失敗：{verify_result.get('error')}（不影響主流程）")
-                except Exception as e:
-                    print(f"⚠️ AI 驗證發生錯誤: {str(e)}（不影響主流程）")
+                            print(f"⚠️ 新聞爬蟲失敗：{news_result.get('error')}（不影響主流程）")
+                    except Exception as e:
+                        print(f"⚠️ 新聞爬蟲發生錯誤: {str(e)}（不影響主流程）")
+                else:
+                    print(f"⏭️ Stage 3 已完成，跳過新聞爬蟲")
                 
-                # Step 6: 來源可靠度驗證 ✨ NEW
-                print("\n--- Step 6: 來源可靠度驗證 ---")
-                update_analysis_status(esg_id, 'stage5')
-                try:
-                    from src.pplx_api import verify_evidence_sources
-                    
-                    pplx_result = verify_evidence_sources(
-                        year=year,
-                        company_code=company_code,
-                        force_regenerate=True
-                    )
-                    
-                    if pplx_result['success']:
-                        if pplx_result.get('skipped'):
-                            print(f"ℹ️ 來源驗證結果已存在，跳過生成")
+                # === Stage 4: AI 驗證與評分調整 ===
+                if resume_from in ['stage1', 'stage2', 'stage3', 'stage4']:
+                    print("\n--- Step 4: AI 驗證與評分調整 ---")
+                    update_analysis_status(esg_id, 'stage4')
+                    try:
+                        from src.run_prompt2_gemini import verify_esg_with_news
+                        
+                        verify_result = verify_esg_with_news(
+                            year=year,
+                            company_code=company_code,
+                            force_regenerate=True
+                        )
+                        
+                        if verify_result['success']:
+                            if verify_result.get('skipped'):
+                                print(f"ℹ️ AI 驗證結果已存在，跳過生成")
+                            else:
+                                stats = verify_result['statistics']
+                                print(f"✅ AI 驗證完成")
+                                print(f"   輸出檔案: {verify_result['output_path']}")
+                                print(f"   處理項目: {stats['processed_items']}")
+                                print(f"   Token 使用: {stats['total_tokens']:,} (輸入: {stats['input_tokens']:,}, 輸出: {stats['output_tokens']:,})")
+                                print(f"   執行時間: {stats['api_time']:.2f} 秒")
                         else:
-                            stats = pplx_result['statistics']
-                            print(f"✅ 來源驗證完成")
-                            print(f"   輸出檔案: {pplx_result['output_path']}")
-                            print(f"   處理項目: {stats['processed_items']}")
-                            print(f"   有效 URL: {stats['verified_count']}")
-                            print(f"   更新 URL: {stats['updated_count']}")
-                            print(f"   失敗項目: {stats['failed_count']}")
-                            print(f"   Perplexity 調用: {stats['perplexity_calls']} 次")
-                            print(f"   執行時間: {stats['execution_time']:.2f} 秒")
-                    else:
-                        print(f"⚠️ 來源驗證失敗：{pplx_result.get('error')}（不影響主流程）")
-                except Exception as e:
-                    print(f"⚠️ 來源驗證發生錯誤: {str(e)}（不影響主流程）")
+                            print(f"⚠️ AI 驗證失敗：{verify_result.get('error')}（不影響主流程）")
+                    except Exception as e:
+                        print(f"⚠️ AI 驗證發生錯誤: {str(e)}（不影響主流程）")
+                else:
+                    print(f"⏭️ Stage 4 已完成，跳過 AI 驗證")
+                
+                # === Stage 5: 來源可靠度驗證 ===
+                if resume_from in ['stage1', 'stage2', 'stage3', 'stage4', 'stage5']:
+                    print("\n--- Step 5: 來源可靠度驗證 ---")
+                    update_analysis_status(esg_id, 'stage5')
+                    try:
+                        from src.pplx_api import verify_evidence_sources
+                        
+                        pplx_result = verify_evidence_sources(
+                            year=year,
+                            company_code=company_code,
+                            force_regenerate=True
+                        )
+                        
+                        if pplx_result['success']:
+                            if pplx_result.get('skipped'):
+                                print(f"ℹ️ 來源驗證結果已存在，跳過生成")
+                            else:
+                                stats = pplx_result['statistics']
+                                print(f"✅ 來源驗證完成")
+                                print(f"   輸出檔案: {pplx_result['output_path']}")
+                                print(f"   處理項目: {stats['processed_items']}")
+                                print(f"   有效 URL: {stats['verified_count']}")
+                                print(f"   更新 URL: {stats['updated_count']}")
+                                print(f"   失敗項目: {stats['failed_count']}")
+                                print(f"   Perplexity 調用: {stats['perplexity_calls']} 次")
+                                print(f"   執行時間: {stats['execution_time']:.2f} 秒")
+                        else:
+                            print(f"⚠️ 來源驗證失敗：{pplx_result.get('error')}（不影響主流程）")
+                    except Exception as e:
+                        print(f"⚠️ 來源驗證發生錯誤: {str(e)}（不影響主流程）")
+                else:
+                    print(f"⏭️ Stage 5 已完成，跳過來源驗證")
                 
                 # Step 7: 讀取 P3 JSON 並插入分析結果至資料庫
                 print("\n--- Step 7: 存入資料庫 ---")
@@ -535,6 +629,8 @@ def query_company():
                         'layer4Data': details
                     }
                     
+                    # 🆕 標記處理結束
+                    mark_processing_end(esg_id)
                     return jsonify({
                         'status': 'completed',
                         'message': '自動抓取與分析完成',
@@ -551,11 +647,20 @@ def query_company():
             except Exception as e:
                 # 發生錯誤，更新狀態為 failed
                 update_analysis_status(esg_id, 'failed')
+                # 🆕 標記處理結束
+                mark_processing_end(esg_id)
                 return jsonify({
                     'status': 'failed',
                     'message': f'處理過程發生錯誤: {str(e)}',
                     'esg_id': esg_id
                 }), 500
+        else:
+            # 🆕 run_analysis 為 False 的情況（不應該發生）
+            return jsonify({
+                'status': 'error',
+                'message': '程式流程異常：未能進入分析流程',
+                'esg_id': esg_id
+            }), 500
     
     except Exception as e:
         return jsonify({

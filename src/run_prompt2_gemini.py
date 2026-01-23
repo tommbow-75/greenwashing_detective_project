@@ -1,4 +1,5 @@
-import json, os, re, sys
+import json, os, re, sys, time
+import pandas as pd
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
@@ -69,7 +70,12 @@ def process_esg_news_verification(input_json_path, news_json_path, msci_json_pat
         print(f"❌ 錯誤：讀取 MSCI 標準失敗 - {e}")
         return {'success': False, 'error': f'MSCI data read error: {e}'}
 
-    # 5. 準備 Prompt（將變數嵌入）
+    # 5. 使用 pandas 提取公司資訊
+    df_original = pd.DataFrame(original_data)
+    company_name = df_original.iloc[0]['company']
+    company_code = df_original.iloc[0]['company_id']
+
+    # 6. 準備 Prompt（將變數嵌入）
     prompt_template = f"""
 你將扮演ESG審查員，負責進行外部新聞比對與風險調整。
 
@@ -135,10 +141,12 @@ def process_esg_news_verification(input_json_path, news_json_path, msci_json_pat
 
 【相關性檢查】
 比對前，請先執行相關性檢查：
-- 檢查驗證資料是否明確提及 'company' 或 'company_code'
-- 如果是在講其他公司，請判定為無效
-- 檢查新聞內容是否與 report_claim 的主題有實質關聯？
-- 如果發現新聞與公司無關、主題完全不符、無新聞，請直接輸出：
+- **目標公司**: {company_name} (股票代號: {company_code})
+- **核心原則**: 新聞內容必須明確提及「{company_name}」**或**「{company_code}」
+- **只有在以下情況才輸出「無相關新聞證據」**:
+  1. 新聞完全沒有提到公司名稱「{company_name}」也沒有提到股票代號「{company_code}」
+  2. 該 SASB 議題確實沒有任何相關新聞
+- 若符合以上任一條件，請輸出：
   * consistency_status: "一致"
   * external_evidence: "無相關新聞證據"
   * external_evidence_url: ""
@@ -154,8 +162,8 @@ def process_esg_news_verification(input_json_path, news_json_path, msci_json_pat
 - **report_claim** 欄位名稱維持不變，不要改為 disclosure_claim
 
 輸出範例：
-**company**: {original_data[0]['company']},  # 必須是名稱，例如 "亞泥"
-**company_id**: {original_data[0]['company_id']},  # 必須是代號，例如 "1102"
+**company**: {company_name},  # 必須是名稱，例如 "南亞"
+**company_id**: {company_code},  # 必須是代號，例如 "1303"
 **year**: {original_data[0]['year']},
 **esg_category**: {original_data[0]['esg_category']},
 **sasb_topic**: {original_data[0]['sasb_topic']},
@@ -185,6 +193,11 @@ def process_esg_news_verification(input_json_path, news_json_path, msci_json_pat
 
     # 7. 呼叫 Gemini API
     print("\n🔄 正在呼叫 Gemini API，請稍候...")
+    
+    # 記錄開始時間
+    total_start_time = time.perf_counter()
+    api_start_time = time.perf_counter()
+
 
     try:
         response = client.models.generate_content(
@@ -200,7 +213,15 @@ def process_esg_news_verification(input_json_path, news_json_path, msci_json_pat
         print(f"❌ API 呼叫失敗: {e}")
         return {'success': False, 'error': f'API call failed: {e}'}
 
-    print(f"✅ Gemini API 呼叫完成")
+    
+    api_elapsed = time.perf_counter() - api_start_time
+    print(f"✅ Gemini API 呼叫完成 (耗時: {api_elapsed:.2f} 秒)")
+    
+    # 簡易 token 估算（實際值需從 API response 取得，這裡使用估算）
+    input_token_est = len(user_input) // 4  # 粗估: 1 token ≈ 4 字元
+    output_token_est = len(response.text) // 4
+    total_token_est = input_token_est + output_token_est
+
 
     # 8. 處理與儲存結果
     raw_text = response.text.strip()

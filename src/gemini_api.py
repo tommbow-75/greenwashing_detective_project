@@ -61,8 +61,13 @@ class ESGReportAnalyzer:
     OUTPUT_DIR = PATHS['P1_JSON']
     SASB_MAP_FILE = DATA_FILES['SASB_WEIGHT_MAP']
     
-    # ✅ 使用 Gemini 2.5 Flash Lite
-    MODEL_NAME = "models/gemini-2.5-flash" 
+    # ====== 模型設定 ======
+    # 預設使用 Gemini 2.5 Flash，若異常則切換至備用模型
+    DEFAULT_MODEL = "models/gemini-2.5-flash"
+    FALLBACK_MODEL = "models/gemini-3-flash-preview"
+    
+    # 輸出異常偵測閾值：若項目數超過唯一主題數的此倍數，視為異常
+    ABNORMAL_THRESHOLD = 2 
 
     def __init__(self, target_year: int, target_company_id: str, company_name: str = '', industry: str = ''):
         """
@@ -182,6 +187,29 @@ class ESGReportAnalyzer:
         repaired = text[:last_complete_obj + 1] + ']'
         return repaired
 
+    def _is_abnormal_output(self, parsed_data: List[Dict[str, Any]]) -> Tuple[bool, int, int]:
+        """
+        偵測 AI 輸出是否異常（重複項目過多）
+        
+        Args:
+            parsed_data: 解析後的 JSON 陣列
+        
+        Returns:
+            Tuple[bool, int, int]: (是否異常, 總項目數, 唯一主題數)
+        """
+        if not parsed_data:
+            return False, 0, 0
+        
+        # 計算唯一的 sasb_topic 數量
+        unique_topics = set(item.get('sasb_topic', '') for item in parsed_data)
+        total_items = len(parsed_data)
+        unique_count = len(unique_topics)
+        
+        # 若項目數超過唯一主題數的 N 倍，視為異常
+        is_abnormal = total_items > unique_count * self.ABNORMAL_THRESHOLD
+        
+        return is_abnormal, total_items, unique_count
+
     def _find_target_pdf(self) -> Tuple[str, str]:
         """
         在輸入目錄中搜尋符合條件的 PDF 檔案
@@ -260,41 +288,14 @@ class ESGReportAnalyzer:
         print(f"[READY] 檔案準備就緒。")
         return file_ref
 
-    def run(self):
+    def _build_prompt(self) -> str:
         """
-        執行完整的 ESG 報告書分析流程
+        建構 ESG 分析 Prompt
         
-        流程：
-            1. 上傳 PDF 至 Gemini
-            2. 建構分析 Prompt
-            3. 呼叫 Gemini AI 模型進行分析
-            4. 解析並儲存 JSON 結果
-        
-        產生的 JSON 格式：
-            [
-                {
-                    "company": "台積電",
-                    "company_id": "2330",
-                    "year": "2024",
-                    "esg_category": "E|S|G",
-                    "sasb_topic": "議題名稱",
-                    "page_number": "頁碼",
-                    "report_claim": "報告書原文摘錄",
-                    "greenwashing_factor": "中文漂綠風險分析",
-                    "risk_score": "0-4",
-                    "internal_consistency": true|false,
-                    "key_word": "適合新聞搜尋的關鍵字"
-                },
-                ...
-            ]
+        Returns:
+            str: 完整的分析提示詞
         """
-        # 1. 上傳 PDF
-        uploaded_pdf = self.upload_file_to_gemini()
-
-        # 2. 建構 Prompt
-        print(">>> 發送分析請求 (Gemini 2.0 Flash)...")
-        
-        prompt_text = f"""
+        return f"""
 你是一個專業的 ESG 稽核員。請分析我提供的 PDF 檔案 (ESG 報告書)。
 
 **任務輸入資料：**
@@ -308,8 +309,15 @@ class ESGReportAnalyzer:
    - 1分 (軟性)：僅有願景、口號或模糊承諾。
    - 2分 (定性)：有具體管理措施，但缺乏數據。
    - 3分 (硬性/定量)：具體量化數據、歷史趨勢。
-   - 4分 (確信/查驗)：數據經過 ISAE 3000 或 AA1000 第三方查驗/確信 (須嚴格檢查附錄查證聲明)。
-3. **重大議題檢核**：若該議題的數值為 2 (高重大性)，但報告書完全未提及，屬於重大資訊缺失。請務必填寫 "report_claim": "N/A", "risk_score": 1。
+   - 4分 (卓越揭露)：滿足下列 **任一條件** 即可得 4 分：
+    - **條件 A (第三方確信)**：數據明確標註經過 ISAE 3000 或 AA1000 第三方查證。
+    - **條件 B (完整透明度)**：雖無第三方查證，但同時滿足以下兩要素：
+        1. **明確目標**：設定具體的未來量化目標 (Target)。
+        2. **細節拆解**：數據有進行細項拆解 (例如：按性別、地區、範疇分類) **或** 清楚說明計算方法學/標準 (如 GRI 編號、計算公式)。
+3. **重大議題檢核**：
+   - **權重判斷**：根據 SASB 產業權重表，每個議題都有對應的權重值（1 或 2）。
+   - **權重 1（低重大性）+ 未揭露**：若該議題的權重為 1，且報告書完全未提及，則**不需要輸出此條目**。
+   - **權重 2（高重大性）+ 未揭露**：若該議題的權重為 2，但報告書完全未提及，屬於重大資訊缺失。請務必填寫 "report_claim": "N/A", "risk_score": 1。
 4. **邏輯一致性檢查**：請檢查報告前後文。若同一議題的數據或宣稱出現矛盾 (例如不同章節數字不符)，請將 "Internal_consistency": false，並在 "greenwashing_factor" 具體指出矛盾點，同時將最終 risk_score 扣減 1 分 (最低為 0)；若一致則 "Internal_consistency": true。
 5. **漂綠因子分析(greenwashing_factor)**：(必須使用中文輸出，嚴禁填寫「無」或任何空泛內容)
     - 請依據以下框架進行分析，必須輸出實質內容：
@@ -349,39 +357,119 @@ class ESGReportAnalyzer:
 請直接輸出 JSON Array，不要包含 Markdown 標記。
 """
 
-        # 3. 呼叫模型
-        try:
-            response = self.client.models.generate_content(
-                model=self.MODEL_NAME,
-                contents=[
-                    uploaded_pdf,
-                    prompt_text
-                ],
-                config=types.GenerateContentConfig(
-                    response_mime_type="application/json",
-                    temperature=0.1  # 設定為 0 以確保分析結果的嚴謹與穩定
-                )
+    def _call_gemini_api(self, uploaded_pdf, prompt_text: str, model_name: str, temperature: float) -> str:
+        """
+        呼叫 Gemini API 進行分析
+        
+        Args:
+            uploaded_pdf: 已上傳的 PDF 檔案參考
+            prompt_text: 分析提示詞
+            model_name: Gemini 模型名稱
+            temperature: 生成溫度參數
+        
+        Returns:
+            str: API 回傳的原始 JSON 字串
+        """
+        response = self.client.models.generate_content(
+            model=model_name,
+            contents=[uploaded_pdf, prompt_text],
+            config=types.GenerateContentConfig(
+                response_mime_type="application/json",
+                temperature=temperature
             )
+        )
+        return response.text
 
-            # 4. 處理結果
-            raw_json = response.text
-            output_path = os.path.join(self.OUTPUT_DIR, self.output_json_name)
+    def run(self):
+        """
+        執行完整的 ESG 報告書分析流程（含自動重試機制）
+        
+        重試策略：
+            1. 預設使用 gemini-2.5-flash + temperature=0.1
+            2. 若偵測到輸出異常，提高 temperature 至 0.2 重試
+            3. 若仍異常，切換至 gemini-3-flash-preview 重試
+        
+        產生的 JSON 格式：
+            [
+                {
+                    "company": "台積電",
+                    "company_id": "2330",
+                    "year": "2024",
+                    "esg_category": "E|S|G",
+                    "sasb_topic": "議題名稱",
+                    "page_number": "頁碼",
+                    "report_claim": "報告書原文摘錄",
+                    "greenwashing_factor": "中文漂綠風險分析",
+                    "risk_score": "0-4",
+                    "internal_consistency": true|false,
+                    "key_word": "適合新聞搜尋的關鍵字"
+                },
+                ...
+            ]
+        """
+        # 重試策略配置
+        retry_configs = [
+            {"model": self.DEFAULT_MODEL, "temperature": 0.1, "desc": "gemini-2.5-flash (temp=0.1)"},
+            {"model": self.DEFAULT_MODEL, "temperature": 0.2, "desc": "gemini-2.5-flash (temp=0.2)"},
+            {"model": self.FALLBACK_MODEL, "temperature": 0.1, "desc": "gemini-3-flash-preview (temp=0.1)"},
+        ]
+        
+        # 1. 上傳 PDF
+        uploaded_pdf = self.upload_file_to_gemini()
+        
+        # 2. 建構 Prompt
+        prompt_text = self._build_prompt()
+        
+        output_path = os.path.join(self.OUTPUT_DIR, self.output_json_name)
+        best_result = None  # 保存最佳結果（項目數最接近預期的）
+        
+        # 3. 嘗試各種配置
+        for attempt, config in enumerate(retry_configs, 1):
+            model_name = config["model"]
+            temperature = config["temperature"]
+            desc = config["desc"]
             
-            # 記錄原始回應長度，用於偵錯
-            print(f"[DEBUG] 原始回應長度: {len(raw_json)} 字元")
-
-            # 嘗試解析 JSON，使用多重修復策略
-            parsed_data = self._parse_json_with_recovery(raw_json)
+            print(f"\n>>> 嘗試 #{attempt}: {desc}")
             
-            # 存檔
-            with open(output_path, "w", encoding="utf-8") as f:
-                json.dump(parsed_data, f, ensure_ascii=False, indent=2)
+            try:
+                # 呼叫 API
+                raw_json = self._call_gemini_api(uploaded_pdf, prompt_text, model_name, temperature)
+                print(f"[DEBUG] 原始回應長度: {len(raw_json)} 字元")
                 
-            print(f"\n[SUCCESS] 分析完成！結果已儲存至: {output_path}")
-            print(f"提取項目數: {len(parsed_data)}")
-
-        except Exception as e:
-            print(f"\n[ERROR] 分析過程發生錯誤: {e}")
+                # 解析 JSON
+                parsed_data = self._parse_json_with_recovery(raw_json)
+                
+                # 偵測異常
+                is_abnormal, total_items, unique_count = self._is_abnormal_output(parsed_data)
+                
+                if is_abnormal:
+                    print(f"⚠️ 偵測到異常輸出：{total_items} 筆項目，但只有 {unique_count} 個唯一主題")
+                    
+                    # 保存最佳結果（選擇項目數最少的）
+                    if best_result is None or total_items < len(best_result):
+                        best_result = parsed_data
+                    
+                    if attempt < len(retry_configs):
+                        print(f"🔄 準備重試...")
+                        continue
+                    else:
+                        print(f"❌ 所有重試配置都失敗，使用最佳結果（{len(best_result)} 筆）")
+                        parsed_data = best_result
+                else:
+                    print(f"✅ 輸出正常：{total_items} 筆項目，{unique_count} 個唯一主題")
+                
+                # 存檔
+                with open(output_path, "w", encoding="utf-8") as f:
+                    json.dump(parsed_data, f, ensure_ascii=False, indent=2)
+                
+                print(f"\n[SUCCESS] 分析完成！結果已儲存至: {output_path}")
+                print(f"提取項目數: {len(parsed_data)}")
+                return  # 成功完成
+                
+            except Exception as e:
+                print(f"[ERROR] 嘗試 #{attempt} 發生錯誤: {e}")
+                if attempt >= len(retry_configs):
+                    raise RuntimeError(f"所有重試配置都失敗: {e}")
 
 
 # =========================

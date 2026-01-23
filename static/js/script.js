@@ -40,12 +40,12 @@ class RealProgressController {
         this.stopPolling(); // 啟動前先確保舊的已清除
         this.esgId = esgId;
         this.show();
-        
+
         // 每 2 秒查詢一次
         this.pollInterval = setInterval(() => {
             this.checkProgress();
         }, 2000);
-        
+
         this.checkProgress();
     }
 
@@ -59,7 +59,7 @@ class RealProgressController {
     async checkProgress() {
         if (this.isCompleted) return;
         this.pollCount++;
-        
+
         if (this.pollCount > this.maxPollAttempts) {
             this.stopPolling();
             alert('處理時間過長，請稍後重新搜尋公司代碼查看結果');
@@ -68,35 +68,35 @@ class RealProgressController {
         }
 
         try {
-        const response = await fetch(`/api/check_progress/${this.esgId}`);
-        const data = await response.json();
-        
-        console.log("收到進度更新:", data); // 偵錯用
+            const response = await fetch(`/api/check_progress/${this.esgId}`);
+            const data = await response.json();
 
-        // 如果後端給的是 analysis_status，這裡就要改寫
-        const currentStage = data.stage || data.analysis_status; 
-        const currentStatus = data.status || (currentStage === 'completed' ? 'completed' : 'processing');
+            console.log("收到進度更新:", data); // 偵錯用
 
-        // 1. 先更新 UI 到對應進度
-        this.updateSteps(currentStage, currentStatus);
+            // 如果後端給的是 analysis_status，這裡就要改寫
+            const currentStage = data.stage || data.analysis_status;
+            const currentStatus = data.status || (currentStage === 'completed' ? 'completed' : 'processing');
 
-        // 2. 如果狀態是完成
+            // 1. 先更新 UI 到對應進度
+            this.updateSteps(currentStage, currentStatus);
+
+            // 2. 如果狀態是完成
             if (currentStatus === 'completed') {
                 this.isCompleted = true;
                 this.stopPolling();
-                
+
                 // 強制將進度條設為 100% (確保 UI 顯示一致)
                 this.markAllCompleted();
 
                 // 停留1.5秒 再隱藏並顯示結果
                 setTimeout(async () => {
                     this.hide(); // 這也會呼叫 stopPolling，但前面已經停了所以沒關係
-                    
+
                     // 執行完成後的資料抓取
                     if (this.esgId) {
                         await this.fetchCompletedData(this.esgId);
                     }
-                }, 1500); 
+                }, 1500);
             }
         } catch (error) {
             console.error('進度查詢錯誤:', error);
@@ -117,7 +117,7 @@ class RealProgressController {
         };
 
         let targetPercent = stageProgressMap[currentStage] || 5;
-        
+
         // 如果 status 已經是 completed，強迫到 100
         if (status === 'completed') targetPercent = 100;
 
@@ -139,7 +139,7 @@ class RealProgressController {
             'stage6': ' 即將分析完成...',
             'completed': ' 分析完成！即將顯示結果'
         };
-        
+
         if (this.status && stageMessageMap[currentStage]) {
             this.status.textContent = stageMessageMap[currentStage];
         }
@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         const response = await fetch('/static/data/companies.json');
         const data = await response.json();
-        
+
         // 格式化資料給 Tom Select 使用
         const options = data.map(c => ({
             value: c.id,
@@ -201,9 +201,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             placeholder: "輸入公司代碼或名稱...",
             create: false,
             // 搜尋邏輯優化
-            score: function(search) {
+            score: function (search) {
                 var score = this.getScoreFunction(search);
-                return function(item) {
+                return function (item) {
                     return score(item);
                 };
             }
@@ -278,6 +278,12 @@ function setupEventListeners() {
 // 處理搜尋按鈕點擊
 function handleSearch() {
     console.log("Search triggered.");
+
+    // 🆕 停止並隱藏進度條（確保任何新搜尋都會清除舊的進度條）
+    if (progressController) {
+        progressController.stopPolling();
+        progressController.hide();
+    }
 
     if (currentCompany) {
         closeDetail();
@@ -1042,14 +1048,11 @@ function createVerifiedTooltip() {
 // 查詢公司資料（呼叫新API）
 async function queryCompanyData(year, companyCode) {
     try {
-        // 先顯示載入中狀態/或重置狀態，避免舊錯誤訊息殘留
-        showAnalysisStatus('processing', '查詢資料中...');
-
         // 隱藏舊的狀態顯示
         const oldStatusDisplay = document.getElementById('statusDisplay');
         if (oldStatusDisplay) {
             oldStatusDisplay.style.display = 'none';
-        }   
+        }
 
         const response = await fetch('/api/query_company', {
             method: 'POST',
@@ -1080,14 +1083,14 @@ async function queryCompanyData(year, companyCode) {
 
         const result = await response.json();
         console.log('Query result:', result);
-        
+
         // ========================================================
         // 🆕 新增：同步 API 資料到全域變數 companiesData
         // ========================================================
         if (result.status === 'completed' && result.data) {
             // 尋找全域變數中是否已經有這一筆 (比對代碼與年度)
-            const idx = companiesData.findIndex(c => 
-                String(c.stockId) === String(result.data.stockId) && 
+            const idx = companiesData.findIndex(c =>
+                String(c.stockId) === String(result.data.stockId) &&
                 String(c.year) === String(result.data.year)
             );
 
@@ -1102,7 +1105,7 @@ async function queryCompanyData(year, companyCode) {
             }
         }
         // ========================================================
-        
+
         // 隱藏初始提示
         document.getElementById('initialPrompt').style.display = 'none';
 
@@ -1134,28 +1137,42 @@ function showAnalysisStatus(status, message, data = null, year = null, companyCo
         statusDisplay.style.display = 'none';
         resultsDashboard.style.display = 'block';
 
+        // 🆕 停止進度條輪詢並隱藏進度條
+        if (progressController) {
+            progressController.stopPolling();
+            progressController.hide();
+        }
+
         // 使用現有的 renderCompanies 函式顯示資料
         filteredData = [data];
         currentPage = 1;
         renderCompanies(filteredData);
 
     } else if (status === 'processing') {
-        // ⏳ 處理中
+        // ⏳ 處理中 - 自動恢復進度追蹤（支援頁面重新整理後恢復顯示）
+        statusDisplay.style.display = 'none';
+        resultsDashboard.style.display = 'none';
+
+        // 🆕 如果有 esg_id，自動啟動進度追蹤
+        if (year && companyCode) {
+            const esgId = `${year}${companyCode}`;
+            console.log(`🔄 偵測到分析進行中，自動恢復進度追蹤: ${esgId}`);
+            progressController.startPolling(esgId);
+        }
+
+    } else if (status === 'resume_needed') {
+        // 🆕 需要恢復 - 顯示斷點恢復選項
         statusDisplay.style.display = 'block';
         resultsDashboard.style.display = 'none';
 
         statusContent.innerHTML = `
-            <div style="text-align: center; padding: 2rem;">
-                <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 1rem;"></div>
-                <h3 style="color: var(--primary);">⏳ ${message}</h3>
-                <p style="color: var(--text-secondary);">系統正在進行分析，這可能需要數分鐘...</p>
+            <div style="text-align: center; padding: 2rem; background: #fff3cd; border-radius: 8px;">
+                <h3 style="color: #856404;">⚠️ ${message}</h3>
+                <p style="color: #856404; margin: 1rem 0;">您可以選擇從斷點繼續，或重新開始分析。</p>
+                <button class="btn" onclick="confirmAutoFetch(${year}, '${companyCode}')" style="margin-top: 1rem; background: var(--primary); color: white;">
+                    ▶️ 從斷點繼續
+                </button>
             </div>
-            <style>
-                @keyframes spin {
-                    0% { transform: rotate(0deg); }
-                    100% { transform: rotate(360deg); }
-                }
-            </style>
         `;
 
     } else if (status === 'failed') {
@@ -1219,16 +1236,15 @@ function showAnalysisStatus(status, message, data = null, year = null, companyCo
 // 確認啟動自動抓取
 async function confirmAutoFetch(year, companyCode) {
     try {
-        // 顯示處理中狀態
-        showAnalysisStatus('processing', '正在啟動自動抓取與分析...');
+        // 不再使用舊的 processing 狀態，直接啟動進度條
         const esgId = `${year}${companyCode}`;
-        
+
         // 1. 隱藏其他狀態框
         document.getElementById('statusDisplay').style.display = 'none';
-        
+
         // 2. 啟動進度控制器
         progressController.startPolling(esgId);
-        
+
         // 3. 呼叫後端 API 啟動非同步處理
         const response = await fetch('/api/query_company', {
             method: 'POST',
