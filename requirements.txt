@@ -360,3 +360,6 @@ yarl==1.22.0
     # via
     #   aiohttp
     #   greenwashing-detective-project
+
+google-cloud-storage
+gunicorn

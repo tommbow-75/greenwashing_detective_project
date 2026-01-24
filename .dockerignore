@@ -1,0 +1,12 @@
+.git
+.github
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.db
+.env
+temp_data/
+static/data/wc_output/
+.venv
+venv/
