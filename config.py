@@ -16,35 +16,20 @@ ESG 分析系統 - 集中配置檔案
 """
 
 import os
-from google.cloud import storage  # 需在 requirements.txt 加入 google-cloud-storage
 from dotenv import load_dotenv
 
 # === 專案根目錄 ===
 # 取得此 config.py 檔案所在的目錄作為專案根目錄
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
-# === 新增：從 GCP Storage 讀取設定檔 ===
-def load_config_from_gcs():
-    bucket_name = "你的-bucket-名稱" # 剛剛在第一步建立的
-    source_blob_name = ".env"
-    destination_file_name = "/tmp/.env" # Cloud Run 只有 /tmp 可寫入
-
-    try:
-        storage_client = storage.Client()
-        bucket = storage_client.bucket(bucket_name)
-        blob = bucket.blob(source_blob_name)
-        blob.download_to_filename(destination_file_name)
-        load_dotenv(destination_file_name)
-        print("✅ 已成功從 GCS 載入設定檔")
-    except Exception as e:
-        print(f"❌ 無法從 GCS 載入設定：{e}")
-        load_dotenv() # 失敗則嘗試讀取本地
-
-# 如果在 Cloud Run 環境 (K_SERVICE 是 GCP 預設變數)
-if os.getenv('K_SERVICE'):
-    load_config_from_gcs()
-else:
+# 只有在本地開發時才讀取 .env 檔案
+# 在 Cloud Run 環境中，系統會直接提供環境變數，不需要 load_dotenv
+if not os.getenv('K_SERVICE'): 
     load_dotenv()
+
+# 現在您可以直接讀取環境變數
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+DB_PASSWORD = os.getenv('DB_PASSWORD')
 
 # === 目錄路徑配置 ===
 PATHS = {

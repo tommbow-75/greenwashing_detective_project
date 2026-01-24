@@ -361,5 +361,4 @@ yarl==1.22.0
     #   aiohttp
     #   greenwashing-detective-project
 
-google-cloud-storage
 gunicorn

@@ -14,27 +14,34 @@ load_dotenv()
 
 @contextmanager
 def get_db_connection():
-    """
-    資料庫連線 Context Manager
-    自動處理連線的開啟與關閉
-    """
-    conn = pymysql.connect(
-        host=os.getenv('DB_HOST'),
-        port=int(os.getenv('DB_PORT')),
-        user=os.getenv('DB_USER'),
-        password=os.getenv('DB_PASSWORD'),
-        db=os.getenv('DB_NAME'),
-        charset='utf8mb4',
-        cursorclass=DictCursor
-    )
-    try:
-        yield conn
-        conn.commit()
-    except Exception as e:
-        conn.rollback()
-        raise e
-    finally:
-        conn.close()
+    # 判斷是否在雲端環境 (Cloud Run 會自動帶入 K_SERVICE 變數)
+    if os.getenv('K_SERVICE'):
+        # Cloud Run 連線 Cloud SQL 的 Unix Socket 路徑
+        # 格式為: /cloudsql/INSTANCE_CONNECTION_NAME
+        db_user = os.getenv('DB_USER')
+        db_pass = os.getenv('DB_PASSWORD')
+        db_name = os.getenv('DB_NAME')
+        instance_connection_name = os.getenv('INSTANCE_CONNECTION_NAME')
+        
+        return pymysql.connect(
+            unix_socket=f'/cloudsql/{instance_connection_name}',
+            user=db_user,
+            password=db_pass,
+            db=db_name,
+            charset='utf8mb4',
+            cursorclass=DictCursor
+        )
+    else:
+        # 本地開發環境連線 (原本的邏輯)
+        return pymysql.connect(
+            host=os.getenv('DB_HOST'),
+            port=int(os.getenv('DB_PORT', 3306)),
+            user=os.getenv('DB_USER'),
+            password=os.getenv('DB_PASSWORD'),
+            db=os.getenv('DB_NAME'),
+            charset='utf8mb4',
+            cursorclass=DictCursor
+        )
 
 
 def query_company_data(year, company_code):
