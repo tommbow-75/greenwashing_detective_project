@@ -67,8 +67,8 @@ def is_actively_processing(esg_id):
 # --- 資料庫連線設定 ---
 def get_db_connection():
     return pymysql.connect(
-        host=os.getenv('DB_HOST'),
-        port=int(os.getenv('DB_PORT')),
+        db_port=os.getenv('DB_PORT'),
+        port = int(db_port) if db_port else 3306,
         user=os.getenv('DB_USER'), 
         password=os.getenv('DB_PASSWORD'), 
         db=os.getenv('DB_NAME'), 
