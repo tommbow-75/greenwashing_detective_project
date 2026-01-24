@@ -66,15 +66,29 @@ def is_actively_processing(esg_id):
 
 # --- 資料庫連線設定 ---
 def get_db_connection():
-    return pymysql.connect(
-        db_port=os.getenv('DB_PORT'),
-        port = int(db_port) if db_port else 3306,
-        user=os.getenv('DB_USER'), 
-        password=os.getenv('DB_PASSWORD'), 
-        db=os.getenv('DB_NAME'), 
-        charset='utf8mb4',
-        cursorclass=DictCursor
-    )
+    # 判斷是否在 Cloud Run 環境
+    if os.getenv('K_SERVICE'):
+        # 雲端環境：使用 Unix Socket
+        return pymysql.connect(
+            unix_socket=f"/cloudsql/{os.getenv('INSTANCE_CONNECTION_NAME')}",
+            user=os.getenv('DB_USER'),
+            password=os.getenv('DB_PASSWORD'),
+            db=os.getenv('DB_NAME'),
+            charset='utf8mb4',
+            cursorclass=DictCursor
+        )
+    else:
+        # 本地環境：使用 Host 與 Port
+        db_port = os.getenv('DB_PORT', '3306')
+        return pymysql.connect(
+            host=os.getenv('DB_HOST', 'localhost'),
+            port=int(db_port),
+            user=os.getenv('DB_USER'), 
+            password=os.getenv('DB_PASSWORD'), 
+            db=os.getenv('DB_NAME'), 
+            charset='utf8mb4',
+            cursorclass=DictCursor
+        )
 
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
