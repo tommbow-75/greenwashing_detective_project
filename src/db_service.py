@@ -14,27 +14,22 @@ load_dotenv()
 
 @contextmanager
 def get_db_connection():
-    # 判斷是否在雲端環境 (Cloud Run 會自動帶入 K_SERVICE 變數)
+    # 檢查是否在 Cloud Run 環境 (GCP 會自動提供 K_SERVICE 變數)
     if os.getenv('K_SERVICE'):
-        # Cloud Run 連線 Cloud SQL 的 Unix Socket 路徑
-        # 格式為: /cloudsql/INSTANCE_CONNECTION_NAME
-        db_user = os.getenv('DB_USER')
-        db_pass = os.getenv('DB_PASSWORD')
-        db_name = os.getenv('DB_NAME')
+        # 雲端環境：使用 Unix Socket 連線 Cloud SQL
         instance_connection_name = os.getenv('INSTANCE_CONNECTION_NAME')
-        
         return pymysql.connect(
-            unix_socket=f'/cloudsql/{instance_connection_name}',
-            user=db_user,
-            password=db_pass,
-            db=db_name,
+            unix_socket=f'/cloudsql/{instance_connection_name}', # 關鍵：指向 Cloud SQL 通道
+            user=os.getenv('DB_USER'),
+            password=os.getenv('DB_PASSWORD'),
+            db=os.getenv('DB_NAME'),
             charset='utf8mb4',
             cursorclass=DictCursor
         )
     else:
-        # 本地開發環境連線 (原本的邏輯)
+        # 本地開發環境：使用傳統的 Host 方式
         return pymysql.connect(
-            host=os.getenv('DB_HOST'),
+            host=os.getenv('DB_HOST', 'localhost'),
             port=int(os.getenv('DB_PORT', 3306)),
             user=os.getenv('DB_USER'),
             password=os.getenv('DB_PASSWORD'),
