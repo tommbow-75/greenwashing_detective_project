@@ -14,29 +14,47 @@ load_dotenv()
 
 @contextmanager
 def get_db_connection():
-    # 檢查是否在 Cloud Run 環境 (GCP 會自動提供 K_SERVICE 變數)
-    if os.getenv('K_SERVICE'):
-        # 雲端環境：使用 Unix Socket 連線 Cloud SQL
-        instance_connection_name = os.getenv('INSTANCE_CONNECTION_NAME')
-        return pymysql.connect(
-            unix_socket=f'/cloudsql/{instance_connection_name}', # 關鍵：指向 Cloud SQL 通道
-            user=os.getenv('DB_USER'),
-            password=os.getenv('DB_PASSWORD'),
-            db=os.getenv('DB_NAME'),
-            charset='utf8mb4',
-            cursorclass=DictCursor
-        )
-    else:
-        # 本地開發環境：使用傳統的 Host 方式
-        return pymysql.connect(
-            host=os.getenv('DB_HOST', 'localhost'),
-            port=int(os.getenv('DB_PORT', 3306)),
-            user=os.getenv('DB_USER'),
-            password=os.getenv('DB_PASSWORD'),
-            db=os.getenv('DB_NAME'),
-            charset='utf8mb4',
-            cursorclass=DictCursor
-        )
+    """
+    資料庫連接的上下文管理器
+    使用 with 語句自動處理連接的開啟與關閉
+    """
+    conn = None
+    try:
+        # 檢查是否在 Cloud Run 環境 (GCP 會自動提供 K_SERVICE 變數)
+        if os.getenv('K_SERVICE'):
+            # 雲端環境：使用 Unix Socket 連線 Cloud SQL
+            instance_connection_name = os.getenv('INSTANCE_CONNECTION_NAME')
+            conn = pymysql.connect(
+                unix_socket=f'/cloudsql/{instance_connection_name}', # 關鍵：指向 Cloud SQL 通道
+                user=os.getenv('DB_USER'),
+                password=os.getenv('DB_PASSWORD'),
+                db=os.getenv('DB_NAME'),
+                charset='utf8mb4',
+                cursorclass=DictCursor
+            )
+        else:
+            # 本地開發環境：使用傳統的 Host 方式
+            conn = pymysql.connect(
+                host=os.getenv('DB_HOST', 'localhost'),
+                port=int(os.getenv('DB_PORT', 3306)),
+                user=os.getenv('DB_USER'),
+                password=os.getenv('DB_PASSWORD'),
+                db=os.getenv('DB_NAME'),
+                charset='utf8mb4',
+                cursorclass=DictCursor
+            )
+        
+        yield conn  # 提供連接給 with 語句區塊使用
+        conn.commit()  # 自動提交事務
+    
+    except Exception as e:
+        if conn:
+            conn.rollback()  # 發生錯誤時回滾
+        raise  # 重新拋出異常
+    
+    finally:
+        if conn:
+            conn.close()  # 確保連接被關閉
 
 
 def query_company_data(year, company_code):
