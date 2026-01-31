@@ -71,8 +71,8 @@ class ESGReportAnalyzer:
     
     # ====== 模型設定 ======
     # Vertex AI 模型名稱（不需要 "models/" 前綴）
-    DEFAULT_MODEL = "gemini-2.0-flash-exp"
-    FALLBACK_MODEL = "gemini-1.5-flash-002"
+    DEFAULT_MODEL = "gemini-2.5-flash"
+    FALLBACK_MODEL = "gemini-3-flash-preview"
     
     # 是否使用 Vertex AI（優先）還是 GenAI SDK（備用）
     USE_VERTEX_AI = True
@@ -448,9 +448,9 @@ class ESGReportAnalyzer:
         執行完整的 ESG 報告書分析流程（含自動重試機制）
         
         重試策略：
-            1. 預設使用 gemini-2.5-flash + temperature=0.1
+            1. 預設使用 gemini-2.0-flash-exp + temperature=0.1
             2. 若偵測到輸出異常，提高 temperature 至 0.2 重試
-            3. 若仍異常，切換至 gemini-3-flash-preview 重試
+            3. 若仍異常，切換至 gemini-1.5-flash 重試
         
         產生的 JSON 格式：
             [
@@ -472,9 +472,9 @@ class ESGReportAnalyzer:
         """
         # 重試策略配置
         retry_configs = [
-            {"model": self.DEFAULT_MODEL, "temperature": 0.1, "desc": "gemini-2.5-flash (temp=0.1)"},
-            {"model": self.DEFAULT_MODEL, "temperature": 0.2, "desc": "gemini-2.5-flash (temp=0.2)"},
-            {"model": self.FALLBACK_MODEL, "temperature": 0.1, "desc": "gemini-3-flash-preview (temp=0.1)"},
+            {"model": self.DEFAULT_MODEL, "temperature": 0.1, "desc": f"{self.DEFAULT_MODEL} (temp=0.1)"},
+            {"model": self.DEFAULT_MODEL, "temperature": 0.2, "desc": f"{self.DEFAULT_MODEL} (temp=0.2)"},
+            {"model": self.FALLBACK_MODEL, "temperature": 0.1, "desc": f"{self.FALLBACK_MODEL} (temp=0.1)"},
         ]
         
         # 1. 上傳 PDF

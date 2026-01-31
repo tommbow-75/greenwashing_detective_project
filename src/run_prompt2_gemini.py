@@ -232,7 +232,7 @@ def process_esg_news_verification(input_json_path, news_json_path, msci_json_pat
         if USE_VERTEX_AI:
             # Vertex AI API - 在創建模型時設定 system_instruction
             model_instance = GenerativeModel(
-                "gemini-2.0-flash-exp",
+                "gemini-2.5-flash",  # 使用 Vertex AI 支援的模型
                 system_instruction=prompt_template
             )
             response = model_instance.generate_content(
