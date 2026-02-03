@@ -84,15 +84,10 @@ class RealProgressController {
     startSmoothing() {
         this.smoothInterval = setInterval(() => {
             if (this.isCompleted) {
-                // 如果已完成，平滑地衝向 100
+                // 如果已完成，快速衝向 100
                 if (this.displayPercent < 100) {
-                    // 使用漸進式加速（距離100越近越慢）
-                    const remainingPercent = 100 - this.displayPercent;
-                    if (remainingPercent > 5) {
-                        this.displayPercent += 0.5; // 中期：每步 0.5%
-                    } else {
-                        this.displayPercent += 0.1; // 最後階段：每步 0.1%
-                    }
+                    // 快速增加以達到 100%
+                    this.displayPercent += 1; // 每 100ms 加 1%
                     this.displayPercent = Math.min(this.displayPercent, 100);
                 } else {
                     this.displayPercent = 100;
@@ -100,22 +95,12 @@ class RealProgressController {
                     console.log('✅ 進度條動畫已完成');
                 }
             } else {
-                // 尚未完成時的邏輯 - 不斷漸進式接近目標值
-                if (this.displayPercent < this.targetPercent) {
-                    // 計算距離目標的差距
-                    const gap = this.targetPercent - this.displayPercent;
-                    
-                    if (gap > 10) {
-                        // 差距大：較快步進
-                        this.displayPercent += Math.min(0.5, gap * 0.1);
-                    } else {
-                        // 差距小：緩慢接近
-                        this.displayPercent += Math.min(0.2, gap * 0.05);
-                    }
-                } else if (this.displayPercent < 98) {
-                    // 已追上目標但還沒完成，則非常慢速爬行（0.01%/次）
-                    // 這樣進度條會不斷向前推進，但絕不會超過 98%
-                    this.displayPercent += 0.01;
+                // 尚未完成時：穩定地每秒增加 0.4% => 每 100ms 增加 0.04%
+                if (this.displayPercent < 99) {
+                    this.displayPercent += 0.04;
+                } else {
+                    // 保持在 99% 直到實際完成
+                    this.displayPercent = 99;
                 }
             }
 
@@ -185,7 +170,7 @@ class RealProgressController {
     updateStageInfo(currentStage, status) {
         // 定義階段對應的百分比（目標值，進度條會漸進式地向此值接近）
         const stageProgressMap = {
-            'stage1': 8,  // 下載PDF
+            'stage1': 4,  // 下載PDF
             'stage2': 45,  // 平行執行 Word Cloud 和 AI 分析
             'stage3': 58,  // 新聞爬蟲驗證
             'stage4': 85,  // AI 驗證與評分調整
