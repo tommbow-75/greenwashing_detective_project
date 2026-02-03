@@ -1,21 +1,50 @@
 import json, os, re, sys, time
 import pandas as pd
 from dotenv import load_dotenv
-from google import genai
-from google.genai import types
+
+# 支援 Vertex AI 和 GenAI SDK（向後相容）
+import vertexai
+from vertexai.generative_models import GenerativeModel
+
+# 備用：保留 GenAI SDK 支援
+try:
+    from google import genai
+    from google.genai import types
+    HAS_GENAI_SDK = True
+except ImportError:
+    HAS_GENAI_SDK = False
 
 # 導入集中配置
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from config import PATHS, DATA_FILES
 
-# 1. 載入 .env 檔案並初始化 Client
+# 1. 載入 .env 檔案並判斷使用哪種 SDK
 load_dotenv()
-api_key = os.getenv("GEMINI_API_KEY")
 
-if not api_key:
-    raise ValueError("找不到 GEMINI_API_KEY。請確保 .env 檔案存在且設定正確。")
+# 初始化 AI 客戶端（優先使用 Vertex AI）
+project_id = os.getenv("GCP_PROJECT_ID")
+location = os.getenv("GCP_LOCATION", "asia-northeast1")
 
-client = genai.Client(api_key=api_key)
+if project_id:
+    # 使用 Vertex AI（生產環境推薦）
+    print(f"[CONFIG] 使用 Vertex AI (專案: {project_id}, 區域: {location})")
+    vertexai.init(project=project_id, location=location)
+    USE_VERTEX_AI = True
+    client = None
+    model = None  # 將在呼叫時創建
+else:
+    # 回退到 GenAI SDK（本地開發或備用）
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        raise ValueError("❌ 請設定 GCP_PROJECT_ID（Vertex AI）或 GEMINI_API_KEY（GenAI SDK）")
+    
+    print(f"[CONFIG] 使用 GenAI SDK (API Key)")
+    if not HAS_GENAI_SDK:
+        raise RuntimeError("❌ GenAI SDK 未安裝，無法使用 API Key 模式")
+    
+    client = genai.Client(api_key=api_key)
+    USE_VERTEX_AI = False
+    model = None
 
 
 def process_esg_news_verification(input_json_path, news_json_path, msci_json_path, output_json_path):
@@ -200,15 +229,30 @@ def process_esg_news_verification(input_json_path, news_json_path, msci_json_pat
 
 
     try:
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=user_input,
-            config=types.GenerateContentConfig(
-                system_instruction=prompt_template,
-                temperature=0,
-                response_mime_type="application/json"
+        if USE_VERTEX_AI:
+            # Vertex AI API - 在創建模型時設定 system_instruction
+            model_instance = GenerativeModel(
+                "gemini-2.5-flash",  # 使用 Vertex AI 支援的模型
+                system_instruction=prompt_template
             )
-        )
+            response = model_instance.generate_content(
+                contents=user_input,
+                generation_config={
+                    "temperature": 0,
+                    "response_mime_type": "application/json"
+                }
+            )
+        else:
+            # GenAI SDK API
+            response = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=user_input,
+                config=types.GenerateContentConfig(
+                    system_instruction=prompt_template,
+                    temperature=0,
+                    response_mime_type="application/json"
+                )
+            )
     except Exception as e:
         print(f"❌ API 呼叫失敗: {e}")
         return {'success': False, 'error': f'API call failed: {e}'}

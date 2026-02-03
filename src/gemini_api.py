@@ -21,10 +21,18 @@ import re
 import sys
 from typing import Dict, List, Any, Tuple
 
-# ✅ 使用 Google 官方 GenAI SDK
-from google import genai
-from google.genai import types
+# ✅ 支援 Vertex AI 和 GenAI SDK（向後相容）
+import vertexai
+from vertexai.generative_models import GenerativeModel, Part
 from dotenv import load_dotenv
+
+# 備用：保留 GenAI SDK 支援
+try:
+    from google import genai
+    from google.genai import types
+    HAS_GENAI_SDK = True
+except ImportError:
+    HAS_GENAI_SDK = False
 
 # 載入環境變數
 load_dotenv()
@@ -62,9 +70,12 @@ class ESGReportAnalyzer:
     SASB_MAP_FILE = DATA_FILES['SASB_WEIGHT_MAP']
     
     # ====== 模型設定 ======
-    # 預設使用 Gemini 2.5 Flash，若異常則切換至備用模型
-    DEFAULT_MODEL = "models/gemini-2.5-flash"
-    FALLBACK_MODEL = "models/gemini-3-flash-preview"
+    # Vertex AI 模型名稱（不需要 "models/" 前綴）
+    DEFAULT_MODEL = "gemini-2.5-flash"
+    FALLBACK_MODEL = "gemini-3-flash-preview"
+    
+    # 是否使用 Vertex AI（優先）還是 GenAI SDK（備用）
+    USE_VERTEX_AI = True
     
     # 輸出異常偵測閾值：若項目數超過唯一主題數的此倍數，視為異常
     ABNORMAL_THRESHOLD = 2 
@@ -83,12 +94,30 @@ class ESGReportAnalyzer:
             RuntimeError: 若找不到 GEMINI_API_KEY 環境變數
             FileNotFoundError: 若找不到符合條件的 PDF 檔案或 SASB 權重表
         """
-        # 取得 API Key
-        api_key = os.getenv("GEMINI_API_KEY")
-        if not api_key:
-            raise RuntimeError("❌ 找不到 GEMINI_API_KEY，請檢查 .env 檔案。")
-
-        self.client = genai.Client(api_key=api_key)
+        # 初始化 AI 客戶端（優先使用 Vertex AI）
+        self.project_id = os.getenv("GCP_PROJECT_ID")
+        self.location = os.getenv("GCP_LOCATION", "asia-northeast1")
+        
+        if self.project_id and self.USE_VERTEX_AI:
+            # 使用 Vertex AI（生產環境推薦）
+            print(f"[CONFIG] 使用 Vertex AI (專案: {self.project_id}, 區域: {self.location})")
+            vertexai.init(project=self.project_id, location=self.location)
+            self.model_instance = None  # 將在呼叫時創建
+            self.client = None
+            self.use_vertex = True
+        else:
+            # 回退到 GenAI SDK（本地開發或備用）
+            api_key = os.getenv("GEMINI_API_KEY")
+            if not api_key:
+                raise RuntimeError(
+                    "❌ 請設定 GCP_PROJECT_ID（Vertex AI）或 GEMINI_API_KEY（GenAI SDK）"
+                )
+            print(f"[CONFIG] 使用 GenAI SDK (API Key)")
+            if not HAS_GENAI_SDK:
+                raise RuntimeError("❌ GenAI SDK 未安裝，無法使用 API Key 模式")
+            self.client = genai.Client(api_key=api_key)
+            self.model_instance = None
+            self.use_vertex = False
         self.target_year = target_year
         self.target_company_id = str(target_company_id).strip()
         self.company_name = company_name or f'公司{target_company_id}'
@@ -250,43 +279,64 @@ class ESGReportAnalyzer:
 
     def upload_file_to_gemini(self):
         """
-        將 PDF 檔案上傳至 Gemini 伺服器
+        準備 PDF 檔案供 AI 模型使用
+        
+        Vertex AI 版本直接讀取檔案內容，不需要上傳到遠端伺服器
+        GenAI SDK 版本則需要上傳並等待處理
         
         Returns:
-            Gemini 檔案參考物件
+            Vertex AI: Part 物件
+            GenAI SDK: 檔案參考物件
         
         Raises:
-            RuntimeError: 若上傳失敗或檔案處理失敗
+            RuntimeError: 若檔案處理失敗
         """
-        print(f"[UPLOAD] 準備上傳: {self.pdf_filename} ...")
-        safe_display_name = f"Report_{self.target_year}_{self.target_company_id}"
-
-        try:
-            with open(self.pdf_path, "rb") as f:
-                file_ref = self.client.files.upload(
-                    file=f,
-                    config=types.UploadFileConfig(
-                        display_name=safe_display_name,
-                        mime_type="application/pdf"
-                    )
+        print(f"[UPLOAD] 準備檔案: {self.pdf_filename} ...")
+        
+        if self.use_vertex:
+            # Vertex AI: 直接讀取檔案內容
+            try:
+                with open(self.pdf_path, "rb") as f:
+                    pdf_data = f.read()
+                
+                pdf_part = Part.from_data(
+                    data=pdf_data,
+                    mime_type="application/pdf"
                 )
-        except Exception as e:
-            raise RuntimeError(f"上傳失敗: {e}")
-        
-        print(f"[UPLOAD] 上傳成功，URI: {file_ref.uri}")
-        print(f"[WAIT] 等待 Google 處理檔案中...", end="")
-
-        while file_ref.state.name == "PROCESSING":
-            time.sleep(2)
-            file_ref = self.client.files.get(name=file_ref.name)
-            print(".", end="", flush=True)
-        
-        print()
-        if file_ref.state.name != "ACTIVE":
-            raise RuntimeError(f"❌ 檔案處理失敗，狀態: {file_ref.state.name}")
+                print(f"[READY] 檔案準備就緒 (Vertex AI)")
+                return pdf_part
+            except Exception as e:
+                raise RuntimeError(f"讀取檔案失敗: {e}")
+        else:
+            # GenAI SDK: 上傳到遠端伺服器
+            safe_display_name = f"Report_{self.target_year}_{self.target_company_id}"
             
-        print(f"[READY] 檔案準備就緒。")
-        return file_ref
+            try:
+                with open(self.pdf_path, "rb") as f:
+                    file_ref = self.client.files.upload(
+                        file=f,
+                        config=types.UploadFileConfig(
+                            display_name=safe_display_name,
+                            mime_type="application/pdf"
+                        )
+                    )
+            except Exception as e:
+                raise RuntimeError(f"上傳失敗: {e}")
+            
+            print(f"[UPLOAD] 上傳成功，URI: {file_ref.uri}")
+            print(f"[WAIT] 等待 Google 處理檔案中...", end="")
+
+            while file_ref.state.name == "PROCESSING":
+                time.sleep(2)
+                file_ref = self.client.files.get(name=file_ref.name)
+                print(".", end="", flush=True)
+            
+            print()
+            if file_ref.state.name != "ACTIVE":
+                raise RuntimeError(f"❌ 檔案處理失敗，狀態: {file_ref.state.name}")
+                
+            print(f"[READY] 檔案準備就緒 (GenAI SDK)")
+            return file_ref
 
     def _build_prompt(self) -> str:
         """
@@ -359,35 +409,48 @@ class ESGReportAnalyzer:
 
     def _call_gemini_api(self, uploaded_pdf, prompt_text: str, model_name: str, temperature: float) -> str:
         """
-        呼叫 Gemini API 進行分析
+        呼叫 AI API 進行分析（支援 Vertex AI 和 GenAI SDK）
         
         Args:
-            uploaded_pdf: 已上傳的 PDF 檔案參考
+            uploaded_pdf: PDF 檔案（Vertex AI: Part 物件，GenAI SDK: 檔案參考）
             prompt_text: 分析提示詞
-            model_name: Gemini 模型名稱
+            model_name: 模型名稱
             temperature: 生成溫度參數
         
         Returns:
             str: API 回傳的原始 JSON 字串
         """
-        response = self.client.models.generate_content(
-            model=model_name,
-            contents=[uploaded_pdf, prompt_text],
-            config=types.GenerateContentConfig(
-                response_mime_type="application/json",
-                temperature=temperature
+        if self.use_vertex:
+            # Vertex AI API
+            model = GenerativeModel(model_name)
+            response = model.generate_content(
+                contents=[uploaded_pdf, prompt_text],
+                generation_config={
+                    "temperature": temperature,
+                    "response_mime_type": "application/json"
+                }
             )
-        )
-        return response.text
+            return response.text
+        else:
+            # GenAI SDK API
+            response = self.client.models.generate_content(
+                model=f"models/{model_name}",  # GenAI SDK 需要 "models/" 前綴
+                contents=[uploaded_pdf, prompt_text],
+                config=types.GenerateContentConfig(
+                    response_mime_type="application/json",
+                    temperature=temperature
+                )
+            )
+            return response.text
 
     def run(self):
         """
         執行完整的 ESG 報告書分析流程（含自動重試機制）
         
         重試策略：
-            1. 預設使用 gemini-2.5-flash + temperature=0.1
+            1. 預設使用 gemini-2.0-flash-exp + temperature=0.1
             2. 若偵測到輸出異常，提高 temperature 至 0.2 重試
-            3. 若仍異常，切換至 gemini-3-flash-preview 重試
+            3. 若仍異常，切換至 gemini-1.5-flash 重試
         
         產生的 JSON 格式：
             [
@@ -409,9 +472,9 @@ class ESGReportAnalyzer:
         """
         # 重試策略配置
         retry_configs = [
-            {"model": self.DEFAULT_MODEL, "temperature": 0.1, "desc": "gemini-2.5-flash (temp=0.1)"},
-            {"model": self.DEFAULT_MODEL, "temperature": 0.2, "desc": "gemini-2.5-flash (temp=0.2)"},
-            {"model": self.FALLBACK_MODEL, "temperature": 0.1, "desc": "gemini-3-flash-preview (temp=0.1)"},
+            {"model": self.DEFAULT_MODEL, "temperature": 0.1, "desc": f"{self.DEFAULT_MODEL} (temp=0.1)"},
+            {"model": self.DEFAULT_MODEL, "temperature": 0.2, "desc": f"{self.DEFAULT_MODEL} (temp=0.2)"},
+            {"model": self.FALLBACK_MODEL, "temperature": 0.1, "desc": f"{self.FALLBACK_MODEL} (temp=0.1)"},
         ]
         
         # 1. 上傳 PDF

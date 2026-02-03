@@ -139,6 +139,8 @@ google-auth-httplib2==0.3.0
     # via google-api-python-client
 google-genai==1.56.0
     # via greenwashing-detective-project
+google-cloud-aiplatform>=1.70.0
+    # via greenwashing-detective-project (Vertex AI SDK)
 google-generativeai==0.8.6
     # via greenwashing-detective-project
 googleapis-common-protos==1.72.0
