@@ -1,161 +1,115 @@
-# Greenwashing Detective Project
+# ESG 抓耙子 (Greenwashing Detective)
+### 深度挖掘，讓 ESG 不只是口號
 
-## 一、 下載 GitHub Desktop
-請先至官網下載並安裝 [GitHub Desktop](https://desktop.github.com/)。
-
-## 二、 把專案領回家 (Clone)
-1. 打開 **GitHub Desktop** 並登入你的帳號。
-2. 點擊 `File` > `Clone Repository`。
-3. 選取 `greenwashing_detective_project`，並選擇本地端的存放路徑。
-4. **注意：** 資料夾路徑盡量**不要包含中文**，以避免程式執行時報錯。
-
-## 三、 檔案對應說明
-以下為專案主要檔案與功能對照：
-
-* **資料庫服務：** `db_service.py` (pymysql)
-* **主程式入口：**
-    * `app.py` (Flask)
-    * `app_line.py` (Line Bot)
-* **AI 介面：**
-    * `gemini_api.py` (Gemini)
-    * `run_prompt2_gemini.py` (Gemini)
-    * `pplx_api.py` (Perplexity)
-* **爬蟲程式：**
-    * `crawler_esgReport` (永續報告書爬蟲)
-    * `crawler_news.py` (新聞爬蟲)
-* **前端網頁：**
-    * **HTML:** `/templates/index.html`
-    * **CSS:** `/static/css/style.css`
-    * **JS:** `/static/js/script.js`
+「ESG 抓耙子」是一款利用生成式 AI 技術，針對企業永續報告書進行深度解析，並進行綠色洗白風險監測的工具。我們結合企業內部聲稱與外部新聞驗證，揭開永續報告書背後的真實面貌。
 
 ---
 
-## 四、 工作步驟 (避免衝突)
-為了確保多人協作順暢，請嚴格遵守以下流程：
+## 1. 背景與目的
 
-1.  **同步進度：** 開工前先點擊 **Fetch origin / Pull**，確保本地端是最新版本。
-2.  **建立分支：** 點擊 `Current Branch` > `New Branch`。
-    * *命名格式建議：* `功能名稱_版本` (例如：`gemini_api_v2`)
-3.  **提交變更：** 程式完成後，在 GitHub Desktop 進行 **Commit** 並點擊 **Publish branch**。
-4.  **發起合併：** 回到 GitHub 網頁版點擊 **Compare & pull request**，並簡述修改內容。
-5.  **完成：** 待管理員確認無誤後，即可進行合併（Merge）。
+* **因應法規及國際趨勢**：國際企業(Apple、Google、Microsoft等)皆積極推行 ESG 永續發展，並嚴格限制供應鏈碳排放；台灣金管會規定 2025 年起，全體上市櫃公司均應申報永續報告書；2026 年起正式開徵碳費。企業永續發展不再是選擇題，而是必答題。
+* **解決痛點**：
+    * **審查耗時**：一份報告書動輒200多頁，人工審閱效率極低。
+    * **資訊不對稱**：目前的 ESG 評選機制缺乏針對「漂綠」內容的有效審查，導致永續獎項可能淪為漂綠工具。
+* **專案目標**：
+    1.  **協助監管機構**：自動化比對報告真實性，提升審查效率。
+    2.  **協助投資人/大眾**：透過視覺化儀表板快速掌握企業 ESG 風險等級。
+    3.  **協助企業內部自檢**：在發布前先行檢視是否存在模糊不清或具風險之聲明。
 
-## 五、程式架構
-```text
-greenwashing_detective_project/
-├── app.py                      # [主程式] Flask 網頁伺服器入口
-├── app_llm_rich_test.py        # [測試] LLM 功能測試入口
-├── config.py                   # [設定] 專案配置與環境變數載入
-├── requirements.txt            # [依賴] Python 套件清單
-├── SQL_table.txt               # [資料庫] Table Schema 定義文件
-├── .env.example                # [環境] 環境變數範例檔 (API Key 設定)
-├── pyproject.toml              # [配置] 專案工具配置
-├── README.md                   # [文件] 專案說明文件
-│
-├── src/                        # [核心邏輯] 後端功能模組
-│   ├── crawler_esgReport.py    # ESG 永續報告書爬蟲
-│   ├── crawler_news.py         # 相關新聞爬蟲
-│   ├── gemini_api.py           # Google Gemini LLM API 串接
-│   ├── pplx_api.py             # Perplexity API 串接
-│   ├── calculate_esg.py        # ESG 分數計算邏輯
-│   ├── db_service.py           # 資料庫連線與 CRUD 操作
-│   ├── word_cloud.py           # 文字雲圖片生成工具
-│   └── run_prompt2_gemini.py   # 特定 Prompt 執行腳本
-│
-├── static/                     # [靜態資源] 前端資源檔案
-│   ├── css/                    # 樣式表 (style.css)
-│   ├── js/                     # 前端腳本 (script.js)
-│   ├── images/                 # 圖片資源 (生成的文字雲、風險圖示)
-│   └── data/                   # 靜態資料檔
-│       ├── dict/               # 分析用字典 (esg_dict, fuzzy_dict, stopword)
-│       ├── SASB_weightMap.json # SASB 權重映射表
-│       ├── msci_flag.json      # MSCI 評級對照
-│       └── tw_listed_companies.json # 台灣上市公司清單
-│
-├── templates/                  # [前端模板] HTML 檔案
-│   └── index.html              # 首頁介面
-│
-└── temp_data/                  # [暫存] 運行時產生的暫存檔 (通常不納入版控)
-    ├── esgReport/              # 下載的 PDF 報告
-    └── prompt*_json/           # LLM 分析結果緩存
-```
+---
 
-## process flowchart
+## 2. 成果展示
+
+* **專案網頁**：[ESG抓耙子 綠色洗白風險監測儀表板](https://esg-app-546777032880.asia-northeast1.run.app/)
+* **關鍵成果**：
+    * **風險儀表板**：直觀呈現 E、S、G 三大面向的風險評分，並分為「無、低、中、高」四種風險等級。
+    ![](static/images/readme/dashboard.png)
+    * **內文比對**：依據SASB 26項議題找出企業聲稱，並針對報告書前後文作比對，做出初步風險評分
+    ![](static/images/readme/inside.png)
+    * **外部新聞驗證**：針對企業聲稱，比對新聞內容，是否存在不一致，並使用MSCI風險旗號，調整風險評分
+    ![](static/images/readme/news.png)
+    * **互動式文字雲**：透過 NLP 技術提取 ESG 關鍵字與模糊字詞（Fuzzy Dictionary），一眼看穿報告書重點。
+    ![](static/images/readme/wordcloud.png)
+    * **自適應網頁**：實作自適應網頁，提供多平台使用體驗。
+    ![](static/images/readme/dwg.png)
+    * **LINE Bot 即時查詢**：提供便利的入口，使用者輸入公司名稱年份即可快速獲取分析摘要。
+    ![](static/images/readme/linebot.png)
+
+---
+
+## 3. 背景技術概述
+
+* **前端開發**：HTML5, CSS3 (RWD 響應式設計), JavaScript (控制頁面互動與圖表呈現)。
+* **自動化資料獲取**：
+    * **報告書爬蟲**：自動從 ESG 平台抓取指定年度與公司的 PDF 報告。
+    * **外部新聞蒐集**：整合 GNews 等工具，並行爬取相關企業之 ESG 負面或爭議新聞。
+* **後端框架**：**Python Flask** 負責處理 API 請求、任務調度與流程控制。
+* **AI 深度解析 (LLM 串接)**：
+    * **內文比對 (Prompt 1)**：提取 SASB 相關議題、具體聲稱及其對應頁碼，並針對前後文做比對，識別是否存在不一致。
+    * **外部查證 (Prompt 2)**：將公司聲稱與外部證據比對，識別是否存在不一致。
+    * **可靠性驗證 (Prompt 3)**：利用 **Perplexity API** 進行實時聯網，若原始連結失效，自動搜尋第三方可靠來源（排除官網），確保證據力。
+* **自然語言處理**：**NLP 工具** 使用 **Jieba** 斷詞處理、自定義 **ESG/Fuzzy/stopwords 字典**、**PDFPlumber** 文本提取。
+* **雲端與資料庫 (GCP)**：
+    * **Cloud Run**：容器化部署 Web 服務與 LINE Bot。
+    * **Cloud SQL (MySQL)**：結構化儲存企業資料、SASB 權重地圖及分析結果。
+    * **Artifact Registry**：管理 Docker image。
+
+---
+
+## 4. 難點突破
+
+* **GNews 多執行緒**：由於議題眾多，初期使用單執行緒爬取新聞，導致效率極低，後改為多執行緒(5個)爬取，大幅提升效率。
+* **Prompt優化**：嚴格控制LLM輸出格式，讓AI能根據需求固定輸出E/S/G分類；原先SASB議題分析會分析出300多項議題，且內容無代表性容易重複，經過調整後能穩定輸出約26項議題，且內容更有代表性。
+* **斷點續傳機制**：初期測試若發生網路中斷或API調用失敗，將會導致流程變成殭屍狀態，資料庫紀錄"已完成"，卻沒有任何內容；為了避免殭屍狀態，實作斷點續傳機制，在資料庫加入stageN，讓使用者可從上次進度繼續，避免浪費運算成本與時間。
+* **平行處理**：利用flask流程控制，將文字雲與外部新聞驗證平行處理，大幅提升效率。
+* **進度條優化**：使用者搜尋進入分析狀態時，下方會顯示進度條，因原先的切分4階段，網頁沒有任何回饋感，會讓使用者誤認為網頁當機，故改為1%,2%,3%...100%遞增，讓使用者可清楚知道目前進度；並在上方加入狀態導引，讓使用者可以知道目前處於哪個階段。
+
+---
+
+## 5. 系統架構圖
 
 ```mermaid
 flowchart TD
     %% --- 樣式定義 ---
     linkStyle default stroke:#000,stroke-width:1px;
     classDef start_end fill:#f2d08a,stroke:#333,stroke-width:1px,color:#000;
-    classDef process fill:#eee,stroke:#999,stroke-width:1px,color:#333;
     classDef decision fill:#fff4dd,stroke:#d4a017,stroke-width:2px,color:#000;
     classDef program fill:#034f4f,stroke:#333,stroke-width:1px,color:#fff;
     classDef db fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000;
-    classDef outputData fill:#fff3e0,stroke:#ff9800,stroke-dasharray: 5 5,color:#000;
 
-    %% --- 泳道 1: Frontend ---
-    subgraph UI [使用者互動層]
-        Start(["index.html<br/>Dashboard"]):::start_end
-        Input["User Input<br/>搜尋關鍵字"]:::process
-        End(["index.html<br/>結果展示"]):::start_end
-    end
+    User(("使用者")):::start_end
+    Start(["前端互動<br/>Web & LINE Bot"]):::start_end
+    End(["結果展示"]):::start_end
+    logic{資料庫是否存在}:::decision
+    Crawler("ESG報告書爬蟲"):::program
+    Gemini("Gemini<br/>P1:內文比對"):::program
+    prompt2("Gemini<br/>P2:外部驗證"):::program
+    news("Gnews新聞爬蟲"):::program
+    Pplx("Perplexity<br/>URL狀態碼驗證"):::program
+    Word_cloud("詞雲生成"):::program
+    Flask("Flask<br/>流程控制"):::program
+    DB_Node[("MySQL<br/>資料庫")]:::db
 
-    %% --- 泳道 2: Processing ---
-    subgraph App [後端邏輯處理]
-        JS{"script.js<br/>發送請求"}:::decision
-        CheckDB("app.py<br/>檢查資料狀態"):::program
-        Crawler("crawler_esgReport.py<br/>PDF 爬蟲"):::program
-        Gemini("gemini_api<br/>P1:內文比對"):::program
-        prompt2("run_prompt2_gemini.py<br/>P2:外部驗證"):::program
-        news("crawler_news.py<br/>新聞爬蟲"):::program
-        Pplx("pplx_api.py<br/>URL 外部驗證"):::program
-        Calc("calculate_esg.py<br/>風險分數計算"):::program
-        Word_cloud("word_cloud.py<br/>生成詞雲"):::program
-        pymysql_insert("db_service.py<br/>寫入資料庫"):::program
-        Flask("app.py<br/>Flask API Server"):::program
-    end
-
-    %% --- 泳道 3: Data ---
-    subgraph Data [數據管理層]
-        PDF[["永續報告書<br/>PDF 檔案"]]:::outputData
-        news["新聞<br/>JSON"]:::outputData
-        JSON1["內文比對結果<br/>JSON"]:::outputData
-        JSON2["外部驗證結果<br/>JSON"]:::outputData
-        JSON3["網頁確認結果<br/>JSON"]:::outputData
-        DB_Node[("MySQL<br/>資料庫")]:::db
-        wc_json["詞雲<br/>JSON"]:::outputData
-    end
-
-    %% --- 連線邏輯 ---
-    Start --> Input --> JS
-    JS --> CheckDB
+    %% 連線邏輯
+    User --> Start
+    Start --> Flask
+    Flask --> logic
     
     %% 資料檢查路徑
-    DB_Node -.->|讀取狀態| CheckDB
-    CheckDB -- 無資料 --> Crawler
-    CheckDB -- 有資料 --> End
+    logic -- 無資料 --> Crawler
+    logic -- 有資料 --> DB_Node
 
     %% 爬蟲與 AI 處理流
-    Crawler --> PDF --> Gemini
-    Gemini --> JSON1
-    prompt2 --> JSON2
-    Pplx --> JSON3
+    Crawler --> Gemini
+    Gemini --> news
+    news --> prompt2
+    prompt2 --> Pplx
+    Pplx --> DB_Node
 
     %% 詞雲生成流
-    PDF --> Word_cloud --> wc_json
-    wc_json --> Flask
-
-    %% JSON 數據分流
-    JSON2 --> Pplx
-    JSON3 --> Calc --> Flask
-    JSON3 --> pymysql_insert -.->|寫入| DB_Node
-    DB_Node -.->|讀取| Flask
-    JSON1 --> news --> prompt2
+    Crawler --> Word_cloud
+    Word_cloud --> DB_Node
 
     %% 最終回傳展示
-    Flask --> End
-
-    %% 調整視覺間距
-    style UI fill:#f9f9f9,stroke:#ddd
-    style App fill:#f5f5f5,stroke:#ddd
-    style Data fill:#f9f9f9,stroke:#ddd
+    DB_Node --> End
+```
