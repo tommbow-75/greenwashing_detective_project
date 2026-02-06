@@ -31,7 +31,7 @@
     * **互動式文字雲**：透過 NLP 技術提取 ESG 關鍵字與模糊字詞（Fuzzy Dictionary），一眼看穿報告書重點。
     ![](static/images/readme/wordcloud.png)
     * **自適應網頁**：實作自適應網頁，提供多平台使用體驗。
-    ![](static/images/readme/dwg.png)
+    ![](static/images/readme/dwg_web.jpg)
     * **LINE Bot 即時查詢**：提供便利的入口，使用者輸入公司名稱年份即可快速獲取分析摘要。
     ![](static/images/readme/linebot.png)
 
